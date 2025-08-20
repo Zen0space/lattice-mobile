@@ -200,6 +200,150 @@ export const CHART_DATA_PRESETS = {
       startValue: 50,
     }),
   },
+  // Dashboard-specific data presets
+  'portfolio-allocation': {
+    name: 'Portfolio Allocation',
+    description: 'Asset allocation breakdown',
+    generator: () => fakeDataGenerator.generateWeeklyData({
+      min: 20,
+      max: 80,
+      trend: 'wave',
+      volatility: 0.15,
+      startValue: 45,
+    }),
+  },
+  'portfolio-performance': {
+    name: 'Portfolio Performance',
+    description: 'Portfolio performance over time',
+    generator: () => fakeDataGenerator.generateWeeklyData({
+      min: 95,
+      max: 115,
+      trend: 'up',
+      volatility: 0.2,
+      startValue: 100,
+    }),
+  },
+  'market-sectors': {
+    name: 'Market Sectors',
+    description: 'Sector performance analysis',
+    generator: () => fakeDataGenerator.generateWeeklyData({
+      min: 85,
+      max: 125,
+      trend: 'random',
+      volatility: 0.25,
+      startValue: 105,
+    }),
+  },
+  'earnings': {
+    name: 'Earnings Data',
+    description: 'Quarterly earnings performance',
+    generator: () => fakeDataGenerator.generateWeeklyData({
+      min: 0.5,
+      max: 3.2,
+      trend: 'up',
+      volatility: 0.3,
+      startValue: 1.8,
+    }),
+  },
+  'risk-analysis': {
+    name: 'Risk Analysis',
+    description: 'Risk metrics and volatility',
+    generator: () => fakeDataGenerator.generateWeeklyData({
+      min: 5,
+      max: 25,
+      trend: 'down',
+      volatility: 0.2,
+      startValue: 15,
+    }),
+  },
+  'price-alerts': {
+    name: 'Price Alerts',
+    description: 'Price alert triggers',
+    generator: () => fakeDataGenerator.generateWeeklyData({
+      min: 140,
+      max: 180,
+      trend: 'random',
+      volatility: 0.4,
+      startValue: 160,
+    }),
+  },
+  'market-scanner': {
+    name: 'Market Scanner',
+    description: 'Market scanning results',
+    generator: () => fakeDataGenerator.generateWeeklyData({
+      min: 30,
+      max: 70,
+      trend: 'wave',
+      volatility: 0.3,
+      startValue: 50,
+    }),
+  },
+  'technical-indicators': {
+    name: 'Technical Indicators',
+    description: 'Technical analysis indicators',
+    generator: () => fakeDataGenerator.generateWeeklyData({
+      min: 20,
+      max: 80,
+      trend: 'random',
+      volatility: 0.35,
+      startValue: 45,
+    }),
+  },
+  'performance-metrics': {
+    name: 'Performance Metrics',
+    description: 'Advanced performance analysis',
+    generator: () => fakeDataGenerator.generateWeeklyData({
+      min: 85,
+      max: 115,
+      trend: 'up',
+      volatility: 0.15,
+      startValue: 100,
+    }),
+  },
+  'correlation-data': {
+    name: 'Correlation Data',
+    description: 'Asset correlation analysis',
+    generator: () => fakeDataGenerator.generateWeeklyData({
+      min: -0.8,
+      max: 0.8,
+      trend: 'wave',
+      volatility: 0.2,
+      startValue: 0.3,
+    }),
+  },
+  'trading-signals': {
+    name: 'Trading Signals',
+    description: 'Buy/sell signal indicators',
+    generator: () => fakeDataGenerator.generateWeeklyData({
+      min: 0,
+      max: 100,
+      trend: 'random',
+      volatility: 0.4,
+      startValue: 50,
+    }),
+  },
+  'order-flow': {
+    name: 'Order Flow',
+    description: 'Order flow analysis',
+    generator: () => fakeDataGenerator.generateWeeklyData({
+      min: 1000,
+      max: 5000,
+      trend: 'wave',
+      volatility: 0.3,
+      startValue: 2500,
+    }),
+  },
+  'pnl-data': {
+    name: 'P&L Data',
+    description: 'Profit and loss tracking',
+    generator: () => fakeDataGenerator.generateWeeklyData({
+      min: -500,
+      max: 1500,
+      trend: 'up',
+      volatility: 0.4,
+      startValue: 200,
+    }),
+  },
 };
 
 export function createChartConfig(

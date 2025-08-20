@@ -102,7 +102,7 @@ const ChartWidget: React.FC<ChartWidgetProps> = ({
       yAxisTextStyle: {
         color: '#9ca3af',
         fontSize: 11,
-        fontWeight: '500',
+        fontWeight: '500' as const,
         ...config.yAxisTextStyle,
       },
       xAxisTextStyle: {
@@ -116,7 +116,7 @@ const ChartWidget: React.FC<ChartWidgetProps> = ({
       xAxisLabelTextStyle: {
         color: '#6b7280',
         fontSize: 12,
-        fontWeight: '500',
+        fontWeight: '500' as const,
       },
       // Additional label configuration
       showXAxisIndices: true,

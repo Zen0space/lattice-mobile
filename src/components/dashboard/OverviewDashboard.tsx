@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, memo } from 'react';
 import {
   View,
   Text,
@@ -17,6 +17,9 @@ import {
 } from 'react-native-feather';
 import { DashboardConfig, AssetData } from './types';
 import { DashboardContainer, ActionButton } from './shared';
+import OptimizedAssetList from './shared/OptimizedAssetList';
+import OptimizedActivityList, { ActivityItem } from './shared/OptimizedActivityList';
+import { useMountedRef, memoryLeakDetection } from '../../utils/memoryLeakPrevention';
 
 const { width } = Dimensions.get('window');
 
@@ -25,6 +28,11 @@ interface OverviewDashboardProps {
 }
 
 const OverviewDashboard: React.FC<OverviewDashboardProps> = ({ config }) => {
+  // Memory leak prevention
+  const mountedRef = useMountedRef();
+  memoryLeakDetection.useComponentLifecycleLogger('OverviewDashboard');
+  memoryLeakDetection.useMemoryMonitor('OverviewDashboard');
+  
   const [portfolioData, setPortfolioData] = useState({
     totalValue: 125847.32,
     totalChange: 2847.23,
@@ -76,10 +84,10 @@ const OverviewDashboard: React.FC<OverviewDashboardProps> = ({ config }) => {
     },
   ]);
 
-  const [recentActivity] = useState([
+  const [recentActivity] = useState<ActivityItem[]>([
     {
       id: '1',
-      type: 'buy',
+      type: 'buy' as const,
       asset: 'BTC',
       amount: 0.1,
       price: 114000,
@@ -87,7 +95,7 @@ const OverviewDashboard: React.FC<OverviewDashboardProps> = ({ config }) => {
     },
     {
       id: '2',
-      type: 'sell',
+      type: 'sell' as const,
       asset: 'ETH',
       amount: 1.5,
       price: 4150,
@@ -95,7 +103,7 @@ const OverviewDashboard: React.FC<OverviewDashboardProps> = ({ config }) => {
     },
     {
       id: '3',
-      type: 'dividend',
+      type: 'dividend' as const,
       asset: 'AAPL',
       amount: 47.25,
       time: '1 day ago',
@@ -216,18 +224,12 @@ const OverviewDashboard: React.FC<OverviewDashboardProps> = ({ config }) => {
         </View>
       </View>
 
-      {/* Top Holdings */}
-      <View className="mb-6">
-        <View className="flex-row items-center justify-between mb-4">
-          <Text className="text-lg font-semibold text-gray-900">Top Holdings</Text>
-          <TouchableOpacity>
-            <Text className="text-primary font-medium">View All</Text>
-          </TouchableOpacity>
-        </View>
-        <View className="bg-gray-50 rounded-xl border border-gray-200 shadow-sm px-4">
-          {topAssets.map(renderAssetRow)}
-        </View>
-      </View>
+      {/* Optimized Top Holdings */}
+      <OptimizedAssetList 
+        assets={topAssets}
+        headerTitle="Top Holdings"
+        onViewAll={() => console.log('View All Assets')}
+      />
 
       {/* Performance Chart Placeholder */}
       <View className="mb-6">
@@ -241,13 +243,11 @@ const OverviewDashboard: React.FC<OverviewDashboardProps> = ({ config }) => {
         </View>
       </View>
 
-      {/* Recent Activity */}
-      <View className="mb-6">
-        <Text className="text-lg font-semibold text-gray-900 mb-4">Recent Activity</Text>
-        <View className="bg-gray-50 rounded-xl border border-gray-200 shadow-sm px-4 py-2">
-          {recentActivity.map(renderActivityItem)}
-        </View>
-      </View>
+      {/* Optimized Recent Activity */}
+      <OptimizedActivityList 
+        activities={recentActivity}
+        headerTitle="Recent Activity"
+      />
 
       {/* Quick Actions */}
       <View className="mb-6">
@@ -272,4 +272,5 @@ const OverviewDashboard: React.FC<OverviewDashboardProps> = ({ config }) => {
   );
 };
 
-export default OverviewDashboard;
+// Export with performance optimizations
+export default memo(OverviewDashboard);

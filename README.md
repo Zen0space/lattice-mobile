@@ -24,8 +24,6 @@
 ### 🎯 **Advanced Widget System**
 - **Drag-and-Drop Interface**: Smooth reordering with `react-native-draggable-flatlist`
 - **Multiple Widget Types**: Chart widgets, Crypto price trackers, Market data displays
-- **Real-Time Data**: Live financial data with customizable refresh intervals
-- **Widget Customization**: Configurable colors, timeframes, and display modes
 
 ### 📈 **Chart & Data Visualization**
 - **Interactive Charts**: Line, area, curved, and step charts with `react-native-gifted-charts`

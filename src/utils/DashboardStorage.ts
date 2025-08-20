@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { DashboardConfig } from '../components/dashboard/types';
+import { useDashboardStore } from '../stores/dashboardStore';
 
 const DASHBOARDS_KEY = 'user_dashboards';
 const ACTIVE_DASHBOARD_KEY = 'active_dashboard';
@@ -342,6 +343,7 @@ export class DashboardStorage {
 
   /**
    * Save widgets for a specific dashboard
+   * Now validates dashboard existence using Zustand store
    */
   static async saveDashboardWidgets(dashboardId: string, widgets: any[]): Promise<void> {
     try {
@@ -354,13 +356,14 @@ export class DashboardStorage {
         throw new Error('Widgets must be an array');
       }
 
-      const dashboards = await this.loadDashboards();
-      
-      // CRITICAL: Validate dashboard exists before saving widgets
+      // Get dashboard from Zustand store for validation
+      const { dashboards, updateDashboard } = useDashboardStore.getState();
       const targetDashboard = dashboards.find(d => d.id === dashboardId);
+      
+      // CRITICAL: Validate dashboard exists in current state
       if (!targetDashboard) {
         const availableDashboards = dashboards.map(d => `${d.name} (${d.id})`).join(', ');
-        const errorMsg = `Dashboard "${dashboardId}" not found. Available dashboards: ${availableDashboards}`;
+        const errorMsg = `Dashboard "${dashboardId}" not found in current state. Available dashboards: ${availableDashboards}`;
         console.error(`❌ Cannot save widgets: ${errorMsg}`);
         throw new Error(errorMsg);
       }
@@ -372,13 +375,14 @@ export class DashboardStorage {
         }
       });
       
-      const updatedDashboards = dashboards.map(dashboard => 
-        dashboard.id === dashboardId 
-          ? { ...dashboard, widgets, lastAccessed: new Date() }
-          : dashboard
-      );
-      await this.saveDashboards(updatedDashboards);
+      // Update dashboard in Zustand store with widgets
+      updateDashboard(dashboardId, { 
+        widgets, 
+        lastAccessed: new Date() 
+      });
+      
       console.log(`✅ Saved ${widgets.length} widgets for dashboard "${targetDashboard.name}" (${dashboardId})`);
+      console.log(`✅ Dashboards with widgets saved to local storage`);
     } catch (error) {
       console.error('❌ Error saving dashboard widgets:', error);
       console.error('Dashboard ID:', dashboardId);
@@ -389,20 +393,25 @@ export class DashboardStorage {
 
   /**
    * Load widgets for a specific dashboard
+   * Now uses Zustand store as source of truth for dashboard existence
    */
   static async loadDashboardWidgets(dashboardId: string): Promise<any[]> {
     try {
-      const dashboards = await this.loadDashboards();
+      // Get dashboard from Zustand store instead of old storage
+      const { dashboards } = useDashboardStore.getState();
       const dashboard = dashboards.find(d => d.id === dashboardId);
       
-      // CRITICAL: Handle case where dashboard doesn't exist (may have been deleted)
+      // CRITICAL: Handle case where dashboard doesn't exist in Zustand store
       if (!dashboard) {
-        console.warn(`⚠️ Cannot load widgets: Dashboard "${dashboardId}" not found (may have been deleted)`);
-        return []; // Return empty array for deleted dashboard
+        console.warn(`⚠️ Cannot load widgets: Dashboard "${dashboardId}" not found in current state`);
+        return []; // Return empty array for non-existent dashboard
       }
       
       const widgets = dashboard.widgets || [];
       console.log(`📝 Loaded ${widgets.length} widgets for dashboard ${dashboardId}`);
+      if (widgets.length === 0) {
+        console.log(`📝 No widgets found for ${dashboard.name} dashboard`);
+      }
       return widgets;
     } catch (error) {
       console.error('❌ Error loading dashboard widgets:', error);
@@ -426,23 +435,17 @@ export class DashboardStorage {
       
       console.log(`🧹 Clearing ${widgetCount} widgets for dashboard: ${dashboardId}`);
       
-      // Clear widgets by setting empty array
-      const dashboards = await this.loadDashboards();
+      // Get dashboard from Zustand store and clear widgets
+      const { dashboards, updateDashboard } = useDashboardStore.getState();
       const targetDashboard = dashboards.find(d => d.id === dashboardId);
       
       if (!targetDashboard) {
-        console.warn(`⚠️ Dashboard ${dashboardId} not found during widget clearing`);
+        console.warn(`⚠️ Dashboard ${dashboardId} not found in current state during widget clearing`);
         return 0;
       }
       
-      // Update dashboard with empty widgets array
-      const updatedDashboards = dashboards.map(dashboard => 
-        dashboard.id === dashboardId 
-          ? { ...dashboard, widgets: [], lastAccessed: new Date() }
-          : dashboard
-      );
-      
-      await this.saveDashboards(updatedDashboards);
+      // Update dashboard in Zustand store with empty widgets array
+      updateDashboard(dashboardId, { widgets: [] });
       console.log(`✅ Successfully cleared ${widgetCount} widgets from dashboard: ${dashboardId}`);
       
       return widgetCount;

@@ -17,13 +17,13 @@
     "preview-aab": {
       "distribution": "internal",
       "android": {
-        "buildType": "aab"
+        "buildType": "app-bundle"
       }
     },
     "production": {
       "autoIncrement": true,
       "android": {
-        "buildType": "aab"
+        "buildType": "app-bundle"
       }
     },
     "production-apk": {
