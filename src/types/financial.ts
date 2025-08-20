@@ -19,7 +19,8 @@ export interface Asset extends BaseEntity {
 }
 
 // Activity/Transaction types
-export interface ActivityItem extends BaseEntity {
+export interface ActivityItem {
+  id: string;
   type: 'buy' | 'sell' | 'dividend' | 'transfer';
   asset: string;
   amount: number;
@@ -27,6 +28,8 @@ export interface ActivityItem extends BaseEntity {
   time: string;
   fee?: number;
   description?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 // Portfolio-related types

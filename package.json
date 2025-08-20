@@ -61,5 +61,13 @@
     "eslint-plugin-react-native": "^4.1.0",
     "prettier": "^3.4.2"
   },
+  "expo": {
+    "doctor": {
+      "reactNativeDirectoryCheck": {
+        "exclude": ["immer", "react-native-feather"],
+        "listUnknownPackages": false
+      }
+    }
+  },
   "private": true
 }

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
-import { DashboardConfig } from '../components/dashboard/types';
+import { DashboardConfig } from '../../components/dashboard/types';
 
 /**
  * Development State Validation Utilities - 2025 Best Practices
