@@ -1,21 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, LayoutAnimation, Platform, UIManager } from 'react-native';
-import { 
-  PieChart, 
-  TrendingUp, 
-  BarChart2, 
-  ArrowLeft, 
-  Plus, 
-  ChevronDown, 
+import {
+  PieChart,
+  TrendingUp,
+  BarChart2,
+  ArrowLeft,
+  Plus,
+  ChevronDown,
   ChevronUp,
   Home,
   Eye,
   Activity,
-  Zap
+  Zap,
 } from 'react-native-feather';
 import DraggableFlatList, { RenderItemParams } from 'react-native-draggable-flatlist';
 import { DashboardConfig, DashboardType } from './types';
-import { WidgetManager, Widget, createChartConfig, CHART_TEMPLATES, CHART_DATA_PRESETS } from '../widget';
+import {
+  WidgetManager,
+  Widget,
+  createChartConfig,
+  CHART_TEMPLATES,
+  CHART_DATA_PRESETS,
+} from '../widget';
 import { DashboardWidget } from './shared';
 import { widgetStorage } from '../../stores/storage';
 import { DASHBOARD_TEMPLATES } from './DashboardTemplates';
@@ -33,10 +39,31 @@ const DASHBOARD_CONFIGS = {
     accentColor: '#0d8f6f',
     icon: Home,
     quickActions: [
-      { id: 'performance', title: 'Performance', icon: TrendingUp, color: '#3b82f6', chartType: 'line' as const, dataPreset: 'stock-price' as const },
-      { id: 'allocation', title: 'Allocation', icon: PieChart, color: '#8b5cf6', chartType: 'curved' as const, dataPreset: 'portfolio-allocation' as const },
-      { id: 'analytics', title: 'Analytics', icon: BarChart2, color: '#10b981', chartType: 'area' as const, dataPreset: 'revenue' as const }
-    ]
+      {
+        id: 'performance',
+        title: 'Performance',
+        icon: TrendingUp,
+        color: '#3b82f6',
+        chartType: 'line' as const,
+        dataPreset: 'stock-price' as const,
+      },
+      {
+        id: 'allocation',
+        title: 'Allocation',
+        icon: PieChart,
+        color: '#8b5cf6',
+        chartType: 'curved' as const,
+        dataPreset: 'portfolio-allocation' as const,
+      },
+      {
+        id: 'analytics',
+        title: 'Analytics',
+        icon: BarChart2,
+        color: '#10b981',
+        chartType: 'area' as const,
+        dataPreset: 'revenue' as const,
+      },
+    ],
   },
   stocks: {
     title: 'Stock Portfolio',
@@ -45,10 +72,31 @@ const DASHBOARD_CONFIGS = {
     accentColor: '#2563eb',
     icon: BarChart2,
     quickActions: [
-      { id: 'stock-performance', title: 'Stock Performance', icon: TrendingUp, color: '#3b82f6', chartType: 'line' as const, dataPreset: 'stock-price' as const },
-      { id: 'sector-analysis', title: 'Sector Analysis', icon: PieChart, color: '#8b5cf6', chartType: 'curved' as const, dataPreset: 'market-sectors' as const },
-      { id: 'earnings', title: 'Earnings', icon: BarChart2, color: '#10b981', chartType: 'area' as const, dataPreset: 'earnings' as const }
-    ]
+      {
+        id: 'stock-performance',
+        title: 'Stock Performance',
+        icon: TrendingUp,
+        color: '#3b82f6',
+        chartType: 'line' as const,
+        dataPreset: 'stock-price' as const,
+      },
+      {
+        id: 'sector-analysis',
+        title: 'Sector Analysis',
+        icon: PieChart,
+        color: '#8b5cf6',
+        chartType: 'curved' as const,
+        dataPreset: 'market-sectors' as const,
+      },
+      {
+        id: 'earnings',
+        title: 'Earnings',
+        icon: BarChart2,
+        color: '#10b981',
+        chartType: 'area' as const,
+        dataPreset: 'earnings' as const,
+      },
+    ],
   },
   portfolio: {
     title: 'Portfolio Management',
@@ -57,10 +105,31 @@ const DASHBOARD_CONFIGS = {
     accentColor: '#7c3aed',
     icon: PieChart,
     quickActions: [
-      { id: 'allocation', title: 'Asset Allocation', icon: PieChart, color: '#8b5cf6', chartType: 'curved' as const, dataPreset: 'portfolio-allocation' as const },
-      { id: 'performance', title: 'Performance', icon: TrendingUp, color: '#3b82f6', chartType: 'line' as const, dataPreset: 'portfolio-performance' as const },
-      { id: 'risk-metrics', title: 'Risk Analysis', icon: BarChart2, color: '#ef4444', chartType: 'area' as const, dataPreset: 'risk-analysis' as const }
-    ]
+      {
+        id: 'allocation',
+        title: 'Asset Allocation',
+        icon: PieChart,
+        color: '#8b5cf6',
+        chartType: 'curved' as const,
+        dataPreset: 'portfolio-allocation' as const,
+      },
+      {
+        id: 'performance',
+        title: 'Performance',
+        icon: TrendingUp,
+        color: '#3b82f6',
+        chartType: 'line' as const,
+        dataPreset: 'portfolio-performance' as const,
+      },
+      {
+        id: 'risk-metrics',
+        title: 'Risk Analysis',
+        icon: BarChart2,
+        color: '#ef4444',
+        chartType: 'area' as const,
+        dataPreset: 'risk-analysis' as const,
+      },
+    ],
   },
   watchlist: {
     title: 'Market Watchlist',
@@ -69,10 +138,31 @@ const DASHBOARD_CONFIGS = {
     accentColor: '#0891b2',
     icon: Eye,
     quickActions: [
-      { id: 'price-alerts', title: 'Price Alerts', icon: TrendingUp, color: '#06b6d4', chartType: 'line' as const, dataPreset: 'price-alerts' as const },
-      { id: 'market-scanner', title: 'Market Scanner', icon: BarChart2, color: '#10b981', chartType: 'area' as const, dataPreset: 'market-scanner' as const },
-      { id: 'technical-analysis', title: 'Technical Analysis', icon: Activity, color: '#f59e0b', chartType: 'curved' as const, dataPreset: 'technical-indicators' as const }
-    ]
+      {
+        id: 'price-alerts',
+        title: 'Price Alerts',
+        icon: TrendingUp,
+        color: '#06b6d4',
+        chartType: 'line' as const,
+        dataPreset: 'price-alerts' as const,
+      },
+      {
+        id: 'market-scanner',
+        title: 'Market Scanner',
+        icon: BarChart2,
+        color: '#10b981',
+        chartType: 'area' as const,
+        dataPreset: 'market-scanner' as const,
+      },
+      {
+        id: 'technical-analysis',
+        title: 'Technical Analysis',
+        icon: Activity,
+        color: '#f59e0b',
+        chartType: 'curved' as const,
+        dataPreset: 'technical-indicators' as const,
+      },
+    ],
   },
   analytics: {
     title: 'Advanced Analytics',
@@ -81,10 +171,31 @@ const DASHBOARD_CONFIGS = {
     accentColor: '#dc2626',
     icon: Activity,
     quickActions: [
-      { id: 'performance-analysis', title: 'Performance Analysis', icon: TrendingUp, color: '#ef4444', chartType: 'line' as const, dataPreset: 'performance-metrics' as const },
-      { id: 'risk-analysis', title: 'Risk Analysis', icon: BarChart2, color: '#f59e0b', chartType: 'area' as const, dataPreset: 'risk-analysis' as const },
-      { id: 'correlation', title: 'Correlation Matrix', icon: Activity, color: '#8b5cf6', chartType: 'curved' as const, dataPreset: 'correlation-data' as const }
-    ]
+      {
+        id: 'performance-analysis',
+        title: 'Performance Analysis',
+        icon: TrendingUp,
+        color: '#ef4444',
+        chartType: 'line' as const,
+        dataPreset: 'performance-metrics' as const,
+      },
+      {
+        id: 'risk-analysis',
+        title: 'Risk Analysis',
+        icon: BarChart2,
+        color: '#f59e0b',
+        chartType: 'area' as const,
+        dataPreset: 'risk-analysis' as const,
+      },
+      {
+        id: 'correlation',
+        title: 'Correlation Matrix',
+        icon: Activity,
+        color: '#8b5cf6',
+        chartType: 'curved' as const,
+        dataPreset: 'correlation-data' as const,
+      },
+    ],
   },
   trading: {
     title: 'Active Trading',
@@ -93,19 +204,40 @@ const DASHBOARD_CONFIGS = {
     accentColor: '#ea580c',
     icon: Zap,
     quickActions: [
-      { id: 'trading-signals', title: 'Trading Signals', icon: Zap, color: '#f97316', chartType: 'line' as const, dataPreset: 'trading-signals' as const },
-      { id: 'order-flow', title: 'Order Flow', icon: BarChart2, color: '#10b981', chartType: 'area' as const, dataPreset: 'order-flow' as const },
-      { id: 'pnl-analysis', title: 'P&L Analysis', icon: TrendingUp, color: '#3b82f6', chartType: 'curved' as const, dataPreset: 'pnl-data' as const }
-    ]
-  }
+      {
+        id: 'trading-signals',
+        title: 'Trading Signals',
+        icon: Zap,
+        color: '#f97316',
+        chartType: 'line' as const,
+        dataPreset: 'trading-signals' as const,
+      },
+      {
+        id: 'order-flow',
+        title: 'Order Flow',
+        icon: BarChart2,
+        color: '#10b981',
+        chartType: 'area' as const,
+        dataPreset: 'order-flow' as const,
+      },
+      {
+        id: 'pnl-analysis',
+        title: 'P&L Analysis',
+        icon: TrendingUp,
+        color: '#3b82f6',
+        chartType: 'curved' as const,
+        dataPreset: 'pnl-data' as const,
+      },
+    ],
+  },
 };
 
 /**
  * UnifiedDashboard Component
- * 
+ *
  * A single, highly customizable dashboard component that replaces all individual
  * dashboard types (Stocks, Portfolio, Watchlist, Analytics, Trading).
- * 
+ *
  * Features:
  * - Theme-based customization using dashboard type
  * - Full widget management and customization
@@ -134,7 +266,7 @@ const UnifiedDashboard: React.FC<UnifiedDashboardProps> = ({ config }) => {
   // Load widgets from local storage when component mounts or dashboard changes
   useEffect(() => {
     let isMounted = true;
-    
+
     const loadDashboardWidgets = async () => {
       try {
         const savedWidgets = await widgetStorage.loadWidgets(config.id);
@@ -142,16 +274,12 @@ const UnifiedDashboard: React.FC<UnifiedDashboardProps> = ({ config }) => {
           if (savedWidgets.length > 0) {
             setWidgets(savedWidgets);
             if (__DEV__) {
-
               console.log(`✅ Loaded ${savedWidgets.length} widgets for ${config.name} dashboard`);
-
             }
           } else {
             setWidgets([]);
             if (__DEV__) {
-
               console.log(`📝 No widgets found for ${config.name} dashboard`);
-
             }
           }
         }
@@ -170,9 +298,7 @@ const UnifiedDashboard: React.FC<UnifiedDashboardProps> = ({ config }) => {
     return () => {
       isMounted = false;
       if (__DEV__) {
-
         console.log(`🧹 Cleaning up widget state for dashboard: ${config.name}`);
-
       }
     };
   }, [config.id, config.name]);
@@ -181,15 +307,15 @@ const UnifiedDashboard: React.FC<UnifiedDashboardProps> = ({ config }) => {
   useEffect(() => {
     if (previousDashboardId && previousDashboardId !== config.id) {
       if (__DEV__) {
-
-        console.log(`🔄 Dashboard changed from ${previousDashboardId} to ${config.id} - resetting widget state`);
-
+        console.log(
+          `🔄 Dashboard changed from ${previousDashboardId} to ${config.id} - resetting widget state`
+        );
       }
-      
+
       setWidgets([]);
       setShowAllWidgets(false);
       setShowWidgetManager(false);
-      
+
       if (Platform.OS === 'android' || Platform.OS === 'ios') {
         LayoutAnimation.configureNext({
           duration: 200,
@@ -214,11 +340,9 @@ const UnifiedDashboard: React.FC<UnifiedDashboardProps> = ({ config }) => {
       }
 
       if (__DEV__) {
-
-
-        console.log(`🔧 Adding widget "${newWidgetData.title}" to dashboard "${config.name}" (${config.id})`);
-
-
+        console.log(
+          `🔧 Adding widget "${newWidgetData.title}" to dashboard "${config.name}" (${config.id})`
+        );
       }
 
       const newWidget: Widget = {
@@ -227,20 +351,20 @@ const UnifiedDashboard: React.FC<UnifiedDashboardProps> = ({ config }) => {
         createdAt: new Date(),
         updatedAt: new Date(),
       };
-      
+
       const updatedWidgets = [...widgets, newWidget];
-      
+
       await widgetStorage.saveWidgets(config.id, updatedWidgets);
       if (__DEV__) {
-
         console.log(`✅ Widget "${newWidget.title}" saved to ${config.name} dashboard`);
-
       }
-      
+
       setWidgets(updatedWidgets);
     } catch (error) {
       console.error('❌ Error adding widget:', error);
-      alert(`Failed to add widget "${newWidgetData?.title || 'Unknown'}". Please try refreshing the app.`);
+      alert(
+        `Failed to add widget "${newWidgetData?.title || 'Unknown'}". Please try refreshing the app.`
+      );
     }
   };
 
@@ -258,24 +382,18 @@ const UnifiedDashboard: React.FC<UnifiedDashboardProps> = ({ config }) => {
       }
 
       if (__DEV__) {
-
-
         console.log(`🗑️ Deleting widget "${widgetToDelete.title}" from dashboard "${config.name}"`);
-
-
       }
 
-      const newWidgets = widgets.filter((w) => w.id !== widgetId);
-      
+      const newWidgets = widgets.filter(w => w.id !== widgetId);
+
       await widgetStorage.saveWidgets(config.id, newWidgets);
       if (__DEV__) {
-
         console.log(`✅ Widget "${widgetToDelete.title}" deleted from ${config.name} dashboard`);
-
       }
-      
+
       setWidgets(newWidgets);
-      
+
       if (newWidgets.length <= 2) {
         setShowAllWidgets(false);
       }
@@ -293,27 +411,19 @@ const UnifiedDashboard: React.FC<UnifiedDashboardProps> = ({ config }) => {
       }
 
       if (__DEV__) {
-
-
         console.log(`🔄 Reordering ${data.length} widgets in dashboard "${config.name}"`);
-
-
       }
-      
+
       await widgetStorage.saveWidgets(config.id, data);
       if (__DEV__) {
-
         console.log(`✅ Widget order saved for ${config.name} dashboard`);
-
       }
-      
+
       setWidgets(data);
     } catch (error) {
       console.error('❌ Error saving widget order:', error);
       if (__DEV__) {
-
         console.log('🔄 Reverting widget order due to save failure');
-
       }
     }
   };
@@ -323,7 +433,7 @@ const UnifiedDashboard: React.FC<UnifiedDashboardProps> = ({ config }) => {
       duration: 300,
       create: { type: 'easeInEaseOut', property: 'opacity' },
       update: { type: 'easeInEaseOut' },
-      delete: { type: 'easeInEaseOut', property: 'opacity' }
+      delete: { type: 'easeInEaseOut', property: 'opacity' },
     });
     setShowAllWidgets(!showAllWidgets);
   };
@@ -342,27 +452,21 @@ const UnifiedDashboard: React.FC<UnifiedDashboardProps> = ({ config }) => {
       }
 
       if (__DEV__) {
-
-
         console.log(`🔧 Updating widget "${existingWidget.title}" in dashboard "${config.name}"`);
-
-
       }
 
-      const updatedWidgets = widgets.map((widget) =>
-        widget.id === widgetId
-          ? { ...widget, ...updates, updatedAt: new Date() }
-          : widget
+      const updatedWidgets = widgets.map(widget =>
+        widget.id === widgetId ? { ...widget, ...updates, updatedAt: new Date() } : widget
       );
-      
+
       await widgetStorage.saveWidgets(config.id, updatedWidgets);
       const updatedWidget = updatedWidgets.find(w => w.id === widgetId);
       if (__DEV__) {
-
-        console.log(`✅ Widget "${updatedWidget?.title || widgetId}" updated in ${config.name} dashboard`);
-
+        console.log(
+          `✅ Widget "${updatedWidget?.title || widgetId}" updated in ${config.name} dashboard`
+        );
       }
-      
+
       setWidgets(updatedWidgets);
     } catch (error) {
       console.error('❌ Error updating widget:', error);
@@ -370,7 +474,7 @@ const UnifiedDashboard: React.FC<UnifiedDashboardProps> = ({ config }) => {
     }
   };
 
-  const handleQuickAddWidget = async (action: typeof dashboardConfig.quickActions[0]) => {
+  const handleQuickAddWidget = async (action: (typeof dashboardConfig.quickActions)[0]) => {
     const template = CHART_TEMPLATES.find(t => t.type === action.chartType);
     if (!template) return;
 
@@ -382,20 +486,20 @@ const UnifiedDashboard: React.FC<UnifiedDashboardProps> = ({ config }) => {
       position: { row: 0, col: 0 },
       size: { width: 1, height: 1 },
     };
-    
+
     await handleAddWidget(newWidgetData);
   };
 
   const getWidgetListData = () => {
     const widgetsToShow = showAllWidgets ? widgets : widgets.slice(0, 2);
-    return widgetsToShow.map((widget) => ({ ...widget }));
+    return widgetsToShow.map(widget => ({ ...widget }));
   };
 
   const renderWidgetItem = ({ item, drag, isActive }: RenderItemParams<any>) => {
     return (
       <TouchableOpacity
         className="mb-4"
-        style={{ 
+        style={{
           marginHorizontal: 20,
           opacity: isActive ? 0.9 : 1,
           transform: [{ scale: isActive ? 1.02 : 1 }],
@@ -409,11 +513,7 @@ const UnifiedDashboard: React.FC<UnifiedDashboardProps> = ({ config }) => {
         delayLongPress={200}
         activeOpacity={0.98}
       >
-        <DashboardWidget
-          widget={item}
-          compact={true}
-          onDelete={handleDeleteWidget}
-        />
+        <DashboardWidget widget={item} compact={true} onDelete={handleDeleteWidget} />
       </TouchableOpacity>
     );
   };
@@ -434,9 +534,9 @@ const UnifiedDashboard: React.FC<UnifiedDashboardProps> = ({ config }) => {
             <TouchableOpacity
               onPress={() => setShowWidgetManager(true)}
               className="px-3 py-1 rounded-full border"
-              style={{ 
+              style={{
                 backgroundColor: `${dashboardConfig.primaryColor}20`,
-                borderColor: dashboardConfig.primaryColor 
+                borderColor: dashboardConfig.primaryColor,
               }}
               activeOpacity={0.7}
             >
@@ -499,7 +599,10 @@ const UnifiedDashboard: React.FC<UnifiedDashboardProps> = ({ config }) => {
                 activeOpacity={0.7}
               >
                 <IconComponent width={24} height={24} stroke={action.color} />
-                <Text className="font-semibold mt-2 text-center text-xs" style={{ color: action.color }}>
+                <Text
+                  className="font-semibold mt-2 text-center text-xs"
+                  style={{ color: action.color }}
+                >
                   {action.title}
                 </Text>
               </TouchableOpacity>
@@ -576,7 +679,7 @@ const UnifiedDashboard: React.FC<UnifiedDashboardProps> = ({ config }) => {
       <DraggableFlatList
         data={widgetListData}
         onDragEnd={handleDragEnd}
-        keyExtractor={(item) => item.id}
+        keyExtractor={item => item.id}
         renderItem={renderWidgetItem}
         ListHeaderComponent={renderListHeader}
         ListFooterComponent={renderListFooter}

@@ -1,6 +1,6 @@
 {
   "name": "lattice-mobile",
-  "version": "1.1.6",
+  "version": "1.1.8",
   "main": "index.ts",
   "scripts": {
     "start": "expo start",
@@ -49,10 +49,10 @@
     "@babel/core": "^7.25.2",
     "@types/react": "~19.0.10",
     "typescript": "~5.8.3",
-    "@expo/eslint-config-universe": "^14.0.0",
-    "@typescript-eslint/eslint-plugin": "^8.19.0",
-    "@typescript-eslint/parser": "^8.19.0",
-    "eslint": "^9.19.0",
+    "eslint-config-universe": "^15.0.3",
+    "@typescript-eslint/eslint-plugin": "^7.18.0",
+    "@typescript-eslint/parser": "^7.18.0",
+    "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-prettier": "^5.2.1",

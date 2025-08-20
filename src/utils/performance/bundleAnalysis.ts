@@ -29,7 +29,7 @@ export class BundleAnalyzer {
   constructor(config: Partial<BundleAnalysisConfig> = {}) {
     this.config = { ...defaultConfig, ...config };
     this.startTime = Date.now();
-    
+
     if (this.config.enableLogging) {
       this.initializeAnalysis();
     }
@@ -39,13 +39,9 @@ export class BundleAnalyzer {
     if (!__DEV__) return;
 
     if (__DEV__) {
-
-
       console.log('📦 Bundle Analysis initialized');
-
-
     }
-    
+
     if (this.config.monitorMemoryUsage) {
       this.startMemoryMonitoring();
     }
@@ -56,7 +52,7 @@ export class BundleAnalyzer {
       if ('performance' in window && 'memory' in (performance as any)) {
         const memory = (performance as any).memory;
         const usage = Math.round(memory.usedJSHeapSize / 1024 / 1024);
-        
+
         this.memorySnapshots.push({
           timestamp: Date.now(),
           usage,
@@ -91,15 +87,11 @@ export class BundleAnalyzer {
     return () => {
       const endTime = performance.now();
       const loadTime = endTime - startTime;
-      
+
       if (__DEV__) {
-
-      
         console.log(`📦 Chunk "${chunkName}" loaded in ${loadTime.toFixed(2)}ms`);
-
-      
       }
-      
+
       if (loadTime > 1000) {
         console.warn(`⚠️ Slow chunk loading detected: ${chunkName} (${loadTime.toFixed(2)}ms)`);
       }
@@ -110,7 +102,7 @@ export class BundleAnalyzer {
   generateReport(): BundleReport {
     const currentTime = Date.now();
     const totalTime = currentTime - this.startTime;
-    
+
     const report: BundleReport = {
       timestamp: new Date().toISOString(),
       totalAnalysisTime: totalTime,
@@ -122,24 +114,16 @@ export class BundleAnalyzer {
     if (this.config.enableLogging) {
       console.group('📊 Bundle Analysis Report');
       if (__DEV__) {
-
         console.log('Total Analysis Time:', `${totalTime}ms`);
-
       }
       if (__DEV__) {
-
         console.log('Chunk Load Times:', report.chunkLoadTimes);
-
       }
       if (__DEV__) {
-
         console.log('Memory Usage:', report.memoryUsage);
-
       }
       if (__DEV__) {
-
         console.log('Recommendations:', report.recommendations);
-
       }
       console.groupEnd();
     }
@@ -192,7 +176,9 @@ export class BundleAnalyzer {
 
     // Memory-based recommendations
     if (memoryStats.peak > this.config.reportThreshold) {
-      recommendations.push(`Consider lazy loading more components (peak usage: ${memoryStats.peak}MB)`);
+      recommendations.push(
+        `Consider lazy loading more components (peak usage: ${memoryStats.peak}MB)`
+      );
     }
 
     if (memoryStats.trend === 'increasing') {
@@ -200,11 +186,14 @@ export class BundleAnalyzer {
     }
 
     // Chunk loading recommendations
-    const slowChunks = Array.from(this.chunkLoadTimes.entries())
-      .filter(([_, time]) => (performance.now() - time) > 1000);
+    const slowChunks = Array.from(this.chunkLoadTimes.entries()).filter(
+      ([_, time]) => performance.now() - time > 1000
+    );
 
     if (slowChunks.length > 0) {
-      recommendations.push(`Optimize slow-loading chunks: ${slowChunks.map(([name]) => name).join(', ')}`);
+      recommendations.push(
+        `Optimize slow-loading chunks: ${slowChunks.map(([name]) => name).join(', ')}`
+      );
     }
 
     // General recommendations
@@ -243,15 +232,18 @@ let globalAnalyzer: BundleAnalyzer | null = null;
 // Initialize global analyzer
 export const initializeBundleAnalysis = (config?: Partial<BundleAnalysisConfig>) => {
   if (!__DEV__) return;
-  
+
   globalAnalyzer = new BundleAnalyzer(config);
-  
+
   // Auto-generate report every 5 minutes in development
-  setInterval(() => {
-    if (globalAnalyzer) {
-      globalAnalyzer.generateReport();
-    }
-  }, 5 * 60 * 1000);
+  setInterval(
+    () => {
+      if (globalAnalyzer) {
+        globalAnalyzer.generateReport();
+      }
+    },
+    5 * 60 * 1000
+  );
 };
 
 // Get global analyzer instance

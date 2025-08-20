@@ -20,15 +20,20 @@ export const useMountedRef = () => {
 };
 
 // Safe state setter that checks if component is mounted
-export const useSafeState = <T>(initialState: T): [T, (newState: T | ((prevState: T) => T)) => void] => {
+export const useSafeState = <T>(
+  initialState: T
+): [T, (newState: T | ((prevState: T) => T)) => void] => {
   const [state, setState] = React.useState<T>(initialState);
   const mountedRef = useMountedRef();
 
-  const safeSetState = useCallback((newState: T | ((prevState: T) => T)) => {
-    if (mountedRef.current) {
-      setState(newState);
-    }
-  }, [mountedRef]);
+  const safeSetState = useCallback(
+    (newState: T | ((prevState: T) => T)) => {
+      if (mountedRef.current) {
+        setState(newState);
+      }
+    },
+    [mountedRef]
+  );
 
   return [state, safeSetState];
 };
@@ -37,17 +42,20 @@ export const useSafeState = <T>(initialState: T): [T, (newState: T | ((prevState
 export const useSafeAsync = () => {
   const mountedRef = useMountedRef();
 
-  return useCallback(async <T>(asyncOperation: () => Promise<T>): Promise<T | null> => {
-    try {
-      const result = await asyncOperation();
-      return mountedRef.current ? result : null;
-    } catch (error) {
-      if (mountedRef.current) {
-        throw error;
+  return useCallback(
+    async <T>(asyncOperation: () => Promise<T>): Promise<T | null> => {
+      try {
+        const result = await asyncOperation();
+        return mountedRef.current ? result : null;
+      } catch (error) {
+        if (mountedRef.current) {
+          throw error;
+        }
+        return null;
       }
-      return null;
-    }
-  }, [mountedRef]);
+    },
+    [mountedRef]
+  );
 };
 
 // Hook for managing subscriptions with automatic cleanup
@@ -192,7 +200,7 @@ export const useFetch = <T>(
   }, [url, options, safeAsync, setData, setLoading, setError, mountedRef]);
 
   const refetch = useCallback(() => {
-    fetchData().catch((err) => {
+    fetchData().catch(err => {
       if (mountedRef.current) {
         setError(err);
         setLoading(false);
@@ -214,15 +222,11 @@ export const memoryLeakDetection = {
     useEffect(() => {
       if (__DEV__) {
         if (__DEV__) {
-
           console.log(`🟢 ${componentName} mounted`);
-
         }
         return () => {
           if (__DEV__) {
-
             console.log(`🔴 ${componentName} unmounted`);
-
           }
         };
       }
@@ -231,18 +235,21 @@ export const memoryLeakDetection = {
 
   // Monitor memory usage (development only)
   useMemoryMonitor: (componentName: string, checkInterval: number = 5000) => {
-    useSafeInterval(() => {
-      if (__DEV__ && 'performance' in window && 'memory' in (performance as any)) {
-        const memory = (performance as any).memory;
-        if (memory.usedJSHeapSize > memory.jsHeapSizeLimit * 0.8) {
-          console.warn(`⚠️ High memory usage detected in ${componentName}:`, {
-            used: Math.round(memory.usedJSHeapSize / 1024 / 1024) + 'MB',
-            total: Math.round(memory.totalJSHeapSize / 1024 / 1024) + 'MB',
-            limit: Math.round(memory.jsHeapSizeLimit / 1024 / 1024) + 'MB',
-          });
+    useSafeInterval(
+      () => {
+        if (__DEV__ && 'performance' in window && 'memory' in (performance as any)) {
+          const memory = (performance as any).memory;
+          if (memory.usedJSHeapSize > memory.jsHeapSizeLimit * 0.8) {
+            console.warn(`⚠️ High memory usage detected in ${componentName}:`, {
+              used: Math.round(memory.usedJSHeapSize / 1024 / 1024) + 'MB',
+              total: Math.round(memory.totalJSHeapSize / 1024 / 1024) + 'MB',
+              limit: Math.round(memory.jsHeapSizeLimit / 1024 / 1024) + 'MB',
+            });
+          }
         }
-      }
-    }, __DEV__ ? checkInterval : null);
+      },
+      __DEV__ ? checkInterval : null
+    );
   },
 
   // Check for potential memory leaks
@@ -253,15 +260,17 @@ export const memoryLeakDetection = {
     useEffect(() => {
       if (__DEV__) {
         mountTimeRef.current = Date.now();
-        
+
         return () => {
           const unmountTime = Date.now();
           const lifespan = unmountTime - (mountTimeRef.current || unmountTime);
-          
+
           if (cleanupFunctionsRef.current.length === 0 && lifespan > 1000) {
-            console.warn(`⚠️ Potential memory leak in ${componentName}: No cleanup functions registered for long-lived component (${lifespan}ms)`);
+            console.warn(
+              `⚠️ Potential memory leak in ${componentName}: No cleanup functions registered for long-lived component (${lifespan}ms)`
+            );
           }
-          
+
           // Execute all cleanup functions
           cleanupFunctionsRef.current.forEach(cleanup => cleanup());
         };

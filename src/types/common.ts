@@ -1,6 +1,6 @@
 /**
  * Common Types and Interfaces
- * 
+ *
  * Consolidated common interfaces used across multiple modules
  * to reduce duplication and improve maintainability.
  */

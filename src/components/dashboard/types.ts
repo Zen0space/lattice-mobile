@@ -29,12 +29,12 @@ export interface Widget {
   };
 }
 
-export type DashboardType = 
-  | 'overview' 
-  | 'stocks' 
-  | 'portfolio' 
-  | 'watchlist' 
-  | 'analytics' 
+export type DashboardType =
+  | 'overview'
+  | 'stocks'
+  | 'portfolio'
+  | 'watchlist'
+  | 'analytics'
   | 'trading';
 
 export interface DashboardSettings {

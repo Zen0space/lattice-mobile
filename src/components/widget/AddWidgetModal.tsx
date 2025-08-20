@@ -1,12 +1,5 @@
 import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  Modal,
-  ScrollView,
-  TextInput,
-} from 'react-native';
+import { View, Text, TouchableOpacity, Modal, ScrollView, TextInput } from 'react-native';
 import { X, Plus } from 'react-native-feather';
 import { CHART_TEMPLATES, CHART_DATA_PRESETS, createChartConfig } from './ChartTemplates';
 import { ChartTemplate, Widget } from './types';
@@ -17,13 +10,10 @@ interface AddWidgetModalProps {
   onAddWidget: (widget: Omit<Widget, 'id' | 'createdAt' | 'updatedAt'>) => void;
 }
 
-const AddWidgetModal: React.FC<AddWidgetModalProps> = ({
-  visible,
-  onClose,
-  onAddWidget,
-}) => {
+const AddWidgetModal: React.FC<AddWidgetModalProps> = ({ visible, onClose, onAddWidget }) => {
   const [selectedTemplate, setSelectedTemplate] = useState<ChartTemplate | null>(null);
-  const [selectedDataPreset, setSelectedDataPreset] = useState<keyof typeof CHART_DATA_PRESETS>('random');
+  const [selectedDataPreset, setSelectedDataPreset] =
+    useState<keyof typeof CHART_DATA_PRESETS>('random');
   const [widgetTitle, setWidgetTitle] = useState('');
   const [step, setStep] = useState<'template' | 'data' | 'customize'>('template');
 
@@ -50,7 +40,7 @@ const AddWidgetModal: React.FC<AddWidgetModalProps> = ({
     if (!selectedTemplate) return;
 
     const config = createChartConfig(selectedTemplate, selectedDataPreset, widgetTitle);
-    
+
     const newWidget: Omit<Widget, 'id' | 'createdAt' | 'updatedAt'> = {
       type: 'chart',
       title: widgetTitle,
@@ -67,9 +57,9 @@ const AddWidgetModal: React.FC<AddWidgetModalProps> = ({
     <View>
       <Text className="text-xl font-bold text-gray-900 mb-2">Choose Chart Type</Text>
       <Text className="text-gray-600 mb-6">Select the type of chart you want to create</Text>
-      
+
       <ScrollView showsVerticalScrollIndicator={false}>
-        {CHART_TEMPLATES.map((template) => (
+        {CHART_TEMPLATES.map(template => (
           <TouchableOpacity
             key={template.type}
             onPress={() => handleTemplateSelect(template)}
@@ -81,12 +71,8 @@ const AddWidgetModal: React.FC<AddWidgetModalProps> = ({
                 <Text className="text-2xl">{template.icon}</Text>
               </View>
               <View className="flex-1">
-                <Text className="text-lg font-semibold text-gray-900 mb-1">
-                  {template.name}
-                </Text>
-                <Text className="text-sm text-gray-600">
-                  {template.description}
-                </Text>
+                <Text className="text-lg font-semibold text-gray-900 mb-1">{template.name}</Text>
+                <Text className="text-sm text-gray-600">{template.description}</Text>
               </View>
             </View>
           </TouchableOpacity>
@@ -99,7 +85,7 @@ const AddWidgetModal: React.FC<AddWidgetModalProps> = ({
     <View>
       <Text className="text-xl font-bold text-gray-900 mb-2">Choose Data Type</Text>
       <Text className="text-gray-600 mb-6">Select the type of data for your chart</Text>
-      
+
       <ScrollView showsVerticalScrollIndicator={false}>
         {Object.entries(CHART_DATA_PRESETS).map(([key, preset]) => (
           <TouchableOpacity
@@ -112,12 +98,8 @@ const AddWidgetModal: React.FC<AddWidgetModalProps> = ({
             }`}
             activeOpacity={0.7}
           >
-            <Text className="text-lg font-semibold text-gray-900 mb-1">
-              {preset.name}
-            </Text>
-            <Text className="text-sm text-gray-600">
-              {preset.description}
-            </Text>
+            <Text className="text-lg font-semibold text-gray-900 mb-1">{preset.name}</Text>
+            <Text className="text-sm text-gray-600">{preset.description}</Text>
           </TouchableOpacity>
         ))}
       </ScrollView>
@@ -128,7 +110,7 @@ const AddWidgetModal: React.FC<AddWidgetModalProps> = ({
     <View>
       <Text className="text-xl font-bold text-gray-900 mb-2">Customize Widget</Text>
       <Text className="text-gray-600 mb-6">Give your widget a name and finalize settings</Text>
-      
+
       <View className="mb-6">
         <Text className="text-sm font-medium text-gray-700 mb-2">Widget Title</Text>
         <TextInput
@@ -239,9 +221,7 @@ const AddWidgetModal: React.FC<AddWidgetModalProps> = ({
         </ScrollView>
 
         {/* Footer */}
-        <View className="p-4 bg-white">
-          {renderFooter()}
-        </View>
+        <View className="p-4 bg-white">{renderFooter()}</View>
       </View>
     </Modal>
   );

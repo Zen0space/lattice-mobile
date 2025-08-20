@@ -1,20 +1,8 @@
 // ESLint configuration for React Native + Expo + TypeScript (2025 Best Practices)
 module.exports = {
   root: true,
-  extends: [
-    'expo',
-    '@expo/eslint-config-universe',
-    '@expo/eslint-config-universe/native',
-    '@expo/eslint-config-universe/shared/typescript-analysis',
-    'prettier',
-  ],
-  plugins: [
-    'react',
-    'react-native',
-    'react-hooks',
-    '@typescript-eslint',
-    'prettier',
-  ],
+  extends: ['universe', 'universe/native', 'universe/shared/typescript-analysis', 'prettier'],
+  plugins: ['react', 'react-native', 'react-hooks', '@typescript-eslint', 'prettier'],
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaFeatures: {
@@ -38,32 +26,35 @@ module.exports = {
   rules: {
     // 2025 Best Practices Rules
     'prettier/prettier': 'error',
-    
+
     // React Rules
     'react/prop-types': 'off', // Using TypeScript for prop validation
     'react/react-in-jsx-scope': 'off', // Not needed in React 17+
     'react/display-name': 'warn',
     'react-hooks/rules-of-hooks': 'error',
     'react-hooks/exhaustive-deps': 'warn',
-    
+
     // React Native Rules
     'react-native/no-unused-styles': 'warn',
     'react-native/split-platform-components': 'warn',
     'react-native/no-inline-styles': 'warn',
     'react-native/no-color-literals': 'warn',
     'react-native/no-raw-text': 'off', // Allow raw text for flexibility
-    
+
     // TypeScript Rules
-    '@typescript-eslint/no-unused-vars': ['error', { 
-      argsIgnorePattern: '^_',
-      varsIgnorePattern: '^_',
-      caughtErrorsIgnorePattern: '^_',
-    }],
+    '@typescript-eslint/no-unused-vars': [
+      'error',
+      {
+        argsIgnorePattern: '^_',
+        varsIgnorePattern: '^_',
+        caughtErrorsIgnorePattern: '^_',
+      },
+    ],
     '@typescript-eslint/no-explicit-any': 'warn',
     '@typescript-eslint/prefer-nullish-coalescing': 'warn',
     '@typescript-eslint/prefer-optional-chain': 'warn',
     '@typescript-eslint/no-non-null-assertion': 'warn',
-    
+
     // General Code Quality
     'no-console': 'off', // Allow console logs for development
     'no-debugger': 'error',
@@ -73,19 +64,12 @@ module.exports = {
     'no-var': 'error',
     'object-shorthand': 'error',
     'prefer-template': 'error',
-    
+
     // Import Rules
     'import/order': [
       'error',
       {
-        groups: [
-          'builtin',
-          'external',
-          'internal',
-          'parent',
-          'sibling',
-          'index',
-        ],
+        groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index'],
         'newlines-between': 'always',
         alphabetize: {
           order: 'asc',
@@ -95,12 +79,12 @@ module.exports = {
     ],
     'import/no-duplicates': 'error',
     'import/no-unused-modules': 'warn',
-    
+
     // Performance Rules
     'react/jsx-no-bind': 'warn',
     'react/jsx-no-leaked-render': 'error',
     'react/jsx-key': 'error',
-    
+
     // Accessibility Rules
     'react-native/no-single-element-style-arrays': 'warn',
   },

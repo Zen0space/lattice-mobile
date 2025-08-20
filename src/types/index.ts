@@ -1,6 +1,6 @@
 /**
  * Centralized Type Exports
- * 
+ *
  * Main entry point for all shared types and interfaces.
  * Import from here to get access to common types across the application.
  */

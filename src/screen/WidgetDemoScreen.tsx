@@ -1,8 +1,5 @@
 import React, { useState } from 'react';
-import {
-  View,
-  SafeAreaView,
-} from 'react-native';
+import { View, SafeAreaView } from 'react-native';
 import { WidgetManager, Widget, createSampleWidgets } from '../components/widget';
 
 const WidgetDemoScreen: React.FC = () => {
@@ -15,19 +12,17 @@ const WidgetDemoScreen: React.FC = () => {
       createdAt: new Date(),
       updatedAt: new Date(),
     };
-    setWidgets((prev) => [...prev, newWidget]);
+    setWidgets(prev => [...prev, newWidget]);
   };
 
   const handleDeleteWidget = (widgetId: string) => {
-    setWidgets((prev) => prev.filter((w) => w.id !== widgetId));
+    setWidgets(prev => prev.filter(w => w.id !== widgetId));
   };
 
   const handleUpdateWidget = (widgetId: string, updates: Partial<Widget>) => {
-    setWidgets((prev) =>
-      prev.map((widget) =>
-        widget.id === widgetId
-          ? { ...widget, ...updates, updatedAt: new Date() }
-          : widget
+    setWidgets(prev =>
+      prev.map(widget =>
+        widget.id === widgetId ? { ...widget, ...updates, updatedAt: new Date() } : widget
       )
     );
   };

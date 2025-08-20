@@ -2,7 +2,7 @@ import { DashboardPlugin, DashboardPluginProps } from '../DashboardRenderer';
 
 /**
  * Dashboard Plugin Registry System
- * 
+ *
  * Manages registration, discovery, and lifecycle of dashboard plugins
  * Supports hot-reloading, version management, and dependency resolution
  */
@@ -46,11 +46,7 @@ export class DashboardPluginRegistry {
     }
 
     if (__DEV__) {
-
-
       console.log(`✅ Registered plugin: ${plugin.name} (${plugin.id}) v${plugin.version}`);
-
-
     }
   }
 
@@ -80,11 +76,7 @@ export class DashboardPluginRegistry {
     this.pluginDependencies.delete(pluginId);
 
     if (__DEV__) {
-
-
       console.log(`🗑️ Unregistered plugin: ${plugin.name} (${pluginId})`);
-
-
     }
     return true;
   }
@@ -117,8 +109,8 @@ export class DashboardPluginRegistry {
    * Get plugins compatible with a specific theme
    */
   getPluginsByTheme(theme: 'light' | 'dark'): DashboardPlugin[] {
-    return Array.from(this.plugins.values()).filter(plugin => 
-      !plugin.supportedThemes || plugin.supportedThemes.includes(theme)
+    return Array.from(this.plugins.values()).filter(
+      plugin => !plugin.supportedThemes || plugin.supportedThemes.includes(theme)
     );
   }
 
@@ -127,9 +119,10 @@ export class DashboardPluginRegistry {
    */
   searchPlugins(query: string): DashboardPlugin[] {
     const searchTerm = query.toLowerCase();
-    return Array.from(this.plugins.values()).filter(plugin =>
-      plugin.name.toLowerCase().includes(searchTerm) ||
-      (plugin as any).description?.toLowerCase().includes(searchTerm)
+    return Array.from(this.plugins.values()).filter(
+      plugin =>
+        plugin.name.toLowerCase().includes(searchTerm) ||
+        (plugin as any).description?.toLowerCase().includes(searchTerm)
     );
   }
 
@@ -163,7 +156,7 @@ export class DashboardPluginRegistry {
    */
   hasRequiredData(plugin: DashboardPlugin, availableData: string[]): boolean {
     if (!plugin.requiredData) return true;
-    
+
     return plugin.requiredData.every(dataType => availableData.includes(dataType));
   }
 
@@ -177,7 +170,7 @@ export class DashboardPluginRegistry {
       pluginsByCategory: Object.fromEntries(
         Array.from(this.pluginCategories.entries()).map(([category, plugins]) => [
           category,
-          plugins.length
+          plugins.length,
         ])
       ),
     };
@@ -215,7 +208,7 @@ export const pluginRegistry = DashboardPluginRegistry.getInstance();
  * Decorator for registering plugins
  */
 export function RegisterPlugin(category?: string) {
-  return function(plugin: DashboardPlugin) {
+  return function (plugin: DashboardPlugin) {
     pluginRegistry.register(plugin, category);
     return plugin;
   };
@@ -226,14 +219,15 @@ export function RegisterPlugin(category?: string) {
  */
 export function usePlugins(category?: string, theme?: 'light' | 'dark') {
   if (category && theme) {
-    return pluginRegistry.getPluginsByCategory(category)
+    return pluginRegistry
+      .getPluginsByCategory(category)
       .filter(plugin => !plugin.supportedThemes || plugin.supportedThemes.includes(theme));
   } else if (category) {
     return pluginRegistry.getPluginsByCategory(category);
   } else if (theme) {
     return pluginRegistry.getPluginsByTheme(theme);
   }
-  
+
   return pluginRegistry.getAllPlugins();
 }
 

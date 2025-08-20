@@ -98,7 +98,7 @@ export function createCryptoConfig(
   title: string = 'New Crypto Widget'
 ): CryptoWidgetConfig {
   const preset = CRYPTO_DATA_PRESETS[dataPreset];
-  
+
   return {
     ...template.defaultConfig,
     id: `crypto_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,

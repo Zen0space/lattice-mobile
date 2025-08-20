@@ -1,6 +1,6 @@
 /**
  * Dashboard Plugin System
- * 
+ *
  * Exports all plugin-related functionality including:
  * - Plugin registry for managing plugins
  * - Core plugins that provide essential functionality
@@ -9,7 +9,7 @@
  */
 
 // Registry and utilities
-export { 
+export {
   default as DashboardPluginRegistry,
   pluginRegistry,
   RegisterPlugin,
@@ -17,14 +17,7 @@ export {
 } from './DashboardPluginRegistry';
 
 // Core plugins
-export { 
-  CORE_PLUGINS,
-  registerCorePlugins,
-} from './CorePlugins';
+export { CORE_PLUGINS, registerCorePlugins } from './CorePlugins';
 
 // Re-export plugin types from DashboardRenderer
-export type { 
-  DashboardPlugin, 
-  DashboardPluginProps,
-  DashboardTheme,
-} from '../DashboardRenderer';
+export type { DashboardPlugin, DashboardPluginProps, DashboardTheme } from '../DashboardRenderer';

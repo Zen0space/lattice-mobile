@@ -5,28 +5,28 @@ module.exports = {
   singleQuote: true,
   tabWidth: 2,
   useTabs: false,
-  
+
   // Line length and wrapping
   printWidth: 100,
   proseWrap: 'preserve',
-  
+
   // Trailing commas (ES5 for better git diffs)
   trailingComma: 'es5',
-  
+
   // Brackets and spacing
   bracketSpacing: true,
   bracketSameLine: false,
   arrowParens: 'avoid',
-  
+
   // JSX specific
   jsxSingleQuote: false,
-  
+
   // End of line (auto for cross-platform compatibility)
   endOfLine: 'auto',
-  
+
   // Embedded language formatting
   embeddedLanguageFormatting: 'auto',
-  
+
   // React Native specific overrides
   overrides: [
     {

@@ -19,7 +19,7 @@ export interface SectionHeaderProps {
 /**
  * Standardized section headers component
  * Eliminates duplicate header patterns across dashboard components
- * 
+ *
  * Features:
  * - Consistent spacing and typography
  * - Action button integration
@@ -73,15 +73,17 @@ const SectionHeader: React.FC<SectionHeaderProps> = ({
     <View className={`${styles.spacing} ${centerAlign ? 'items-center' : ''}`}>
       <View className={`flex-row items-center justify-between ${centerAlign ? 'w-full' : ''}`}>
         <View className={`flex-1 ${centerAlign ? 'items-center' : ''}`}>
-          <Text className={`${styles.titleSize} font-bold text-gray-900 ${styles.titleSpacing} ${
-            centerAlign ? 'text-center' : ''
-          }`}>
+          <Text
+            className={`${styles.titleSize} font-bold text-gray-900 ${styles.titleSpacing} ${
+              centerAlign ? 'text-center' : ''
+            }`}
+          >
             {title}
           </Text>
           {subtitle && (
-            <Text className={`${styles.subtitleSize} text-gray-600 ${
-              centerAlign ? 'text-center' : ''
-            }`}>
+            <Text
+              className={`${styles.subtitleSize} text-gray-600 ${centerAlign ? 'text-center' : ''}`}
+            >
               {subtitle}
             </Text>
           )}
@@ -100,9 +102,7 @@ const SectionHeader: React.FC<SectionHeaderProps> = ({
               accessibilityRole="button"
               accessibilityLabel={actionText}
             >
-              <Text className="text-primary font-medium text-sm mr-1">
-                {actionText}
-              </Text>
+              <Text className="text-primary font-medium text-sm mr-1">{actionText}</Text>
               <ActionIcon width={16} height={16} stroke="#3b82f6" />
             </TouchableOpacity>
           )}
@@ -198,7 +198,7 @@ export const AnalyticsHeader: React.FC<{
 );
 
 // Loading skeleton for SectionHeader
-export const SectionHeaderSkeleton: React.FC<{ 
+export const SectionHeaderSkeleton: React.FC<{
   variant?: 'default' | 'large' | 'compact';
   showAction?: boolean;
 }> = ({ variant = 'default', showAction = false }) => {
@@ -214,9 +214,7 @@ export const SectionHeaderSkeleton: React.FC<{
           <View className="w-56 h-4 bg-gray-200 rounded animate-pulse" />
         </View>
 
-        {showAction && (
-          <View className="w-20 h-8 bg-gray-200 rounded-lg animate-pulse" />
-        )}
+        {showAction && <View className="w-20 h-8 bg-gray-200 rounded-lg animate-pulse" />}
       </View>
     </View>
   );

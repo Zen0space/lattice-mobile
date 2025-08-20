@@ -1,11 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  Modal,
-  Animated,
-} from 'react-native';
+import { View, Text, TouchableOpacity, Modal, Animated } from 'react-native';
 import { X } from 'react-native-feather';
 
 interface DeleteConfirmationModalProps {
@@ -19,10 +13,10 @@ interface DeleteConfirmationModalProps {
 
 /**
  * DeleteConfirmationModal Component
- * 
+ *
  * Handles the dashboard deletion confirmation modal with animations.
  * Extracted from DashboardManager.tsx for better separation of concerns.
- * 
+ *
  * Features:
  * - Animated modal presentation
  * - Active dashboard warning system
@@ -97,20 +91,15 @@ const DeleteConfirmationModal: React.FC<DeleteConfirmationModalProps> = ({
   if (!visible) return null;
 
   return (
-    <Modal
-      visible={visible}
-      transparent
-      animationType="none"
-      onRequestClose={handleClose}
-    >
-      <Animated.View 
+    <Modal visible={visible} transparent animationType="none" onRequestClose={handleClose}>
+      <Animated.View
         className="flex-1 items-center justify-center px-4"
         style={{
           backgroundColor: 'rgba(0, 0, 0, 0.5)',
           opacity: modalOpacity,
         }}
       >
-        <Animated.View 
+        <Animated.View
           className="bg-white rounded-2xl p-6 w-full max-w-sm"
           style={{
             transform: [{ scale: modalScale }],
@@ -126,10 +115,10 @@ const DeleteConfirmationModal: React.FC<DeleteConfirmationModalProps> = ({
             <View className="w-16 h-16 bg-red-100 rounded-full items-center justify-center mb-4">
               <X width={32} height={32} stroke="#ef4444" />
             </View>
-            
+
             {/* Title */}
             <Text className="text-xl font-bold text-gray-900 mb-2">Delete Dashboard</Text>
-            
+
             {/* Active Dashboard Warning */}
             {activeDashboardId === dashboardToDelete && (
               <View className="mb-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
@@ -141,15 +130,18 @@ const DeleteConfirmationModal: React.FC<DeleteConfirmationModalProps> = ({
                 </Text>
               </View>
             )}
-            
+
             {/* Widget Count Warning */}
             {dashboardWidgetCount > 0 ? (
               <View className="mb-4">
                 <Text className="text-gray-800 text-center font-semibold mb-2">
-                  ⚠️ This dashboard contains {dashboardWidgetCount} widget{dashboardWidgetCount !== 1 ? 's' : ''}
+                  ⚠️ This dashboard contains {dashboardWidgetCount} widget
+                  {dashboardWidgetCount !== 1 ? 's' : ''}
                 </Text>
                 <Text className="text-gray-600 text-center leading-5 mb-2">
-                  All widgets will be <Text className="font-semibold text-red-600">permanently deleted first</Text>, then the dashboard will be removed.
+                  All widgets will be{' '}
+                  <Text className="font-semibold text-red-600">permanently deleted first</Text>,
+                  then the dashboard will be removed.
                 </Text>
                 <Text className="text-gray-500 text-center text-sm">
                   This action cannot be undone.
@@ -161,7 +153,7 @@ const DeleteConfirmationModal: React.FC<DeleteConfirmationModalProps> = ({
               </Text>
             )}
           </View>
-          
+
           {/* Action Buttons */}
           <View className="flex-row gap-3">
             <TouchableOpacity

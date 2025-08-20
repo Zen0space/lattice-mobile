@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  ScrollView,
-  Dimensions,
-} from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, Dimensions } from 'react-native';
 import { Plus } from 'react-native-feather';
 import { CHART_TEMPLATES, CHART_DATA_PRESETS, createChartConfig } from './ChartTemplates';
 import { CRYPTO_TEMPLATES, CRYPTO_DATA_PRESETS, createCryptoConfig } from './CryptoTemplates';
@@ -28,21 +22,30 @@ const WidgetGallery: React.FC<WidgetGalleryProps> = ({
 }) => {
   const cardWidth = (screenWidth - 48) / 2; // 2 columns with padding
 
-  const handleWidgetSelect = (template: any, dataPreset: string, customTitle?: string, widgetType: 'chart' | 'crypto' = 'chart') => {
+  const handleWidgetSelect = (
+    template: any,
+    dataPreset: string,
+    customTitle?: string,
+    widgetType: 'chart' | 'crypto' = 'chart'
+  ) => {
     let title: string;
     let config: any;
     let type: Widget['type'];
-    
+
     if (widgetType === 'crypto') {
-      title = customTitle || `${template.name} - ${CRYPTO_DATA_PRESETS[dataPreset as keyof typeof CRYPTO_DATA_PRESETS]?.name || 'Default'}`;
+      title =
+        customTitle ||
+        `${template.name} - ${CRYPTO_DATA_PRESETS[dataPreset as keyof typeof CRYPTO_DATA_PRESETS]?.name || 'Default'}`;
       config = createCryptoConfig(template, dataPreset as keyof typeof CRYPTO_DATA_PRESETS, title);
       type = template.type;
     } else {
-      title = customTitle || `${template.name} - ${CHART_DATA_PRESETS[dataPreset as keyof typeof CHART_DATA_PRESETS].name}`;
+      title =
+        customTitle ||
+        `${template.name} - ${CHART_DATA_PRESETS[dataPreset as keyof typeof CHART_DATA_PRESETS].name}`;
       config = createChartConfig(template, dataPreset as keyof typeof CHART_DATA_PRESETS, title);
       type = 'chart';
     }
-    
+
     const newWidget: Omit<Widget, 'id' | 'createdAt' | 'updatedAt'> = {
       type,
       title,
@@ -60,28 +63,28 @@ const WidgetGallery: React.FC<WidgetGalleryProps> = ({
       dataPreset: 'stock-price',
       title: 'Stock Performance',
       description: 'Track stock price movements',
-      color: '#10a37f'
+      color: '#10a37f',
     },
     {
       template: CHART_TEMPLATES.find(t => t.type === 'area'),
       dataPreset: 'revenue',
       title: 'Revenue Growth',
       description: 'Monitor revenue trends',
-      color: '#8b5cf6'
+      color: '#8b5cf6',
     },
     {
       template: CHART_TEMPLATES.find(t => t.type === 'curved'),
       dataPreset: 'user-growth',
       title: 'User Analytics',
       description: 'Analyze user growth patterns',
-      color: '#3b82f6'
+      color: '#3b82f6',
     },
     {
       template: CHART_TEMPLATES.find(t => t.type === 'step'),
       dataPreset: 'user-growth',
       title: 'Step Analysis',
       description: 'Step-by-step data tracking',
-      color: '#06b6d4'
+      color: '#06b6d4',
     },
   ];
 
@@ -91,28 +94,28 @@ const WidgetGallery: React.FC<WidgetGalleryProps> = ({
       dataPreset: 'btc-eth-bnb',
       title: 'Top Crypto Prices',
       description: 'Bitcoin, Ethereum & BNB prices',
-      color: '#f59e0b'
+      color: '#f59e0b',
     },
     {
       template: CRYPTO_TEMPLATES.find(t => t.type === 'crypto-market'),
       dataPreset: 'btc-eth-bnb',
       title: 'Market Overview',
       description: 'Total market cap & volume',
-      color: '#3b82f6'
+      color: '#3b82f6',
     },
     {
       template: CRYPTO_TEMPLATES.find(t => t.type === 'crypto-gainers'),
       dataPreset: 'top-gainers',
       title: 'Top Gainers',
       description: 'Best performing coins',
-      color: '#10b981'
+      color: '#10b981',
     },
     {
       template: CRYPTO_TEMPLATES.find(t => t.type === 'crypto-portfolio'),
       dataPreset: 'btc-eth-bnb',
       title: 'Portfolio Summary',
       description: 'Your crypto holdings',
-      color: '#8b5cf6'
+      color: '#8b5cf6',
     },
   ];
 
@@ -123,12 +126,8 @@ const WidgetGallery: React.FC<WidgetGalleryProps> = ({
       {/* Gallery Header - Only show when not embedded */}
       {showHeader && (
         <View className="px-6 py-4 bg-white border-b border-gray-100">
-          <Text className="text-lg font-semibold text-secondary mb-1">
-            Widget Gallery
-          </Text>
-          <Text className="text-sm text-gray-600">
-            Tap any widget to add it to your dashboard
-          </Text>
+          <Text className="text-lg font-semibold text-secondary mb-1">Widget Gallery</Text>
+          <Text className="text-sm text-gray-600">Tap any widget to add it to your dashboard</Text>
           {isLimitReached && (
             <View className="mt-2 px-3 py-1 bg-amber-50 border border-amber-200 rounded-lg">
               <Text className="text-xs text-amber-700 font-medium">
@@ -140,29 +139,29 @@ const WidgetGallery: React.FC<WidgetGalleryProps> = ({
       )}
 
       {/* Popular Widgets Section */}
-      <ScrollView 
+      <ScrollView
         className="flex-1"
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ 
-          padding: 16, 
-          paddingTop: showHeader ? 16 : 24 // Add more top padding when header is hidden
+        contentContainerStyle={{
+          padding: 16,
+          paddingTop: showHeader ? 16 : 24, // Add more top padding when header is hidden
         }}
       >
         {/* Chart Widgets Section */}
-        <Text className="text-base font-semibold text-gray-900 mb-4 px-2">
-          📈 Chart Widgets
-        </Text>
-        
+        <Text className="text-base font-semibold text-gray-900 mb-4 px-2">📈 Chart Widgets</Text>
+
         <View className="flex-row flex-wrap justify-between mb-6">
           {popularCombinations.map((item, index) => {
             if (!item.template) return null;
-            
+
             return (
               <TouchableOpacity
                 key={index}
-                onPress={() => !isLimitReached && handleWidgetSelect(item.template, item.dataPreset, item.title)}
+                onPress={() =>
+                  !isLimitReached && handleWidgetSelect(item.template, item.dataPreset, item.title)
+                }
                 className={`mb-4 rounded-xl border ${isLimitReached ? 'opacity-50' : ''}`}
-                style={{ 
+                style={{
                   width: cardWidth,
                   backgroundColor: 'white',
                   borderColor: '#e5e7eb',
@@ -176,11 +175,11 @@ const WidgetGallery: React.FC<WidgetGalleryProps> = ({
                 disabled={isLimitReached}
               >
                 {/* Widget Preview */}
-                <View 
+                <View
                   className="h-24 rounded-t-xl items-center justify-center"
                   style={{ backgroundColor: `${item.color}15` }}
                 >
-                  <View 
+                  <View
                     className="w-12 h-12 rounded-full items-center justify-center"
                     style={{ backgroundColor: item.color }}
                   >
@@ -191,7 +190,10 @@ const WidgetGallery: React.FC<WidgetGalleryProps> = ({
                 {/* Widget Info */}
                 <View className="p-4">
                   <View className="flex-row items-center justify-between mb-2">
-                    <Text className="text-sm font-semibold text-gray-900 flex-1 mr-2" numberOfLines={1}>
+                    <Text
+                      className="text-sm font-semibold text-gray-900 flex-1 mr-2"
+                      numberOfLines={1}
+                    >
                       {item.title}
                     </Text>
                     {!isLimitReached && (
@@ -200,13 +202,13 @@ const WidgetGallery: React.FC<WidgetGalleryProps> = ({
                       </View>
                     )}
                   </View>
-                  
+
                   <Text className="text-xs text-gray-600 mb-2" numberOfLines={2}>
                     {item.description}
                   </Text>
-                  
+
                   <View className="flex-row items-center">
-                    <View 
+                    <View
                       className="w-2 h-2 rounded-full mr-2"
                       style={{ backgroundColor: item.color }}
                     />
@@ -221,20 +223,21 @@ const WidgetGallery: React.FC<WidgetGalleryProps> = ({
         </View>
 
         {/* Crypto Widgets Section */}
-        <Text className="text-base font-semibold text-gray-900 mb-4 px-2">
-          💰 Crypto Widgets
-        </Text>
-        
+        <Text className="text-base font-semibold text-gray-900 mb-4 px-2">💰 Crypto Widgets</Text>
+
         <View className="flex-row flex-wrap justify-between mb-6">
           {cryptoCombinations.map((item, index) => {
             if (!item.template) return null;
-            
+
             return (
               <TouchableOpacity
                 key={`crypto-${index}`}
-                onPress={() => !isLimitReached && handleWidgetSelect(item.template, item.dataPreset, item.title, 'crypto')}
+                onPress={() =>
+                  !isLimitReached &&
+                  handleWidgetSelect(item.template, item.dataPreset, item.title, 'crypto')
+                }
                 className={`mb-4 rounded-xl border ${isLimitReached ? 'opacity-50' : ''}`}
-                style={{ 
+                style={{
                   width: cardWidth,
                   backgroundColor: 'white',
                   borderColor: '#e5e7eb',
@@ -248,7 +251,7 @@ const WidgetGallery: React.FC<WidgetGalleryProps> = ({
                 disabled={isLimitReached}
               >
                 {/* Widget Preview */}
-                <View 
+                <View
                   className="h-24 rounded-t-xl items-center justify-center"
                   style={{ backgroundColor: `${item.color}15` }}
                 >
@@ -261,19 +264,19 @@ const WidgetGallery: React.FC<WidgetGalleryProps> = ({
                     </View>
                   )}
                 </View>
-                
+
                 {/* Widget Info */}
                 <View className="p-3">
                   <Text className="font-semibold text-gray-900 mb-1" numberOfLines={1}>
                     {item.title}
                   </Text>
-                  
+
                   <Text className="text-xs text-gray-600 mb-2" numberOfLines={2}>
                     {item.description}
                   </Text>
-                  
+
                   <View className="flex-row items-center">
-                    <View 
+                    <View
                       className="w-2 h-2 rounded-full mr-2"
                       style={{ backgroundColor: item.color }}
                     />
@@ -291,24 +294,20 @@ const WidgetGallery: React.FC<WidgetGalleryProps> = ({
         <Text className="text-base font-semibold text-gray-900 mb-4 mt-6 px-2">
           All Chart Types
         </Text>
-        
+
         <View className="space-y-3">
-          {CHART_TEMPLATES.map((template) => (
+          {CHART_TEMPLATES.map(template => (
             <View key={template.type} className="bg-white rounded-xl border border-gray-200 p-4">
               <View className="flex-row items-center mb-3">
                 <View className="w-10 h-10 bg-gray-100 rounded-lg items-center justify-center mr-3">
                   <Text className="text-lg">{template.icon}</Text>
                 </View>
                 <View className="flex-1">
-                  <Text className="text-base font-semibold text-gray-900">
-                    {template.name}
-                  </Text>
-                  <Text className="text-sm text-gray-600">
-                    {template.description}
-                  </Text>
+                  <Text className="text-base font-semibold text-gray-900">{template.name}</Text>
+                  <Text className="text-sm text-gray-600">{template.description}</Text>
                 </View>
               </View>
-              
+
               {/* Data Preset Options */}
               <View className="flex-row flex-wrap gap-2">
                 {Object.entries(CHART_DATA_PRESETS).map(([key, preset]) => (
@@ -323,16 +322,14 @@ const WidgetGallery: React.FC<WidgetGalleryProps> = ({
                     activeOpacity={isLimitReached ? 1 : 0.7}
                     disabled={isLimitReached}
                   >
-                    <Text className="text-xs font-medium text-gray-700">
-                      {preset.name}
-                    </Text>
+                    <Text className="text-xs font-medium text-gray-700">{preset.name}</Text>
                   </TouchableOpacity>
                 ))}
               </View>
             </View>
           ))}
         </View>
-        
+
         {/* Bottom Spacing */}
         <View className="h-8" />
       </ScrollView>

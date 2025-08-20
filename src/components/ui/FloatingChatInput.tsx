@@ -1,24 +1,21 @@
 import React, { useState, useEffect, useRef } from 'react';
-import {
-  View,
-  TextInput,
-  TouchableOpacity,
-  Text,
-  Platform,
-  Keyboard,
-} from 'react-native';
+import { View, TextInput, TouchableOpacity, Text, Platform, Keyboard } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 interface FloatingChatInputProps {
   onSendMessage: (message: string) => void;
   placeholder?: string;
   bottomSpacing?: number;
-  onLayoutChange?: (layout: { height: number; keyboardHeight: number; totalHeight: number }) => void;
+  onLayoutChange?: (layout: {
+    height: number;
+    keyboardHeight: number;
+    totalHeight: number;
+  }) => void;
 }
 
 const FloatingChatInput: React.FC<FloatingChatInputProps> = ({
   onSendMessage,
-  placeholder = "Type your message...",
+  placeholder = 'Type your message...',
   bottomSpacing = 20,
   onLayoutChange,
 }) => {
@@ -36,11 +33,9 @@ const FloatingChatInput: React.FC<FloatingChatInputProps> = ({
     }
 
     // Official React Native Keyboard API event listeners
-    const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', (event) => {
+    const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', event => {
       if (__DEV__) {
-
         console.log('Keyboard shown - Height:', event.endCoordinates.height);
-
       }
       setIsKeyboardVisible(true);
       setKeyboardHeight(event.endCoordinates.height);
@@ -48,9 +43,7 @@ const FloatingChatInput: React.FC<FloatingChatInputProps> = ({
 
     const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
       if (__DEV__) {
-
         console.log('Keyboard hidden - Returning to original position');
-
       }
       setIsKeyboardVisible(false);
       setKeyboardHeight(0);
@@ -87,12 +80,12 @@ const FloatingChatInput: React.FC<FloatingChatInputProps> = ({
     const inputHeight = 48; // Base input height (min-h-12 = 48px)
     const currentPosition = getInputPosition();
     const totalHeight = inputHeight + currentPosition;
-    
+
     if (onLayoutChange) {
       onLayoutChange({
         height: inputHeight,
         keyboardHeight: keyboardHeight,
-        totalHeight: totalHeight
+        totalHeight: totalHeight,
       });
     }
   };
@@ -103,7 +96,7 @@ const FloatingChatInput: React.FC<FloatingChatInputProps> = ({
   }, [keyboardHeight, isKeyboardVisible, bottomSpacing, insets.bottom]);
 
   return (
-    <View 
+    <View
       className="absolute left-4 right-4 bg-gray-50 rounded-3xl border border-gray-300 flex-row items-center px-4 py-3 min-h-12"
       style={{ bottom: getInputPosition() }}
     >
@@ -122,14 +115,14 @@ const FloatingChatInput: React.FC<FloatingChatInputProps> = ({
       <TouchableOpacity
         className="absolute right-2 w-8 h-8 rounded-full items-center justify-center shadow-md"
         style={{
-          backgroundColor: isValidMessage ? '#10a37f' : '#f3f4f6'
+          backgroundColor: isValidMessage ? '#10a37f' : '#f3f4f6',
         }}
         onPress={handleSend}
         disabled={!isValidMessage}
       >
-        <Text className={`text-base font-semibold ${
-          isValidMessage ? 'text-white' : 'text-gray-400'
-        }`}>
+        <Text
+          className={`text-base font-semibold ${isValidMessage ? 'text-white' : 'text-gray-400'}`}
+        >
           ↑
         </Text>
       </TouchableOpacity>

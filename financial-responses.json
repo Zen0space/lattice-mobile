@@ -10,8 +10,8 @@
       "marketCap": "1.17T",
       "technicalAnalysis": {
         "rsi": 61.4,
-        "support": 350.00,
-        "resistance": 385.00,
+        "support": 350.0,
+        "resistance": 385.0,
         "trend": "bullish"
       },
       "recommendation": {
@@ -42,8 +42,8 @@
       "marketCap": "2.26T",
       "technicalAnalysis": {
         "rsi": 52.8,
-        "support": 110000.00,
-        "resistance": 118000.00,
+        "support": 110000.0,
+        "resistance": 118000.0,
         "trend": "neutral"
       },
       "chartConfig": {
@@ -68,8 +68,8 @@
       "marketCap": "503.2B",
       "technicalAnalysis": {
         "rsi": 64.2,
-        "support": 4000.00,
-        "resistance": 4300.00,
+        "support": 4000.0,
+        "resistance": 4300.0,
         "trend": "bullish"
       },
       "chartConfig": {
@@ -94,8 +94,8 @@
       "marketCap": "3.47T",
       "technicalAnalysis": {
         "rsi": 58.2,
-        "support": 220.00,
-        "resistance": 235.00,
+        "support": 220.0,
+        "resistance": 235.0,
         "trend": "bullish"
       },
       "chartConfig": {
@@ -113,21 +113,21 @@
       "fullResponse": "AAPL $227.85 (+0.64%) • RSI: 58.2 • Trend: Bullish • Support: $220"
     },
     "nvidia": {
-      "symbol": "NVDA", 
+      "symbol": "NVDA",
       "currentPrice": 142.67,
       "changePercent": -2.15,
       "volume": "38.9M",
       "marketCap": "3.51T",
       "technicalAnalysis": {
         "rsi": 48.3,
-        "support": 135.00,
-        "resistance": 150.00,
+        "support": 135.0,
+        "resistance": 150.0,
         "trend": "neutral"
       },
       "chartConfig": {
         "symbol": "NASDAQ:NVDA",
         "theme": "dark",
-        "interval": "D", 
+        "interval": "D",
         "height": 400,
         "studies": ["RSI", "MACD"],
         "showChart": true,

@@ -8,23 +8,23 @@ export interface UIStore {
   showDeleteModal: boolean;
   showWidgetManager: boolean;
   showAllWidgets: boolean;
-  
+
   // Loading states
   isGlobalLoading: boolean;
   loadingOperations: Record<string, boolean>; // operationId -> isLoading
-  
+
   // Error states
   globalError: string | null;
   operationErrors: Record<string, string>; // operationId -> error
-  
+
   // UI state
   activeTab: string;
   sidebarOpen: boolean;
-  
+
   // Data to delete (for confirmation modals)
   dashboardToDelete: string;
   widgetToDelete: string;
-  
+
   // Modal Actions
   openCreateModal: () => void;
   closeCreateModal: () => void;
@@ -33,24 +33,24 @@ export interface UIStore {
   openWidgetManager: () => void;
   closeWidgetManager: () => void;
   toggleAllWidgets: () => void;
-  
+
   // Loading Actions
   setGlobalLoading: (loading: boolean) => void;
   setOperationLoading: (operationId: string, loading: boolean) => void;
   clearOperationLoading: (operationId: string) => void;
   isOperationLoading: (operationId: string) => boolean;
-  
+
   // Error Actions
   setGlobalError: (error: string | null) => void;
   setOperationError: (operationId: string, error: string | null) => void;
   clearOperationError: (operationId: string) => void;
   clearAllErrors: () => void;
-  
+
   // UI Actions
   setActiveTab: (tab: string) => void;
   toggleSidebar: () => void;
   setSidebarOpen: (open: boolean) => void;
-  
+
   // Utility Actions
   resetUI: () => void;
   closeAllModals: () => void;
@@ -59,154 +59,154 @@ export interface UIStore {
 export const useUIStore = create<UIStore>()(
   devtools(
     immer((set, get) => ({
-    // Initial state
-    showCreateModal: false,
-    showDeleteModal: false,
-    showWidgetManager: false,
-    showAllWidgets: false,
-    
-    isGlobalLoading: false,
-    loadingOperations: {},
-    
-    globalError: null,
-    operationErrors: {},
-    
-    activeTab: 'overview',
-    sidebarOpen: false,
-    
-    dashboardToDelete: '',
-    widgetToDelete: '',
+      // Initial state
+      showCreateModal: false,
+      showDeleteModal: false,
+      showWidgetManager: false,
+      showAllWidgets: false,
 
-    // Modal Actions
-    openCreateModal: () =>
-      set((state) => {
-        state.showCreateModal = true;
-      }),
+      isGlobalLoading: false,
+      loadingOperations: {},
 
-    closeCreateModal: () =>
-      set((state) => {
-        state.showCreateModal = false;
-      }),
+      globalError: null,
+      operationErrors: {},
 
-    openDeleteModal: (dashboardId) =>
-      set((state) => {
-        state.showDeleteModal = true;
-        state.dashboardToDelete = dashboardId;
-      }),
+      activeTab: 'overview',
+      sidebarOpen: false,
 
-    closeDeleteModal: () =>
-      set((state) => {
-        state.showDeleteModal = false;
-        state.dashboardToDelete = '';
-      }),
+      dashboardToDelete: '',
+      widgetToDelete: '',
 
-    openWidgetManager: () =>
-      set((state) => {
-        state.showWidgetManager = true;
-      }),
+      // Modal Actions
+      openCreateModal: () =>
+        set(state => {
+          state.showCreateModal = true;
+        }),
 
-    closeWidgetManager: () =>
-      set((state) => {
-        state.showWidgetManager = false;
-      }),
+      closeCreateModal: () =>
+        set(state => {
+          state.showCreateModal = false;
+        }),
 
-    toggleAllWidgets: () =>
-      set((state) => {
-        state.showAllWidgets = !state.showAllWidgets;
-      }),
+      openDeleteModal: dashboardId =>
+        set(state => {
+          state.showDeleteModal = true;
+          state.dashboardToDelete = dashboardId;
+        }),
 
-    // Loading Actions
-    setGlobalLoading: (loading) =>
-      set((state) => {
-        state.isGlobalLoading = loading;
-      }),
+      closeDeleteModal: () =>
+        set(state => {
+          state.showDeleteModal = false;
+          state.dashboardToDelete = '';
+        }),
 
-    setOperationLoading: (operationId, loading) =>
-      set((state) => {
-        if (loading) {
-          state.loadingOperations[operationId] = true;
-        } else {
+      openWidgetManager: () =>
+        set(state => {
+          state.showWidgetManager = true;
+        }),
+
+      closeWidgetManager: () =>
+        set(state => {
+          state.showWidgetManager = false;
+        }),
+
+      toggleAllWidgets: () =>
+        set(state => {
+          state.showAllWidgets = !state.showAllWidgets;
+        }),
+
+      // Loading Actions
+      setGlobalLoading: loading =>
+        set(state => {
+          state.isGlobalLoading = loading;
+        }),
+
+      setOperationLoading: (operationId, loading) =>
+        set(state => {
+          if (loading) {
+            state.loadingOperations[operationId] = true;
+          } else {
+            delete state.loadingOperations[operationId];
+          }
+        }),
+
+      clearOperationLoading: operationId =>
+        set(state => {
           delete state.loadingOperations[operationId];
-        }
-      }),
+        }),
 
-    clearOperationLoading: (operationId) =>
-      set((state) => {
-        delete state.loadingOperations[operationId];
-      }),
+      isOperationLoading: operationId => {
+        const state = get();
+        return state.loadingOperations[operationId] || false;
+      },
 
-    isOperationLoading: (operationId) => {
-      const state = get();
-      return state.loadingOperations[operationId] || false;
-    },
+      // Error Actions
+      setGlobalError: error =>
+        set(state => {
+          state.globalError = error;
+        }),
 
-    // Error Actions
-    setGlobalError: (error) =>
-      set((state) => {
-        state.globalError = error;
-      }),
+      setOperationError: (operationId, error) =>
+        set(state => {
+          if (error) {
+            state.operationErrors[operationId] = error;
+          } else {
+            delete state.operationErrors[operationId];
+          }
+        }),
 
-    setOperationError: (operationId, error) =>
-      set((state) => {
-        if (error) {
-          state.operationErrors[operationId] = error;
-        } else {
+      clearOperationError: operationId =>
+        set(state => {
           delete state.operationErrors[operationId];
-        }
-      }),
+        }),
 
-    clearOperationError: (operationId) =>
-      set((state) => {
-        delete state.operationErrors[operationId];
-      }),
+      clearAllErrors: () =>
+        set(state => {
+          state.globalError = null;
+          state.operationErrors = {};
+        }),
 
-    clearAllErrors: () =>
-      set((state) => {
-        state.globalError = null;
-        state.operationErrors = {};
-      }),
+      // UI Actions
+      setActiveTab: tab =>
+        set(state => {
+          state.activeTab = tab;
+        }),
 
-    // UI Actions
-    setActiveTab: (tab) =>
-      set((state) => {
-        state.activeTab = tab;
-      }),
+      toggleSidebar: () =>
+        set(state => {
+          state.sidebarOpen = !state.sidebarOpen;
+        }),
 
-    toggleSidebar: () =>
-      set((state) => {
-        state.sidebarOpen = !state.sidebarOpen;
-      }),
+      setSidebarOpen: open =>
+        set(state => {
+          state.sidebarOpen = open;
+        }),
 
-    setSidebarOpen: (open) =>
-      set((state) => {
-        state.sidebarOpen = open;
-      }),
+      // Utility Actions
+      resetUI: () =>
+        set(state => {
+          state.showCreateModal = false;
+          state.showDeleteModal = false;
+          state.showWidgetManager = false;
+          state.showAllWidgets = false;
+          state.isGlobalLoading = false;
+          state.loadingOperations = {};
+          state.globalError = null;
+          state.operationErrors = {};
+          state.activeTab = 'overview';
+          state.sidebarOpen = false;
+          state.dashboardToDelete = '';
+          state.widgetToDelete = '';
+        }),
 
-    // Utility Actions
-    resetUI: () =>
-      set((state) => {
-        state.showCreateModal = false;
-        state.showDeleteModal = false;
-        state.showWidgetManager = false;
-        state.showAllWidgets = false;
-        state.isGlobalLoading = false;
-        state.loadingOperations = {};
-        state.globalError = null;
-        state.operationErrors = {};
-        state.activeTab = 'overview';
-        state.sidebarOpen = false;
-        state.dashboardToDelete = '';
-        state.widgetToDelete = '';
-      }),
-
-    closeAllModals: () =>
-      set((state) => {
-        state.showCreateModal = false;
-        state.showDeleteModal = false;
-        state.showWidgetManager = false;
-        state.dashboardToDelete = '';
-        state.widgetToDelete = '';
-      }),
+      closeAllModals: () =>
+        set(state => {
+          state.showCreateModal = false;
+          state.showDeleteModal = false;
+          state.showWidgetManager = false;
+          state.dashboardToDelete = '';
+          state.widgetToDelete = '';
+        }),
     })),
     {
       name: 'UIStore', // DevTools name

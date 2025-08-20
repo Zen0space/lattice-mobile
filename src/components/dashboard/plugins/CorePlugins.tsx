@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, Dimensions } from 'react-native';
-import { 
-  TrendingUp, 
-  TrendingDown, 
-  DollarSign, 
-  Activity, 
-  PieChart, 
+import {
+  TrendingUp,
+  TrendingDown,
+  DollarSign,
+  Activity,
+  PieChart,
   BarChart2,
   Clock,
   Bell,
@@ -20,18 +20,18 @@ const { width } = Dimensions.get('window');
 
 /**
  * Core Dashboard Plugins
- * 
+ *
  * Essential plugins that provide fundamental dashboard functionality
  * These plugins demonstrate the plugin system capabilities and provide
  * commonly needed dashboard components
  */
 
 // Market Overview Plugin
-const MarketOverviewPlugin: React.FC<DashboardPluginProps> = ({ 
-  data, 
-  theme, 
+const MarketOverviewPlugin: React.FC<DashboardPluginProps> = ({
+  data,
+  theme,
   settings,
-  onDataUpdate 
+  onDataUpdate,
 }) => {
   const [marketData, setMarketData] = useState({
     sp500: { value: 4825.23, change: 1.2 },
@@ -41,11 +41,7 @@ const MarketOverviewPlugin: React.FC<DashboardPluginProps> = ({
 
   return (
     <View className="mb-6">
-      <SectionHeader 
-        title="Market Overview"
-        subtitle="Major market indices"
-        variant="compact"
-      />
+      <SectionHeader title="Market Overview" subtitle="Major market indices" variant="compact" />
       <View className="flex-row flex-wrap justify-between gap-3">
         <StatCard
           title="S&P 500"
@@ -77,11 +73,7 @@ const MarketOverviewPlugin: React.FC<DashboardPluginProps> = ({
 };
 
 // News Feed Plugin
-const NewsFeedPlugin: React.FC<DashboardPluginProps> = ({ 
-  data, 
-  theme, 
-  settings 
-}) => {
+const NewsFeedPlugin: React.FC<DashboardPluginProps> = ({ data, theme, settings }) => {
   const [news] = useState([
     {
       id: '1',
@@ -108,7 +100,7 @@ const NewsFeedPlugin: React.FC<DashboardPluginProps> = ({
 
   return (
     <View className="mb-6">
-      <SectionHeader 
+      <SectionHeader
         title="Market News"
         subtitle="Latest financial news"
         showAction
@@ -116,7 +108,7 @@ const NewsFeedPlugin: React.FC<DashboardPluginProps> = ({
         onActionPress={() => console.log('View all news')}
       />
       <View className="space-y-3">
-        {news.map((item) => (
+        {news.map(item => (
           <TouchableOpacity
             key={item.id}
             className="bg-white rounded-lg border border-gray-200 p-4"
@@ -126,9 +118,7 @@ const NewsFeedPlugin: React.FC<DashboardPluginProps> = ({
               <Text className="text-sm font-medium text-blue-600">{item.category}</Text>
               <Text className="text-xs text-gray-500">{item.timestamp}</Text>
             </View>
-            <Text className="text-base font-semibold text-gray-900 mb-1">
-              {item.title}
-            </Text>
+            <Text className="text-base font-semibold text-gray-900 mb-1">{item.title}</Text>
             <Text className="text-sm text-gray-600" numberOfLines={2}>
               {item.summary}
             </Text>
@@ -140,11 +130,7 @@ const NewsFeedPlugin: React.FC<DashboardPluginProps> = ({
 };
 
 // Quick Actions Plugin
-const QuickActionsPlugin: React.FC<DashboardPluginProps> = ({ 
-  config,
-  theme, 
-  settings 
-}) => {
+const QuickActionsPlugin: React.FC<DashboardPluginProps> = ({ config, theme, settings }) => {
   const actions = [
     { id: 'buy', title: 'Buy', icon: TrendingUp, color: '#10b981' },
     { id: 'sell', title: 'Sell', icon: TrendingDown, color: '#ef4444' },
@@ -154,13 +140,9 @@ const QuickActionsPlugin: React.FC<DashboardPluginProps> = ({
 
   return (
     <View className="mb-6">
-      <SectionHeader 
-        title="Quick Actions"
-        subtitle="Common portfolio actions"
-        variant="compact"
-      />
+      <SectionHeader title="Quick Actions" subtitle="Common portfolio actions" variant="compact" />
       <View className="flex-row flex-wrap justify-between gap-3">
-        {actions.map((action) => {
+        {actions.map(action => {
           const IconComponent = action.icon;
           return (
             <TouchableOpacity
@@ -169,7 +151,7 @@ const QuickActionsPlugin: React.FC<DashboardPluginProps> = ({
               style={{ width: (width - 48) / 2 - 6 }}
               onPress={() => console.log(`${action.title} pressed`)}
             >
-              <View 
+              <View
                 className="w-12 h-12 rounded-full items-center justify-center mb-3"
                 style={{ backgroundColor: action.color }}
               >
@@ -185,11 +167,7 @@ const QuickActionsPlugin: React.FC<DashboardPluginProps> = ({
 };
 
 // Watchlist Plugin
-const WatchlistPlugin: React.FC<DashboardPluginProps> = ({ 
-  data, 
-  theme, 
-  settings 
-}) => {
+const WatchlistPlugin: React.FC<DashboardPluginProps> = ({ data, theme, settings }) => {
   const [watchlist] = useState([
     { symbol: 'AAPL', name: 'Apple Inc.', price: 178.25, change: 2.34, changePercent: 1.33 },
     { symbol: 'GOOGL', name: 'Alphabet Inc.', price: 142.56, change: -1.23, changePercent: -0.85 },
@@ -198,7 +176,7 @@ const WatchlistPlugin: React.FC<DashboardPluginProps> = ({
 
   return (
     <View className="mb-6">
-      <SectionHeader 
+      <SectionHeader
         title="Watchlist"
         subtitle="Stocks you're tracking"
         showAction
@@ -206,12 +184,12 @@ const WatchlistPlugin: React.FC<DashboardPluginProps> = ({
         onActionPress={() => console.log('Manage watchlist')}
       />
       <View className="space-y-2">
-        {watchlist.map((asset) => (
+        {watchlist.map(asset => (
           <AssetCard
             key={asset.symbol}
             asset={asset}
             variant="compact"
-            onPress={(asset) => console.log('Watchlist asset pressed:', asset.symbol)}
+            onPress={asset => console.log('Watchlist asset pressed:', asset.symbol)}
           />
         ))}
       </View>
@@ -220,11 +198,7 @@ const WatchlistPlugin: React.FC<DashboardPluginProps> = ({
 };
 
 // Performance Summary Plugin
-const PerformanceSummaryPlugin: React.FC<DashboardPluginProps> = ({ 
-  data, 
-  theme, 
-  settings 
-}) => {
+const PerformanceSummaryPlugin: React.FC<DashboardPluginProps> = ({ data, theme, settings }) => {
   const [performance] = useState({
     today: { value: 1247.89, percent: 0.99 },
     week: { value: 3456.78, percent: 2.34 },
@@ -234,7 +208,7 @@ const PerformanceSummaryPlugin: React.FC<DashboardPluginProps> = ({
 
   return (
     <View className="mb-6">
-      <SectionHeader 
+      <SectionHeader
         title="Performance Summary"
         subtitle="Portfolio performance over time"
         variant="compact"
@@ -348,13 +322,9 @@ export function registerCorePlugins() {
   CORE_PLUGINS.forEach(plugin => {
     pluginRegistry.register(plugin, 'core');
   });
-  
+
   if (__DEV__) {
-
-  
     console.log(`✅ Registered ${CORE_PLUGINS.length} core dashboard plugins`);
-
-  
   }
 }
 

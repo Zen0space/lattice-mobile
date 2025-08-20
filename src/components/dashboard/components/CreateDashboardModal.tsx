@@ -1,23 +1,7 @@
 import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  Modal,
-  TextInput,
-  ScrollView,
-} from 'react-native';
+import { View, Text, TouchableOpacity, Modal, TextInput, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import {
-  X,
-  Home,
-  TrendingUp,
-  BarChart2,
-  PieChart,
-  Eye,
-  Activity,
-  Zap,
-} from 'react-native-feather';
+import { X, Home, TrendingUp, BarChart2, PieChart, Eye, Activity, Zap } from 'react-native-feather';
 import { DashboardType, DashboardTemplate } from '../types';
 import { DASHBOARD_TEMPLATES } from '../DashboardTemplates';
 
@@ -40,10 +24,10 @@ interface CreateDashboardModalProps {
 
 /**
  * CreateDashboardModal Component
- * 
+ *
  * Handles the dashboard creation modal with template selection.
  * Extracted from DashboardManager.tsx for better separation of concerns.
- * 
+ *
  * Features:
  * - Modal presentation with proper animations
  * - Dashboard name input with validation
@@ -86,28 +70,26 @@ const CreateDashboardModal: React.FC<CreateDashboardModalProps> = ({
         key={template.type}
         onPress={() => setSelectedTemplate(template.type)}
         className={`p-4 rounded-xl border-2 mb-3 ${
-          isSelected 
-            ? 'border-primary bg-blue-50' 
-            : 'border-gray-200 bg-white'
+          isSelected ? 'border-primary bg-blue-50' : 'border-gray-200 bg-white'
         }`}
         activeOpacity={0.7}
         accessibilityRole="radio"
         accessibilityState={{ checked: isSelected }}
         accessibilityLabel={`${template.name} template: ${template.description}`}
       >
-        <View 
+        <View
           className="w-12 h-12 rounded-lg items-center justify-center mr-4"
           style={{ backgroundColor: template.color }}
         >
           <IconComponent width={24} height={24} stroke="#ffffff" />
         </View>
         <View className="flex-1">
-          <Text className={`font-semibold text-base ${isSelected ? 'text-primary' : 'text-gray-900'}`}>
+          <Text
+            className={`font-semibold text-base ${isSelected ? 'text-primary' : 'text-gray-900'}`}
+          >
             {template.name}
           </Text>
-          <Text className="text-gray-600 text-sm mt-1">
-            {template.description}
-          </Text>
+          <Text className="text-gray-600 text-sm mt-1">{template.description}</Text>
         </View>
       </TouchableOpacity>
     );
@@ -123,7 +105,7 @@ const CreateDashboardModal: React.FC<CreateDashboardModalProps> = ({
       <SafeAreaView className="flex-1 bg-white">
         {/* Header */}
         <View className="flex-row items-center justify-between p-4 border-b border-gray-200">
-          <TouchableOpacity 
+          <TouchableOpacity
             onPress={handleClose}
             accessibilityRole="button"
             accessibilityLabel="Close create dashboard modal"
@@ -135,8 +117,8 @@ const CreateDashboardModal: React.FC<CreateDashboardModalProps> = ({
             onPress={handleCreateDashboard}
             className="px-4 py-2 bg-primary rounded-lg"
             disabled={!dashboardName.trim()}
-            style={{ 
-              opacity: dashboardName.trim() ? 1 : 0.5 
+            style={{
+              opacity: dashboardName.trim() ? 1 : 0.5,
             }}
             accessibilityRole="button"
             accessibilityLabel="Create dashboard"

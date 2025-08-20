@@ -15,7 +15,7 @@ export interface AssetCardProps {
 /**
  * Unified asset display component
  * Replaces duplicate code in 3+ components
- * 
+ *
  * Features:
  * - Props-driven customization
  * - Multiple display variants (row, card, compact)
@@ -54,13 +54,13 @@ const AssetCard: React.FC<AssetCardProps> = ({
   // Format volume - handles both string and number inputs
   const formatVolume = (volume?: string | number) => {
     if (!volume) return 'N/A';
-    
+
     // Convert string to number if needed
     const numVolume = typeof volume === 'string' ? parseFloat(volume) : volume;
-    
+
     // Handle invalid numbers
     if (isNaN(numVolume)) return 'N/A';
-    
+
     if (numVolume >= 1e9) return `${(numVolume / 1e9).toFixed(1)}B`;
     if (numVolume >= 1e6) return `${(numVolume / 1e6).toFixed(1)}M`;
     if (numVolume >= 1e3) return `${(numVolume / 1e3).toFixed(1)}K`;
@@ -75,9 +75,7 @@ const AssetCard: React.FC<AssetCardProps> = ({
 
     return (
       <View className="w-12 h-12 bg-gray-100 rounded-full items-center justify-center mr-4">
-        <Text className="text-gray-700 font-bold text-sm">
-          {asset.symbol}
-        </Text>
+        <Text className="text-gray-700 font-bold text-sm">{asset.symbol}</Text>
       </View>
     );
   };
@@ -90,41 +88,33 @@ const AssetCard: React.FC<AssetCardProps> = ({
       disabled={!onPress}
     >
       {renderAssetIcon()}
-      
+
       <View className="flex-1">
         <View className="flex-row items-center justify-between mb-1">
           <View>
-            <Text className="text-gray-900 font-semibold text-base">
-              {asset.name}
-            </Text>
-            <Text className="text-gray-500 text-sm">
-              {asset.symbol}
-            </Text>
+            <Text className="text-gray-900 font-semibold text-base">{asset.name}</Text>
+            <Text className="text-gray-500 text-sm">{asset.symbol}</Text>
           </View>
-          
+
           <View className="items-end">
             <Text className="text-gray-900 font-semibold text-base">
               {formatPrice(asset.price)}
             </Text>
             <View className="flex-row items-center">
-              <TrendIcon 
-                width={14} 
-                height={14} 
-                stroke={isPositive ? '#10b981' : '#ef4444'} 
-              />
-              <Text className={`text-sm font-medium ml-1 ${
-                isPositive ? 'text-green-600' : 'text-red-600'
-              }`}>
+              <TrendIcon width={14} height={14} stroke={isPositive ? '#10b981' : '#ef4444'} />
+              <Text
+                className={`text-sm font-medium ml-1 ${
+                  isPositive ? 'text-green-600' : 'text-red-600'
+                }`}
+              >
                 {formatChangePercent(asset.changePercent)}
               </Text>
             </View>
           </View>
         </View>
-        
+
         {showVolume && (
-          <Text className="text-gray-500 text-xs">
-            Vol: {formatVolume(asset.volume)}
-          </Text>
+          <Text className="text-gray-500 text-xs">Vol: {formatVolume(asset.volume)}</Text>
         )}
       </View>
     </TouchableOpacity>
@@ -139,46 +129,35 @@ const AssetCard: React.FC<AssetCardProps> = ({
     >
       <View className="flex-row items-center justify-between mb-3">
         {renderAssetIcon()}
-        
-        <View className={`flex-row items-center px-2 py-1 rounded-full ${
-          isPositive ? 'bg-green-100' : 'bg-red-100'
-        }`}>
-          <TrendIcon 
-            width={12} 
-            height={12} 
-            stroke={isPositive ? '#10b981' : '#ef4444'} 
-          />
-          <Text className={`text-xs font-medium ml-1 ${
-            isPositive ? 'text-green-600' : 'text-red-600'
-          }`}>
+
+        <View
+          className={`flex-row items-center px-2 py-1 rounded-full ${
+            isPositive ? 'bg-green-100' : 'bg-red-100'
+          }`}
+        >
+          <TrendIcon width={12} height={12} stroke={isPositive ? '#10b981' : '#ef4444'} />
+          <Text
+            className={`text-xs font-medium ml-1 ${isPositive ? 'text-green-600' : 'text-red-600'}`}
+          >
             {formatChangePercent(asset.changePercent)}
           </Text>
         </View>
       </View>
-      
+
       <View className="mb-2">
-        <Text className="text-gray-900 font-bold text-lg">
-          {asset.name}
-        </Text>
-        <Text className="text-gray-500 text-sm">
-          {asset.symbol}
-        </Text>
+        <Text className="text-gray-900 font-bold text-lg">{asset.name}</Text>
+        <Text className="text-gray-500 text-sm">{asset.symbol}</Text>
       </View>
-      
-      <Text className="text-gray-900 font-semibold text-xl mb-1">
-        {formatPrice(asset.price)}
+
+      <Text className="text-gray-900 font-semibold text-xl mb-1">{formatPrice(asset.price)}</Text>
+
+      <Text className={`text-sm font-medium ${isPositive ? 'text-green-600' : 'text-red-600'}`}>
+        {asset.change > 0 ? '+' : ''}
+        {formatPrice(asset.change)}
       </Text>
-      
-      <Text className={`text-sm font-medium ${
-        isPositive ? 'text-green-600' : 'text-red-600'
-      }`}>
-        {asset.change > 0 ? '+' : ''}{formatPrice(asset.change)}
-      </Text>
-      
+
       {showVolume && (
-        <Text className="text-gray-500 text-xs mt-2">
-          Volume: {formatVolume(asset.volume)}
-        </Text>
+        <Text className="text-gray-500 text-xs mt-2">Volume: {formatVolume(asset.volume)}</Text>
       )}
     </TouchableOpacity>
   );
@@ -192,22 +171,14 @@ const AssetCard: React.FC<AssetCardProps> = ({
     >
       <View className="flex-row items-center flex-1">
         <View className="w-8 h-8 bg-gray-100 rounded-full items-center justify-center mr-3">
-          <Text className="text-gray-700 font-bold text-xs">
-            {asset.symbol}
-          </Text>
+          <Text className="text-gray-700 font-bold text-xs">{asset.symbol}</Text>
         </View>
-        <Text className="text-gray-900 font-medium text-sm flex-1">
-          {asset.symbol}
-        </Text>
+        <Text className="text-gray-900 font-medium text-sm flex-1">{asset.symbol}</Text>
       </View>
-      
+
       <View className="items-end">
-        <Text className="text-gray-900 font-medium text-sm">
-          {formatPrice(asset.price)}
-        </Text>
-        <Text className={`text-xs ${
-          isPositive ? 'text-green-600' : 'text-red-600'
-        }`}>
+        <Text className="text-gray-900 font-medium text-sm">{formatPrice(asset.price)}</Text>
+        <Text className={`text-xs ${isPositive ? 'text-green-600' : 'text-red-600'}`}>
           {formatChangePercent(asset.changePercent)}
         </Text>
       </View>
@@ -226,8 +197,8 @@ const AssetCard: React.FC<AssetCardProps> = ({
 };
 
 // Loading skeleton for AssetCard
-export const AssetCardSkeleton: React.FC<{ variant?: 'row' | 'card' | 'compact' }> = ({ 
-  variant = 'row' 
+export const AssetCardSkeleton: React.FC<{ variant?: 'row' | 'card' | 'compact' }> = ({
+  variant = 'row',
 }) => {
   switch (variant) {
     case 'card':
@@ -243,7 +214,7 @@ export const AssetCardSkeleton: React.FC<{ variant?: 'row' | 'card' | 'compact' 
           <View className="w-20 h-4 bg-gray-200 rounded animate-pulse" />
         </View>
       );
-    
+
     case 'compact':
       return (
         <View className="flex-row items-center justify-between py-2">
@@ -257,7 +228,7 @@ export const AssetCardSkeleton: React.FC<{ variant?: 'row' | 'card' | 'compact' 
           </View>
         </View>
       );
-    
+
     default:
       return (
         <View className="flex-row items-center py-4 border-b border-gray-100">

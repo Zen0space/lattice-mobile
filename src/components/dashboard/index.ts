@@ -8,7 +8,7 @@ export { default as PortfolioDashboard } from './PortfolioDashboard';
 
 // Phase 3.2 Dashboard Template System ✅ NEW
 export { default as DashboardRenderer } from './DashboardRenderer';
-export { 
+export {
   default as DashboardConfigManager,
   dashboardConfigManager,
 } from './DashboardConfigManager';
@@ -27,7 +27,4 @@ export * from './shared';
 
 // Types
 export * from './types';
-export type { 
-  DashboardLayoutConfig, 
-  DashboardPreset,
-} from './DashboardConfigManager';
+export type { DashboardLayoutConfig, DashboardPreset } from './DashboardConfigManager';

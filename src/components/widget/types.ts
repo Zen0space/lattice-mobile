@@ -113,19 +113,25 @@ export interface ChartTemplate {
 }
 
 export interface FakeDataGenerator {
-  generateLineData: (points: number, options?: {
-    min?: number;
-    max?: number;
-    trend?: 'up' | 'down' | 'random' | 'wave';
-    volatility?: number;
-    startValue?: number;
-  }) => ChartDataPoint[];
-  generateTimeSeriesData: (points: number, options?: {
-    startDate?: Date;
-    interval?: 'hour' | 'day' | 'week' | 'month';
-    min?: number;
-    max?: number;
-    trend?: 'up' | 'down' | 'random' | 'wave';
-    volatility?: number;
-  }) => ChartDataPoint[];
+  generateLineData: (
+    points: number,
+    options?: {
+      min?: number;
+      max?: number;
+      trend?: 'up' | 'down' | 'random' | 'wave';
+      volatility?: number;
+      startValue?: number;
+    }
+  ) => ChartDataPoint[];
+  generateTimeSeriesData: (
+    points: number,
+    options?: {
+      startDate?: Date;
+      interval?: 'hour' | 'day' | 'week' | 'month';
+      min?: number;
+      max?: number;
+      trend?: 'up' | 'down' | 'random' | 'wave';
+      volatility?: number;
+    }
+  ) => ChartDataPoint[];
 }

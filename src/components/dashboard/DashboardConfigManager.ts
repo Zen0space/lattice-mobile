@@ -6,7 +6,7 @@ import { themeManager } from './themes/DashboardThemeManager';
 
 /**
  * Dashboard Configuration Manager
- * 
+ *
  * Centralized management system for dashboard configurations including:
  * - Dashboard creation from templates
  * - Configuration persistence and loading
@@ -201,11 +201,9 @@ export class DashboardConfigManager {
       }
 
       if (__DEV__) {
-
-
-        console.log(`✅ Loaded ${this.configurations.size} dashboard configurations and ${this.presets.size} presets`);
-
-
+        console.log(
+          `✅ Loaded ${this.configurations.size} dashboard configurations and ${this.presets.size} presets`
+        );
       }
     } catch (error) {
       console.error('Failed to load dashboard configurations:', error);
@@ -221,8 +219,9 @@ export class DashboardConfigManager {
       await AsyncStorage.setItem(this.storageKey, JSON.stringify(configs));
 
       // Save custom presets only
-      const customPresets = Array.from(this.presets.values())
-        .filter(preset => preset.category === 'custom');
+      const customPresets = Array.from(this.presets.values()).filter(
+        preset => preset.category === 'custom'
+      );
       await AsyncStorage.setItem(this.presetsKey, JSON.stringify(customPresets));
     } catch (error) {
       console.error('Failed to save dashboard configurations:', error);
@@ -268,11 +267,7 @@ export class DashboardConfigManager {
     await this.saveConfigurations();
 
     if (__DEV__) {
-
-
       console.log(`✨ Created dashboard configuration: ${name} (${config.id})`);
-
-
     }
     return config;
   }
@@ -298,11 +293,7 @@ export class DashboardConfigManager {
     await this.saveConfigurations();
 
     if (__DEV__) {
-
-
       console.log(`📋 Created dashboard from preset: ${preset.name} → ${config.name}`);
-
-
     }
     return config;
   }
@@ -331,11 +322,7 @@ export class DashboardConfigManager {
     await this.saveConfigurations();
 
     if (__DEV__) {
-
-
       console.log(`🔄 Updated dashboard configuration: ${configId}`);
-
-
     }
     return true;
   }
@@ -353,11 +340,7 @@ export class DashboardConfigManager {
     await this.saveConfigurations();
 
     if (__DEV__) {
-
-
       console.log(`🗑️ Deleted dashboard configuration: ${configId}`);
-
-
     }
     return true;
   }
@@ -366,8 +349,9 @@ export class DashboardConfigManager {
    * Get all configurations
    */
   getAllConfigurations(): DashboardLayoutConfig[] {
-    return Array.from(this.configurations.values())
-      .sort((a, b) => b.updatedAt.getTime() - a.updatedAt.getTime());
+    return Array.from(this.configurations.values()).sort(
+      (a, b) => b.updatedAt.getTime() - a.updatedAt.getTime()
+    );
   }
 
   /**
@@ -387,9 +371,10 @@ export class DashboardConfigManager {
   /**
    * Get presets by category
    */
-  getPresetsByCategory(category: 'beginner' | 'advanced' | 'professional' | 'custom'): DashboardPreset[] {
-    return Array.from(this.presets.values())
-      .filter(preset => preset.category === category);
+  getPresetsByCategory(
+    category: 'beginner' | 'advanced' | 'professional' | 'custom'
+  ): DashboardPreset[] {
+    return Array.from(this.presets.values()).filter(preset => preset.category === category);
   }
 
   /**
@@ -413,11 +398,7 @@ export class DashboardConfigManager {
     await this.saveConfigurations();
 
     if (__DEV__) {
-
-
       console.log(`✨ Created custom preset: ${presetName} (${preset.id})`);
-
-
     }
     return preset;
   }
@@ -481,12 +462,16 @@ export class DashboardConfigManager {
       return null;
     }
 
-    return JSON.stringify({
-      version: '1.0.0',
-      type: 'dashboard-configuration',
-      data: config,
-      exportedAt: new Date().toISOString(),
-    }, null, 2);
+    return JSON.stringify(
+      {
+        version: '1.0.0',
+        type: 'dashboard-configuration',
+        data: config,
+        exportedAt: new Date().toISOString(),
+      },
+      null,
+      2
+    );
   }
 
   /**
@@ -495,7 +480,7 @@ export class DashboardConfigManager {
   async importConfiguration(configData: string): Promise<DashboardLayoutConfig | null> {
     try {
       const importData = JSON.parse(configData);
-      
+
       if (importData.type !== 'dashboard-configuration') {
         console.error('Invalid import data type');
         return null;
@@ -519,11 +504,7 @@ export class DashboardConfigManager {
       await this.saveConfigurations();
 
       if (__DEV__) {
-
-
         console.log(`📥 Imported dashboard configuration: ${config.name}`);
-
-
       }
       return config;
     } catch (error) {
@@ -542,21 +523,30 @@ export class DashboardConfigManager {
     return {
       configurations: {
         total: configs.length,
-        byTemplate: configs.reduce((acc, config) => {
-          acc[config.template] = (acc[config.template] || 0) + 1;
-          return acc;
-        }, {} as Record<string, number>),
-        byTheme: configs.reduce((acc, config) => {
-          acc[config.theme] = (acc[config.theme] || 0) + 1;
-          return acc;
-        }, {} as Record<string, number>),
+        byTemplate: configs.reduce(
+          (acc, config) => {
+            acc[config.template] = (acc[config.template] || 0) + 1;
+            return acc;
+          },
+          {} as Record<string, number>
+        ),
+        byTheme: configs.reduce(
+          (acc, config) => {
+            acc[config.theme] = (acc[config.theme] || 0) + 1;
+            return acc;
+          },
+          {} as Record<string, number>
+        ),
       },
       presets: {
         total: presets.length,
-        byCategory: presets.reduce((acc, preset) => {
-          acc[preset.category] = (acc[preset.category] || 0) + 1;
-          return acc;
-        }, {} as Record<string, number>),
+        byCategory: presets.reduce(
+          (acc, preset) => {
+            acc[preset.category] = (acc[preset.category] || 0) + 1;
+            return acc;
+          },
+          {} as Record<string, number>
+        ),
       },
     };
   }
@@ -573,11 +563,7 @@ export class DashboardConfigManager {
     await AsyncStorage.removeItem(this.presetsKey);
 
     if (__DEV__) {
-
-
       console.log('🔄 Reset dashboard configurations to defaults');
-
-
     }
   }
 }

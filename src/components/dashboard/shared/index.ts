@@ -17,8 +17,8 @@ export type { StatCardProps, StatCardData } from './StatCard';
 export { default as AssetCard, AssetCardSkeleton } from './AssetCard';
 export type { AssetCardProps } from './AssetCard';
 
-export { 
-  default as SectionHeader, 
+export {
+  default as SectionHeader,
   SectionHeaderSkeleton,
   WelcomeHeader,
   PortfolioHeader,
@@ -28,7 +28,7 @@ export {
 } from './SectionHeader';
 export type { SectionHeaderProps } from './SectionHeader';
 
-export { 
+export {
   default as DataRenderer,
   AssetDataRenderer,
   ActivityDataRenderer,

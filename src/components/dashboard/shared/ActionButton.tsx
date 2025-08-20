@@ -30,14 +30,8 @@ const ActionButton: React.FC<ActionButtonProps> = ({
       onPress={onPress}
       activeOpacity={0.7}
     >
-      <IconComponent 
-        width={24} 
-        height={24} 
-        stroke={isPrimary ? '#ffffff' : '#6B7280'} 
-      />
-      <Text className={`font-semibold mt-2 ${textColor}`}>
-        {title}
-      </Text>
+      <IconComponent width={24} height={24} stroke={isPrimary ? '#ffffff' : '#6B7280'} />
+      <Text className={`font-semibold mt-2 ${textColor}`}>{title}</Text>
     </TouchableOpacity>
   );
 };

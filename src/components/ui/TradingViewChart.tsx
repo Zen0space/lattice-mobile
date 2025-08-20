@@ -28,7 +28,7 @@ interface TradingViewChartProps {
 
 const TradingViewChart: React.FC<TradingViewChartProps> = ({ chartConfig, style }) => {
   const { width: screenWidth } = Dimensions.get('window');
-  
+
   const {
     symbol,
     theme = 'dark',
@@ -40,7 +40,7 @@ const TradingViewChart: React.FC<TradingViewChartProps> = ({ chartConfig, style 
     hideTimeInterval = true,
     hideVolume = true,
     hideTopToolbar = true,
-    hideLegend = false
+    hideLegend = false,
   } = chartConfig;
 
   if (!showChart) {
@@ -50,7 +50,7 @@ const TradingViewChart: React.FC<TradingViewChartProps> = ({ chartConfig, style 
   // Generate TradingView widget HTML
   const generateChartHTML = () => {
     const widgetId = `tradingview_${Math.random().toString(36).substr(2, 9)}`;
-    
+
     // Advanced Chart Widget (for individual stocks/crypto)
     if (type === 'advanced_chart' || !type) {
       return `
@@ -305,11 +305,11 @@ const TradingViewChart: React.FC<TradingViewChartProps> = ({ chartConfig, style 
         scrollEnabled={false}
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
-        onError={(syntheticEvent) => {
+        onError={syntheticEvent => {
           const { nativeEvent } = syntheticEvent;
           console.warn('TradingView WebView error: ', nativeEvent);
         }}
-        onHttpError={(syntheticEvent) => {
+        onHttpError={syntheticEvent => {
           const { nativeEvent } = syntheticEvent;
           console.warn('TradingView WebView HTTP error: ', nativeEvent);
         }}

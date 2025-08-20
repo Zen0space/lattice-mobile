@@ -2,7 +2,7 @@ import React, { useMemo, useCallback, useState, useEffect } from 'react';
 import { View, Text, ScrollView, RefreshControl } from 'react-native';
 import { DashboardConfig, DashboardTemplate, DashboardData, DashboardSettings } from './types';
 import { DASHBOARD_TEMPLATES } from './DashboardTemplates';
-import { 
+import {
   DashboardContainer,
   StatCard,
   AssetCard,
@@ -141,7 +141,7 @@ export const DASHBOARD_COMPONENTS = {
 
   performance: ({ data, theme }: { data: DashboardData; theme: DashboardTheme }) => (
     <View className="mb-6">
-      <SectionHeader 
+      <SectionHeader
         title="Performance"
         subtitle="Portfolio performance metrics"
         variant="default"
@@ -168,14 +168,14 @@ export const DASHBOARD_COMPONENTS = {
 
   topAssets: ({ data, theme }: { data: DashboardData; theme: DashboardTheme }) => (
     <View className="mb-6">
-      <AssetsHeader 
+      <AssetsHeader
         totalAssets={data.assets?.length || 0}
         onViewAll={() => console.log('View All Assets')}
       />
       <AssetDataRenderer
         assets={data.assets?.slice(0, 5) || []}
         variant="row"
-        onAssetPress={(asset) => console.log('Asset pressed:', asset.symbol)}
+        onAssetPress={asset => console.log('Asset pressed:', asset.symbol)}
         nestedInScrollView={true}
       />
     </View>
@@ -183,12 +183,10 @@ export const DASHBOARD_COMPONENTS = {
 
   recentActivity: ({ data, theme }: { data: DashboardData; theme: DashboardTheme }) => (
     <View className="mb-6">
-      <ActivityHeader 
-        onViewHistory={() => console.log('View Activity History')}
-      />
+      <ActivityHeader onViewHistory={() => console.log('View Activity History')} />
       <ActivityDataRenderer
         activities={[]} // Would be populated with real activity data
-        onActivityPress={(activity) => console.log('Activity pressed:', activity)}
+        onActivityPress={activity => console.log('Activity pressed:', activity)}
         nestedInScrollView={true}
       />
     </View>
@@ -201,7 +199,7 @@ export const DASHBOARD_COMPONENTS = {
       <AssetDataRenderer
         assets={data.assets?.filter(asset => asset.symbol.match(/^[A-Z]+$/)) || []}
         variant="row"
-        onAssetPress={(asset) => console.log('Stock pressed:', asset.symbol)}
+        onAssetPress={asset => console.log('Stock pressed:', asset.symbol)}
         nestedInScrollView={true}
       />
     </View>
@@ -246,7 +244,7 @@ export interface DashboardRendererProps {
 
 /**
  * Dynamic Dashboard Rendering System
- * 
+ *
  * Features:
  * - Template-driven approach using DASHBOARD_TEMPLATES
  * - Plugin system for extensibility
@@ -266,8 +264,8 @@ const DashboardRenderer: React.FC<DashboardRendererProps> = ({
   const [dashboardData, setDashboardData] = useState<DashboardData>(data);
 
   // Get template for this dashboard type
-  const template = useMemo(() => 
-    DASHBOARD_TEMPLATES[config.type] || DASHBOARD_TEMPLATES.overview,
+  const template = useMemo(
+    () => DASHBOARD_TEMPLATES[config.type] || DASHBOARD_TEMPLATES.overview,
     [config.type]
   );
 
@@ -279,15 +277,18 @@ const DashboardRenderer: React.FC<DashboardRendererProps> = ({
   }, [customTheme, config.settings?.theme, template.defaultSettings.theme]);
 
   // Merge settings
-  const settings = useMemo(() => ({
-    ...template.defaultSettings,
-    ...config.settings,
-  }), [template.defaultSettings, config.settings]);
+  const settings = useMemo(
+    () => ({
+      ...template.defaultSettings,
+      ...config.settings,
+    }),
+    [template.defaultSettings, config.settings]
+  );
 
   // Handle refresh
   const handleRefresh = useCallback(async () => {
     if (!onRefresh) return;
-    
+
     setRefreshing(true);
     try {
       await onRefresh();
@@ -313,7 +314,8 @@ const DashboardRenderer: React.FC<DashboardRendererProps> = ({
   const renderComponents = useCallback(() => {
     return template.components.map((componentId, index) => {
       // Check if it's a registered component
-      const ComponentRenderer = DASHBOARD_COMPONENTS[componentId as keyof typeof DASHBOARD_COMPONENTS];
+      const ComponentRenderer =
+        DASHBOARD_COMPONENTS[componentId as keyof typeof DASHBOARD_COMPONENTS];
       if (ComponentRenderer) {
         return (
           <View key={`${componentId}-${index}`}>
@@ -333,7 +335,7 @@ const DashboardRenderer: React.FC<DashboardRendererProps> = ({
               data={dashboardData}
               theme={settings.theme || 'light'}
               settings={settings}
-              onDataUpdate={(newData) => setDashboardData(prev => ({ ...prev, ...newData }))}
+              onDataUpdate={newData => setDashboardData(prev => ({ ...prev, ...newData }))}
             />
           </View>
         );
@@ -342,7 +344,7 @@ const DashboardRenderer: React.FC<DashboardRendererProps> = ({
       // Fallback for unknown components
       return (
         <View key={`unknown-${componentId}-${index}`} className="mb-6">
-          <SectionHeader 
+          <SectionHeader
             title={componentId}
             subtitle="Component not implemented"
             variant="compact"
@@ -387,9 +389,7 @@ const DashboardRenderer: React.FC<DashboardRendererProps> = ({
       >
         {/* Dashboard Header */}
         <View className="mb-6">
-          <WelcomeHeader 
-            subtitle={template.description}
-          />
+          <WelcomeHeader subtitle={template.description} />
         </View>
 
         {/* Dynamic Components */}
@@ -405,7 +405,7 @@ const DashboardRenderer: React.FC<DashboardRendererProps> = ({
                 data={dashboardData}
                 theme={settings.theme || 'light'}
                 settings={settings}
-                onDataUpdate={(newData) => setDashboardData(prev => ({ ...prev, ...newData }))}
+                onDataUpdate={newData => setDashboardData(prev => ({ ...prev, ...newData }))}
               />
             </View>
           );

@@ -33,10 +33,10 @@ const ICON_MAP = {
 
 /**
  * DashboardTabs Component
- * 
+ *
  * Handles the horizontal scrolling tab navigation for dashboards.
  * Extracted from DashboardManager.tsx for better separation of concerns.
- * 
+ *
  * Features:
  * - Horizontal scrolling tab layout
  * - Active state management
@@ -53,38 +53,30 @@ const DashboardTabs: React.FC<DashboardTabsProps> = ({
 }) => {
   return (
     <View className="bg-white border-b border-gray-200">
-      <ScrollView 
-        horizontal 
+      <ScrollView
+        horizontal
         showsHorizontalScrollIndicator={false}
         className="px-4 py-3"
         contentContainerStyle={{ paddingRight: 20 }}
       >
-        {dashboards.map((dashboard) => {
+        {dashboards.map(dashboard => {
           const IconComponent = ICON_MAP[dashboard.icon as keyof typeof ICON_MAP] || Home;
           const isActive = dashboard.id === activeDashboardId;
-          
+
           return (
             <View key={dashboard.id} className="mr-3">
               <TouchableOpacity
                 onPress={() => onSwitchDashboard(dashboard.id)}
                 className={`flex-row items-center px-4 py-2 rounded-full ${
-                  isActive 
-                    ? 'bg-primary' 
-                    : 'bg-gray-100'
+                  isActive ? 'bg-primary' : 'bg-gray-100'
                 }`}
                 activeOpacity={0.7}
                 accessibilityRole="tab"
                 accessibilityState={{ selected: isActive }}
                 accessibilityLabel={`${dashboard.name} dashboard${isActive ? ', selected' : ''}`}
               >
-                <IconComponent 
-                  width={16} 
-                  height={16} 
-                  stroke={isActive ? '#ffffff' : '#6B7280'} 
-                />
-                <Text className={`ml-2 font-medium ${
-                  isActive ? 'text-white' : 'text-gray-700'
-                }`}>
+                <IconComponent width={16} height={16} stroke={isActive ? '#ffffff' : '#6B7280'} />
+                <Text className={`ml-2 font-medium ${isActive ? 'text-white' : 'text-gray-700'}`}>
                   {dashboard.name}
                 </Text>
                 {!dashboard.isDefault && (
@@ -102,7 +94,7 @@ const DashboardTabs: React.FC<DashboardTabsProps> = ({
             </View>
           );
         })}
-        
+
         {/* Add Dashboard Button */}
         <TouchableOpacity
           onPress={onCreateDashboard}

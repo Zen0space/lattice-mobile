@@ -23,36 +23,27 @@ export const DevelopmentFallback: React.FC<{ error?: string }> = ({ error }) => 
           // In React Native, we can't reload like web, but we can trigger a state reset
           if (__DEV__) {
             if (__DEV__) {
-
               console.log('🔄 Development fallback triggered - restart the app');
-
             }
           }
         }}
         className="bg-yellow-400 px-4 py-2 rounded"
       >
-        <Text className="text-yellow-800 font-medium text-center">
-          Restart Required
-        </Text>
+        <Text className="text-yellow-800 font-medium text-center">Restart Required</Text>
       </TouchableOpacity>
     </View>
   );
 };
 
 // Hook for handling hot reload state recovery
-export const useHotReloadRecovery = (
-  initialState: any,
-  stateKey: string = 'defaultState'
-) => {
+export const useHotReloadRecovery = (initialState: any, stateKey: string = 'defaultState') => {
   const [state, setState] = useState(initialState);
   const [recoveryCount, setRecoveryCount] = useState(0);
 
   useEffect(() => {
     if (__DEV__ && recoveryCount > 0) {
       if (__DEV__) {
-
         console.log(`🔄 Hot reload recovery #${recoveryCount} for ${stateKey}`);
-
       }
     }
   }, [recoveryCount, stateKey]);
@@ -62,9 +53,7 @@ export const useHotReloadRecovery = (
       setState(initialState);
       setRecoveryCount(prev => prev + 1);
       if (__DEV__) {
-
         console.log(`✅ State recovered for ${stateKey}`);
-
       }
     }
   }, [initialState, stateKey]);
@@ -127,7 +116,7 @@ export const withDevelopmentSafety = <P extends object>(
   Component: ComponentType<P>,
   fallbackProps?: Partial<P>
 ) => {
-  const SafeComponent: React.FC<P> = (props) => {
+  const SafeComponent: React.FC<P> = props => {
     if (!__DEV__) {
       return <Component {...props} />;
     }
@@ -136,7 +125,7 @@ export const withDevelopmentSafety = <P extends object>(
       return <Component {...props} />;
     } catch (error) {
       console.error('🚨 Component render error:', error);
-      
+
       if (fallbackProps) {
         try {
           return <Component {...{ ...props, ...fallbackProps }} />;
@@ -144,8 +133,10 @@ export const withDevelopmentSafety = <P extends object>(
           console.error('🚨 Fallback render error:', fallbackError);
         }
       }
-      
-      return <DevelopmentFallback error={error instanceof Error ? error.message : 'Render error'} />;
+
+      return (
+        <DevelopmentFallback error={error instanceof Error ? error.message : 'Render error'} />
+      );
     }
   };
 
@@ -157,9 +148,7 @@ export const withDevelopmentSafety = <P extends object>(
 export const devLog = (message: string, data?: any) => {
   if (__DEV__) {
     if (__DEV__) {
-
       console.log(`🔧 [DEV] ${message}`, data || '');
-
     }
   }
 };
@@ -181,11 +170,11 @@ export const useDevPerformanceMonitor = (componentName: string) => {
   useEffect(() => {
     if (__DEV__) {
       const startTime = performance.now();
-      
+
       return () => {
         const endTime = performance.now();
         const renderTime = endTime - startTime;
-        
+
         if (renderTime > 100) {
           console.warn(`⏱️ Slow render detected in ${componentName}: ${renderTime.toFixed(2)}ms`);
         }

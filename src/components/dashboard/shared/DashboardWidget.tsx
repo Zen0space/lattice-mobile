@@ -1,12 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  Dimensions,
-  Modal,
-  Animated,
-} from 'react-native';
+import { View, Text, TouchableOpacity, Dimensions, Modal, Animated } from 'react-native';
 import { LineChart } from 'react-native-gifted-charts';
 import { MoreVertical, TrendingUp, TrendingDown, Trash2, X } from 'react-native-feather';
 import { Widget, ChartConfig, CryptoWidgetConfig } from '../../widget/types';
@@ -79,7 +72,7 @@ const DashboardWidget: React.FC<DashboardWidgetProps> = ({
     gradient: {
       start: isPositive ? '#10b981' : '#ef4444',
       end: isPositive ? '#059669' : '#dc2626',
-    }
+    },
   };
 
   // Memoize chart rendering to prevent unnecessary re-renders during drag operations
@@ -117,7 +110,9 @@ const DashboardWidget: React.FC<DashboardWidgetProps> = ({
       animateOnDataChange: false, // Disable during drag for better performance
       animationDuration: 0, // No animation during drag
       noOfSections: compact ? 3 : 4,
-      spacing: compact ? Math.max(30, (chartWidth - 50) / (config.data.length - 1)) : Math.max(40, (chartWidth - 60) / (config.data.length - 1)),
+      spacing: compact
+        ? Math.max(30, (chartWidth - 50) / (config.data.length - 1))
+        : Math.max(40, (chartWidth - 60) / (config.data.length - 1)),
       initialSpacing: compact ? 15 : 20,
       endSpacing: compact ? 15 : 20,
       backgroundColor: '#f8fafc', // Neutral gray-blue background
@@ -128,10 +123,7 @@ const DashboardWidget: React.FC<DashboardWidgetProps> = ({
 
   return (
     <>
-      <View
-        className="bg-white rounded-2xl overflow-hidden border border-gray-200"
-        style={{}}
-      >
+      <View className="bg-white rounded-2xl overflow-hidden border border-gray-200" style={{}}>
         {/* Enhanced Header - Header tap functionality removed for better drag performance */}
         <View className="px-4 pt-4 pb-2">
           <View className="flex-row items-start justify-between mb-3">
@@ -139,14 +131,12 @@ const DashboardWidget: React.FC<DashboardWidgetProps> = ({
               <Text className="text-lg font-bold text-gray-900 mb-1" numberOfLines={1}>
                 {config.title}
               </Text>
-              <Text className="text-xs text-gray-500">
-                {config.data.length} points
-              </Text>
+              <Text className="text-xs text-gray-500">{config.data.length} points</Text>
             </View>
-            
-            <TouchableOpacity 
+
+            <TouchableOpacity
               onPress={() => setShowDeleteModal(true)}
-              className="p-2 rounded-lg bg-gray-50" 
+              className="p-2 rounded-lg bg-gray-50"
               hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
               activeOpacity={0.7}
             >
@@ -158,29 +148,25 @@ const DashboardWidget: React.FC<DashboardWidgetProps> = ({
         {/* Current Value & Change */}
         <View className="flex-row items-end justify-between px-4">
           <View>
-            <Text className="text-2xl font-bold text-gray-900">
-              {latestValue.toFixed(2)}
-            </Text>
+            <Text className="text-2xl font-bold text-gray-900">{latestValue.toFixed(2)}</Text>
             <View className="flex-row items-center mt-1">
               {isPositive ? (
                 <TrendingUp width={14} height={14} stroke={colors.primary} />
               ) : (
                 <TrendingDown width={14} height={14} stroke={colors.primary} />
               )}
-              <Text 
-                className="text-sm font-semibold ml-1"
-                style={{ color: colors.primary }}
-              >
-                {isPositive ? '+' : ''}{change.toFixed(2)} ({changePercent.toFixed(1)}%)
+              <Text className="text-sm font-semibold ml-1" style={{ color: colors.primary }}>
+                {isPositive ? '+' : ''}
+                {change.toFixed(2)} ({changePercent.toFixed(1)}%)
               </Text>
             </View>
           </View>
         </View>
 
         {/* Chart Section */}
-        <View 
+        <View
           className="rounded-xl overflow-hidden mx-4 mb-4 mt-3"
-          style={{ 
+          style={{
             backgroundColor: '#f8fafc',
             minHeight: compact ? 180 : 240,
             paddingVertical: 15,
@@ -195,20 +181,18 @@ const DashboardWidget: React.FC<DashboardWidgetProps> = ({
             <View className="flex-1">
               <Text className="text-xs font-medium text-gray-500">Range</Text>
               <Text className="text-sm font-semibold text-gray-900">
-                {Math.min(...config.data.map(d => d.value)).toFixed(1)} - {Math.max(...config.data.map(d => d.value)).toFixed(1)}
+                {Math.min(...config.data.map(d => d.value)).toFixed(1)} -{' '}
+                {Math.max(...config.data.map(d => d.value)).toFixed(1)}
               </Text>
             </View>
-            
+
             <View className="flex-1 items-center">
               <Text className="text-xs font-medium text-gray-500">Trend</Text>
-              <Text 
-                className="text-sm font-semibold"
-                style={{ color: colors.primary }}
-              >
+              <Text className="text-sm font-semibold" style={{ color: colors.primary }}>
                 {isPositive ? 'UP' : 'DOWN'}
               </Text>
             </View>
-            
+
             <View className="flex-1 items-end">
               <Text className="text-xs font-medium text-gray-500">Type</Text>
               <View className="bg-gray-100 px-2 py-1 rounded-md mt-0.5">
@@ -228,9 +212,9 @@ const DashboardWidget: React.FC<DashboardWidgetProps> = ({
         animationType="none"
         onRequestClose={() => setShowDeleteModal(false)}
       >
-        <Animated.View 
+        <Animated.View
           className="flex-1 justify-center items-center"
-          style={{ 
+          style={{
             opacity: fadeAnim,
             backgroundColor: 'rgba(0, 0, 0, 0.5)',
             padding: 16,

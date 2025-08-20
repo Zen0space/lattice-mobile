@@ -13,12 +13,7 @@ export { useWidgetStore, useWidgetDevTools } from './widgetStore';
 export type { WidgetStore } from './widgetStore';
 
 // UI Store
-export { 
-  useUIStore, 
-  useModalStore, 
-  useLoadingStore, 
-  useErrorStore 
-} from './uiStore';
+export { useUIStore, useModalStore, useLoadingStore, useErrorStore } from './uiStore';
 export type { UIStore } from './uiStore';
 
 // Storage System (Phase 3.3)

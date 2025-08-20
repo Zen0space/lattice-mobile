@@ -3,7 +3,7 @@ import { DashboardConfig } from '../../components/dashboard/types';
 
 /**
  * Clean, focused dashboard storage (~150 lines)
- * 
+ *
  * Simplified storage layer that works with Zustand stores
  * - Removed 40+ unnecessary console.logs
  * - Simplified date handling utilities
@@ -59,16 +59,16 @@ class DashboardStorage {
    */
   async loadDashboards(): Promise<DashboardConfig[]> {
     const startTime = Date.now();
-    
+
     try {
       const data = await AsyncStorage.getItem(STORAGE_KEYS.DASHBOARDS);
-      
+
       if (!data) {
         return [];
       }
 
       const dashboards: DashboardConfig[] = JSON.parse(data);
-      
+
       // Convert date strings back to Date objects
       dashboards.forEach(dashboard => {
         dashboard.createdAt = new Date(dashboard.createdAt);
@@ -88,11 +88,11 @@ class DashboardStorage {
    */
   async saveDashboards(dashboards: DashboardConfig[]): Promise<void> {
     const startTime = Date.now();
-    
+
     try {
       const data = JSON.stringify(dashboards);
       await AsyncStorage.setItem(STORAGE_KEYS.DASHBOARDS, data);
-      
+
       // Update metadata
       await this.updateMetadata({
         totalDashboards: dashboards.length,
@@ -177,13 +177,17 @@ class DashboardStorage {
     try {
       const dashboards = await this.loadDashboards();
       const metadata = await this.getMetadata();
-      
-      return JSON.stringify({
-        version: '1.0.0',
-        exportDate: new Date().toISOString(),
-        metadata,
-        dashboards,
-      }, null, 2);
+
+      return JSON.stringify(
+        {
+          version: '1.0.0',
+          exportDate: new Date().toISOString(),
+          metadata,
+          dashboards,
+        },
+        null,
+        2
+      );
     } catch (error) {
       throw new Error(`Failed to export dashboards: ${error}`);
     }
@@ -195,7 +199,7 @@ class DashboardStorage {
   async importDashboards(data: string): Promise<number> {
     try {
       const importData = JSON.parse(data);
-      
+
       if (!importData.dashboards || !Array.isArray(importData.dashboards)) {
         throw new Error('Invalid import data format');
       }
@@ -215,7 +219,7 @@ class DashboardStorage {
         ...existing,
         ...updates,
       };
-      
+
       await AsyncStorage.setItem(STORAGE_KEYS.DASHBOARD_METADATA, JSON.stringify(metadata));
     } catch (error) {
       // Metadata update failure shouldn't break the main operation
@@ -228,7 +232,7 @@ class DashboardStorage {
   private async getMetadata(): Promise<DashboardMetadata> {
     try {
       const data = await AsyncStorage.getItem(STORAGE_KEYS.DASHBOARD_METADATA);
-      
+
       if (!data) {
         return {
           version: '1.0.0',

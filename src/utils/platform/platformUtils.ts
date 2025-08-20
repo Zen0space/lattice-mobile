@@ -24,7 +24,7 @@ export const getPerformanceNow = (): number => {
 export const getMemoryInfo = () => {
   const performance = global.performance || {};
   const memory = (performance as any)?.memory;
-  
+
   if (memory) {
     return {
       used: Math.round(memory.usedJSHeapSize / 1024 / 1024),
@@ -33,7 +33,7 @@ export const getMemoryInfo = () => {
       available: true,
     };
   }
-  
+
   return {
     used: 0,
     total: 0,
@@ -63,9 +63,9 @@ export const getBundleInfo = () => {
   if (!__DEV__) {
     return { available: false, reason: 'Only available in development' };
   }
-  
+
   const memoryInfo = getMemoryInfo();
-  
+
   return {
     available: true,
     platform: Platform.OS,
@@ -79,9 +79,7 @@ export const getBundleInfo = () => {
 export const devLog = (message: string, data?: any) => {
   if (__DEV__) {
     if (__DEV__) {
-
       console.log(`🔧 [${Platform.OS.toUpperCase()}] ${message}`, data || '');
-
     }
   }
 };

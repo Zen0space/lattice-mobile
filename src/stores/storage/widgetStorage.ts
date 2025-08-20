@@ -3,7 +3,7 @@ import { Widget } from '../../components/dashboard/types';
 
 /**
  * Separate widget storage with clean API
- * 
+ *
  * Handles widget-specific persistence operations
  * - Clean API design
  * - Error boundaries
@@ -60,25 +60,23 @@ class WidgetStorage {
 
     try {
       const data = await AsyncStorage.getItem(`${STORAGE_KEYS.WIDGETS}_${dashboardId}`);
-      
+
       if (!data) {
         return [];
       }
 
       const widgets: Widget[] = JSON.parse(data);
-      
+
       // Validate and convert dates
-      const validatedWidgets = widgets
-        .filter(this.validateWidget)
-        .map(widget => ({
-          ...widget,
-          createdAt: new Date(widget.createdAt),
-          updatedAt: new Date(widget.updatedAt),
-        }));
+      const validatedWidgets = widgets.filter(this.validateWidget).map(widget => ({
+        ...widget,
+        createdAt: new Date(widget.createdAt),
+        updatedAt: new Date(widget.updatedAt),
+      }));
 
       // Cache the result
       this.setCachedWidgets(dashboardId, validatedWidgets);
-      
+
       return validatedWidgets;
     } catch (error) {
       throw new Error(`Failed to load widgets for dashboard ${dashboardId}: ${error}`);
@@ -92,7 +90,7 @@ class WidgetStorage {
     try {
       // Validate widgets before saving
       const validWidgets = widgets.filter(this.validateWidget);
-      
+
       if (validWidgets.length !== widgets.length) {
         if (__DEV__) {
           console.warn(`Filtered out ${widgets.length - validWidgets.length} invalid widgets`);
@@ -101,10 +99,10 @@ class WidgetStorage {
 
       const data = JSON.stringify(validWidgets);
       await AsyncStorage.setItem(`${STORAGE_KEYS.WIDGETS}_${dashboardId}`, data);
-      
+
       // Update cache
       this.setCachedWidgets(dashboardId, validWidgets);
-      
+
       // Create backup
       await this.createBackup(dashboardId, validWidgets);
     } catch (error) {
@@ -118,7 +116,7 @@ class WidgetStorage {
   async deleteWidgets(dashboardId: string): Promise<void> {
     try {
       await AsyncStorage.removeItem(`${STORAGE_KEYS.WIDGETS}_${dashboardId}`);
-      
+
       // Clear cache
       this.clearCache(dashboardId);
     } catch (error) {
@@ -132,7 +130,7 @@ class WidgetStorage {
   async getTemplates(): Promise<WidgetTemplate[]> {
     try {
       const data = await AsyncStorage.getItem(STORAGE_KEYS.WIDGET_TEMPLATES);
-      
+
       if (!data) {
         return this.getDefaultTemplates();
       }
@@ -184,16 +182,16 @@ class WidgetStorage {
     try {
       const backupKey = `${STORAGE_KEYS.WIDGETS}_backup_${dashboardId}`;
       const data = await AsyncStorage.getItem(backupKey);
-      
+
       if (!data) {
         throw new Error('No backup found');
       }
 
       const backup: WidgetBackup = JSON.parse(data);
-      
+
       // Restore widgets
       await this.saveWidgets(dashboardId, backup.widgets);
-      
+
       return backup.widgets;
     } catch (error) {
       throw new Error(`Failed to restore widgets from backup: ${error}`);
@@ -207,17 +205,18 @@ class WidgetStorage {
     try {
       // Get all AsyncStorage keys
       const allKeys = await AsyncStorage.getAllKeys();
-      
+
       // Filter widget-related keys
-      const widgetKeys = allKeys.filter(key => 
-        key.startsWith(STORAGE_KEYS.WIDGETS) ||
-        key.startsWith(STORAGE_KEYS.WIDGET_TEMPLATES) ||
-        key.startsWith(STORAGE_KEYS.WIDGET_CACHE)
+      const widgetKeys = allKeys.filter(
+        key =>
+          key.startsWith(STORAGE_KEYS.WIDGETS) ||
+          key.startsWith(STORAGE_KEYS.WIDGET_TEMPLATES) ||
+          key.startsWith(STORAGE_KEYS.WIDGET_CACHE)
       );
-      
+
       // Remove all widget keys
       await AsyncStorage.multiRemove(widgetKeys);
-      
+
       // Clear cache
       this.cache.clear();
       this.cacheExpiry.clear();
@@ -238,10 +237,10 @@ class WidgetStorage {
     try {
       const allKeys = await AsyncStorage.getAllKeys();
       const widgetKeys = allKeys.filter(key => key.startsWith(STORAGE_KEYS.WIDGETS));
-      
+
       let totalWidgets = 0;
       let totalSize = 0;
-      
+
       for (const key of widgetKeys) {
         const data = await AsyncStorage.getItem(key);
         if (data) {
@@ -285,7 +284,7 @@ class WidgetStorage {
       this.clearCache(dashboardId);
       return null;
     }
-    
+
     return this.cache.get(dashboardId) || null;
   }
 

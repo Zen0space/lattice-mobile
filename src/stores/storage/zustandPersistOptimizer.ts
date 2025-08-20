@@ -5,7 +5,7 @@ import { dashboardStorage } from './dashboardStorage';
 
 /**
  * Optimized Zustand Persist Middleware
- * 
+ *
  * Features:
  * - Selective state persistence
  * - Background sync capabilities
@@ -64,7 +64,7 @@ class ZustandPersistOptimizer {
 
           // Fallback to AsyncStorage
           const data = await AsyncStorage.getItem(name);
-          
+
           if (data && config.cacheEnabled) {
             // Cache for future use
             await cacheManager.set(name, data, 10 * 60 * 1000); // 10 minutes
@@ -87,7 +87,7 @@ class ZustandPersistOptimizer {
 
           // Direct write
           await AsyncStorage.setItem(name, value);
-          
+
           // Update cache if enabled
           if (config.cacheEnabled) {
             await cacheManager.set(name, value, 10 * 60 * 1000);
@@ -101,7 +101,7 @@ class ZustandPersistOptimizer {
       removeItem: async (name: string) => {
         try {
           await AsyncStorage.removeItem(name);
-          
+
           // Clear from cache if enabled
           if (config.cacheEnabled) {
             await cacheManager.delete(name);
@@ -179,9 +179,9 @@ class ZustandPersistOptimizer {
               state = migration.migrate(state);
               if (__DEV__) {
                 if (__DEV__) {
-
-                  console.log(`Applied migration ${migration.version} for ${key}: ${migration.description}`);
-
+                  console.log(
+                    `Applied migration ${migration.version} for ${key}: ${migration.description}`
+                  );
                 }
               }
             } catch (error) {
@@ -268,7 +268,7 @@ class ZustandPersistOptimizer {
   // Private methods
   private queueBackgroundSync(key: string, data: any): void {
     this.backgroundSyncQueue.push({ key, data });
-    
+
     // Start background sync if not already running
     if (!this.syncInProgress) {
       this.processBackgroundSync();
@@ -287,13 +287,13 @@ class ZustandPersistOptimizer {
       const batchSize = 5;
       while (this.backgroundSyncQueue.length > 0) {
         const batch = this.backgroundSyncQueue.splice(0, batchSize);
-        
+
         // Process batch in parallel
         await Promise.all(
           batch.map(async ({ key, data }) => {
             try {
               await AsyncStorage.setItem(key, data);
-              
+
               // Update cache
               await cacheManager.set(key, data, 10 * 60 * 1000);
             } catch (error) {
@@ -323,8 +323,10 @@ class ZustandPersistOptimizer {
     return {
       queueSize: this.backgroundSyncQueue.length,
       syncInProgress: this.syncInProgress,
-      registeredMigrations: Array.from(this.migrations.values())
-        .reduce((total, migrations) => total + migrations.length, 0),
+      registeredMigrations: Array.from(this.migrations.values()).reduce(
+        (total, migrations) => total + migrations.length,
+        0
+      ),
     };
   }
 

@@ -1,9 +1,9 @@
 /**
  * useDashboardData Custom Hook
- * 
+ *
  * Handles data fetching, caching, and background refresh for dashboards.
  * Provides intelligent caching, offline support, and performance optimizations.
- * 
+ *
  * Features:
  * - Intelligent data caching with TTL
  * - Background data refresh
@@ -11,7 +11,7 @@
  * - Data preloading for performance
  * - Memory-efficient cache management
  * - Development debugging tools
- * 
+ *
  * Following 2025 React Native best practices for data fetching.
  */
 
@@ -88,7 +88,7 @@ const generateMockData = (dashboardId: string, dashboardType: string) => {
           totalAssets: 12,
         },
       };
-    
+
     case 'portfolio':
       return {
         ...baseData,
@@ -100,7 +100,7 @@ const generateMockData = (dashboardId: string, dashboardType: string) => {
           currentPrice: Math.random() * 120,
         })),
       };
-    
+
     default:
       return baseData;
   }
@@ -117,7 +117,7 @@ export const useDashboardData = (
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [lastRefresh, setLastRefresh] = useState<Date | null>(null);
-  
+
   // Cache management
   const cacheRef = useRef<Map<string, CacheEntry>>(new Map());
   const refreshIntervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -126,261 +126,261 @@ export const useDashboardData = (
   /**
    * Get cached data for a dashboard
    */
-  const getCachedData = useCallback((dashboardId: string) => {
-    const entry = cacheRef.current.get(dashboardId);
-    
-    if (!entry) {
-      return null;
-    }
+  const getCachedData = useCallback(
+    (dashboardId: string) => {
+      const entry = cacheRef.current.get(dashboardId);
 
-    const now = Date.now();
-    
-    // Check if data has expired
-    if (now > entry.expiresAt) {
-      cacheRef.current.delete(dashboardId);
-      return null;
-    }
+      if (!entry) {
+        return null;
+      }
 
-    // Mark as stale if needed
-    if (now > entry.timestamp + (config.staleTimeout || DEFAULT_CONFIG.staleTimeout!)) {
-      entry.isStale = true;
-    }
+      const now = Date.now();
 
-    return entry.data;
-  }, [config.staleTimeout]);
+      // Check if data has expired
+      if (now > entry.expiresAt) {
+        cacheRef.current.delete(dashboardId);
+        return null;
+      }
+
+      // Mark as stale if needed
+      if (now > entry.timestamp + (config.staleTimeout || DEFAULT_CONFIG.staleTimeout!)) {
+        entry.isStale = true;
+      }
+
+      return entry.data;
+    },
+    [config.staleTimeout]
+  );
 
   /**
    * Set cached data for a dashboard
    */
-  const setCachedData = useCallback((dashboardId: string, data: any) => {
-    if (!config.enableCache) {
-      return;
-    }
-
-    const now = Date.now();
-    const entry: CacheEntry = {
-      data,
-      timestamp: now,
-      expiresAt: now + (config.cacheTimeout || DEFAULT_CONFIG.cacheTimeout!),
-      dashboardId,
-      isStale: false,
-    };
-
-    cacheRef.current.set(dashboardId, entry);
-
-    // Enforce cache size limit
-    if (cacheRef.current.size > (config.maxCacheSize || DEFAULT_CONFIG.maxCacheSize!)) {
-      // Remove oldest entries
-      const entries = Array.from(cacheRef.current.entries());
-      entries.sort((a, b) => a[1].timestamp - b[1].timestamp);
-      
-      const entriesToRemove = entries.slice(0, entries.length - config.maxCacheSize! + 1);
-      entriesToRemove.forEach(([key]) => {
-        cacheRef.current.delete(key);
-      });
-    }
-
-    if (config.enableDevMode) {
-      if (__DEV__) {
-
-        console.log(`📦 Cached data for dashboard: ${dashboardId} (${cacheRef.current.size} total)`);
-
+  const setCachedData = useCallback(
+    (dashboardId: string, data: any) => {
+      if (!config.enableCache) {
+        return;
       }
-    }
-  }, [config.enableCache, config.cacheTimeout, config.maxCacheSize, config.enableDevMode]);
+
+      const now = Date.now();
+      const entry: CacheEntry = {
+        data,
+        timestamp: now,
+        expiresAt: now + (config.cacheTimeout || DEFAULT_CONFIG.cacheTimeout!),
+        dashboardId,
+        isStale: false,
+      };
+
+      cacheRef.current.set(dashboardId, entry);
+
+      // Enforce cache size limit
+      if (cacheRef.current.size > (config.maxCacheSize || DEFAULT_CONFIG.maxCacheSize!)) {
+        // Remove oldest entries
+        const entries = Array.from(cacheRef.current.entries());
+        entries.sort((a, b) => a[1].timestamp - b[1].timestamp);
+
+        const entriesToRemove = entries.slice(0, entries.length - config.maxCacheSize! + 1);
+        entriesToRemove.forEach(([key]) => {
+          cacheRef.current.delete(key);
+        });
+      }
+
+      if (config.enableDevMode) {
+        if (__DEV__) {
+          console.log(
+            `📦 Cached data for dashboard: ${dashboardId} (${cacheRef.current.size} total)`
+          );
+        }
+      }
+    },
+    [config.enableCache, config.cacheTimeout, config.maxCacheSize, config.enableDevMode]
+  );
 
   /**
    * Fetch data for a specific dashboard
    */
-  const fetchDashboardData = useCallback(async (dashboardId: string, dashboardType?: string) => {
-    try {
-      setIsLoading(true);
-      setError(null);
+  const fetchDashboardData = useCallback(
+    async (dashboardId: string, dashboardType?: string) => {
+      try {
+        setIsLoading(true);
+        setError(null);
 
-      if (config.enableDevMode) {
-        if (__DEV__) {
-
-          console.log(`🔄 Fetching data for dashboard: ${dashboardId}`);
-
-        }
-      }
-
-      // Check cache first
-      const cachedData = getCachedData(dashboardId);
-      if (cachedData && !cachedData.isStale) {
-        setDashboardData(prev => ({ ...prev, [dashboardId]: cachedData }));
-        setIsLoading(false);
-        
         if (config.enableDevMode) {
           if (__DEV__) {
-
-            console.log(`💾 Using cached data for dashboard: ${dashboardId}`);
-
+            console.log(`🔄 Fetching data for dashboard: ${dashboardId}`);
           }
         }
-        return;
-      }
 
-      // Simulate API call with mock data
-      // In a real app, this would be an actual API call
-      await new Promise(resolve => setTimeout(resolve, 500 + Math.random() * 1000));
-      
-      const data = generateMockData(dashboardId, dashboardType || 'overview');
-      
-      // Update state and cache
-      setDashboardData(prev => ({ ...prev, [dashboardId]: data }));
-      setCachedData(dashboardId, data);
-      setLastRefresh(new Date());
-      setIsLoading(false);
-
-      if (config.enableDevMode) {
-        if (__DEV__) {
-
-          console.log(`✅ Fetched fresh data for dashboard: ${dashboardId}`);
-
-        }
-      }
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Failed to fetch dashboard data';
-      setError(errorMessage);
-      setIsLoading(false);
-      
-      // Try to use stale cached data as fallback
-      if (config.enableOfflineMode) {
+        // Check cache first
         const cachedData = getCachedData(dashboardId);
-        if (cachedData) {
+        if (cachedData && !cachedData.isStale) {
           setDashboardData(prev => ({ ...prev, [dashboardId]: cachedData }));
-          
+          setIsLoading(false);
+
           if (config.enableDevMode) {
             if (__DEV__) {
+              console.log(`💾 Using cached data for dashboard: ${dashboardId}`);
+            }
+          }
+          return;
+        }
 
-              console.log(`🔄 Using stale cached data as fallback for: ${dashboardId}`);
+        // Simulate API call with mock data
+        // In a real app, this would be an actual API call
+        await new Promise(resolve => setTimeout(resolve, 500 + Math.random() * 1000));
 
+        const data = generateMockData(dashboardId, dashboardType || 'overview');
+
+        // Update state and cache
+        setDashboardData(prev => ({ ...prev, [dashboardId]: data }));
+        setCachedData(dashboardId, data);
+        setLastRefresh(new Date());
+        setIsLoading(false);
+
+        if (config.enableDevMode) {
+          if (__DEV__) {
+            console.log(`✅ Fetched fresh data for dashboard: ${dashboardId}`);
+          }
+        }
+      } catch (error) {
+        const errorMessage =
+          error instanceof Error ? error.message : 'Failed to fetch dashboard data';
+        setError(errorMessage);
+        setIsLoading(false);
+
+        // Try to use stale cached data as fallback
+        if (config.enableOfflineMode) {
+          const cachedData = getCachedData(dashboardId);
+          if (cachedData) {
+            setDashboardData(prev => ({ ...prev, [dashboardId]: cachedData }));
+
+            if (config.enableDevMode) {
+              if (__DEV__) {
+                console.log(`🔄 Using stale cached data as fallback for: ${dashboardId}`);
+              }
             }
           }
         }
-      }
 
-      if (config.enableDevMode) {
-        console.error(`❌ Error fetching data for dashboard ${dashboardId}:`, error);
+        if (config.enableDevMode) {
+          console.error(`❌ Error fetching data for dashboard ${dashboardId}:`, error);
+        }
       }
-    }
-  }, [config.enableDevMode, config.enableOfflineMode, getCachedData, setCachedData]);
+    },
+    [config.enableDevMode, config.enableOfflineMode, getCachedData, setCachedData]
+  );
 
   /**
    * Refresh data for one or all dashboards
    */
-  const refreshData = useCallback(async (dashboardId?: string) => {
-    try {
-      setError(null);
+  const refreshData = useCallback(
+    async (dashboardId?: string) => {
+      try {
+        setError(null);
 
-      if (dashboardId) {
-        // Refresh specific dashboard
-        invalidateCache(dashboardId);
-        await fetchDashboardData(dashboardId);
-      } else {
-        // Refresh all cached dashboards
-        const dashboardIds = Array.from(cacheRef.current.keys());
-        
-        // Clear cache
-        cacheRef.current.clear();
-        
-        // Refresh all dashboards
-        await Promise.all(
-          dashboardIds.map(id => fetchDashboardData(id))
-        );
-      }
+        if (dashboardId) {
+          // Refresh specific dashboard
+          invalidateCache(dashboardId);
+          await fetchDashboardData(dashboardId);
+        } else {
+          // Refresh all cached dashboards
+          const dashboardIds = Array.from(cacheRef.current.keys());
 
-      setLastRefresh(new Date());
+          // Clear cache
+          cacheRef.current.clear();
 
-      if (config.enableDevMode) {
-        if (__DEV__) {
+          // Refresh all dashboards
+          await Promise.all(dashboardIds.map(id => fetchDashboardData(id)));
+        }
 
-          console.log(`🔄 Refreshed data for ${dashboardId || 'all dashboards'}`);
+        setLastRefresh(new Date());
 
+        if (config.enableDevMode) {
+          if (__DEV__) {
+            console.log(`🔄 Refreshed data for ${dashboardId || 'all dashboards'}`);
+          }
+        }
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'Failed to refresh data';
+        setError(errorMessage);
+
+        if (config.enableDevMode) {
+          console.error('❌ Error refreshing data:', error);
         }
       }
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Failed to refresh data';
-      setError(errorMessage);
-      
-      if (config.enableDevMode) {
-        console.error('❌ Error refreshing data:', error);
-      }
-    }
-  }, [config.enableDevMode, fetchDashboardData]);
+    },
+    [config.enableDevMode, fetchDashboardData]
+  );
 
   /**
    * Clear cache for specific dashboard or all
    */
-  const clearCache = useCallback((dashboardId?: string) => {
-    if (dashboardId) {
-      cacheRef.current.delete(dashboardId);
-      setDashboardData(prev => {
-        const newData = { ...prev };
-        delete newData[dashboardId];
-        return newData;
-      });
-    } else {
-      cacheRef.current.clear();
-      setDashboardData({});
-    }
-
-    if (config.enableDevMode) {
-      if (__DEV__) {
-
-        console.log(`🗑️ Cleared cache for ${dashboardId || 'all dashboards'}`);
-
+  const clearCache = useCallback(
+    (dashboardId?: string) => {
+      if (dashboardId) {
+        cacheRef.current.delete(dashboardId);
+        setDashboardData(prev => {
+          const newData = { ...prev };
+          delete newData[dashboardId];
+          return newData;
+        });
+      } else {
+        cacheRef.current.clear();
+        setDashboardData({});
       }
-    }
-  }, [config.enableDevMode]);
+
+      if (config.enableDevMode) {
+        if (__DEV__) {
+          console.log(`🗑️ Cleared cache for ${dashboardId || 'all dashboards'}`);
+        }
+      }
+    },
+    [config.enableDevMode]
+  );
 
   /**
    * Preload data for multiple dashboards
    */
-  const preloadData = useCallback(async (dashboardIds: string[]) => {
-    try {
-      if (config.enableDevMode) {
-        if (__DEV__) {
+  const preloadData = useCallback(
+    async (dashboardIds: string[]) => {
+      try {
+        if (config.enableDevMode) {
+          if (__DEV__) {
+            console.log(`⏳ Preloading data for ${dashboardIds.length} dashboards`);
+          }
+        }
 
-          console.log(`⏳ Preloading data for ${dashboardIds.length} dashboards`);
+        // Fetch data for all dashboards in parallel
+        await Promise.all(dashboardIds.map(id => fetchDashboardData(id)));
 
+        if (config.enableDevMode) {
+          if (__DEV__) {
+            console.log(`✅ Preloaded data for ${dashboardIds.length} dashboards`);
+          }
+        }
+      } catch (error) {
+        if (config.enableDevMode) {
+          console.error('❌ Error preloading data:', error);
         }
       }
-
-      // Fetch data for all dashboards in parallel
-      await Promise.all(
-        dashboardIds.map(id => fetchDashboardData(id))
-      );
-
-      if (config.enableDevMode) {
-        if (__DEV__) {
-
-          console.log(`✅ Preloaded data for ${dashboardIds.length} dashboards`);
-
-        }
-      }
-    } catch (error) {
-      if (config.enableDevMode) {
-        console.error('❌ Error preloading data:', error);
-      }
-    }
-  }, [config.enableDevMode, fetchDashboardData]);
+    },
+    [config.enableDevMode, fetchDashboardData]
+  );
 
   /**
    * Invalidate cache for specific dashboard
    */
-  const invalidateCache = useCallback((dashboardId: string) => {
-    cacheRef.current.delete(dashboardId);
-    
-    if (config.enableDevMode) {
-      if (__DEV__) {
+  const invalidateCache = useCallback(
+    (dashboardId: string) => {
+      cacheRef.current.delete(dashboardId);
 
-        console.log(`🗑️ Invalidated cache for dashboard: ${dashboardId}`);
-
+      if (config.enableDevMode) {
+        if (__DEV__) {
+          console.log(`🗑️ Invalidated cache for dashboard: ${dashboardId}`);
+        }
       }
-    }
-  }, [config.enableDevMode]);
+    },
+    [config.enableDevMode]
+  );
 
   /**
    * Get age of cached data in milliseconds
@@ -390,55 +390,54 @@ export const useDashboardData = (
     if (!entry) {
       return -1;
     }
-    
+
     return Date.now() - entry.timestamp;
   }, []);
 
   /**
    * Enable or disable background sync
    */
-  const enableBackgroundSync = useCallback((enabled: boolean) => {
-    if (enabled && config.enableBackgroundRefresh) {
-      // Start background refresh interval
-      if (refreshIntervalRef.current) {
-        clearInterval(refreshIntervalRef.current);
-      }
-      
-      refreshIntervalRef.current = setInterval(() => {
-        if (appStateRef.current === 'active') {
-          refreshData();
+  const enableBackgroundSync = useCallback(
+    (enabled: boolean) => {
+      if (enabled && config.enableBackgroundRefresh) {
+        // Start background refresh interval
+        if (refreshIntervalRef.current) {
+          clearInterval(refreshIntervalRef.current);
         }
-      }, config.refreshInterval || DEFAULT_CONFIG.refreshInterval!);
-      
-      if (config.enableDevMode) {
-        if (__DEV__) {
 
-          console.log('🔄 Enabled background data sync');
+        refreshIntervalRef.current = setInterval(() => {
+          if (appStateRef.current === 'active') {
+            refreshData();
+          }
+        }, config.refreshInterval || DEFAULT_CONFIG.refreshInterval!);
 
+        if (config.enableDevMode) {
+          if (__DEV__) {
+            console.log('🔄 Enabled background data sync');
+          }
         }
-      }
-    } else {
-      // Stop background refresh
-      if (refreshIntervalRef.current) {
-        clearInterval(refreshIntervalRef.current);
-        refreshIntervalRef.current = null;
-      }
-      
-      if (config.enableDevMode) {
-        if (__DEV__) {
+      } else {
+        // Stop background refresh
+        if (refreshIntervalRef.current) {
+          clearInterval(refreshIntervalRef.current);
+          refreshIntervalRef.current = null;
+        }
 
-          console.log('⏹️ Disabled background data sync');
-
+        if (config.enableDevMode) {
+          if (__DEV__) {
+            console.log('⏹️ Disabled background data sync');
+          }
         }
       }
-    }
-  }, [config.enableBackgroundRefresh, config.refreshInterval, config.enableDevMode, refreshData]);
+    },
+    [config.enableBackgroundRefresh, config.refreshInterval, config.enableDevMode, refreshData]
+  );
 
   // Handle app state changes for background sync
   useEffect(() => {
     const handleAppStateChange = (nextAppState: AppStateStatus) => {
       appStateRef.current = nextAppState;
-      
+
       if (nextAppState === 'active' && config.enableBackgroundRefresh) {
         // Refresh data when app becomes active
         refreshData();
@@ -446,7 +445,7 @@ export const useDashboardData = (
     };
 
     const subscription = AppState.addEventListener('change', handleAppStateChange);
-    
+
     return () => {
       subscription?.remove();
     };
@@ -467,17 +466,17 @@ export const useDashboardData = (
     isLoading,
     error,
     lastRefresh,
-    
+
     // Actions
     fetchDashboardData,
     refreshData,
     clearCache,
     preloadData,
-    
+
     // Cache management
     getCachedData,
     invalidateCache,
-    
+
     // Background sync
     enableBackgroundSync,
     getDataAge,

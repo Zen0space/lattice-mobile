@@ -1,6 +1,6 @@
 /**
  * Financial Data Types
- * 
+ *
  * Common financial data interfaces used across the application
  */
 

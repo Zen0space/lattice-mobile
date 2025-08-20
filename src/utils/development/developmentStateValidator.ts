@@ -21,13 +21,13 @@ const dashboardStateSchema: StateValidationSchema = {
   dashboards: {
     type: 'array',
     required: true,
-    validator: (value) => Array.isArray(value) && value.length >= 0,
+    validator: value => Array.isArray(value) && value.length >= 0,
     fallback: [],
   },
   activeDashboardId: {
     type: 'string',
     required: false,
-    validator: (value) => typeof value === 'string' || value === null,
+    validator: value => typeof value === 'string' || value === null,
     fallback: null,
   },
   isLoading: {
@@ -38,7 +38,7 @@ const dashboardStateSchema: StateValidationSchema = {
   error: {
     type: 'string',
     required: false,
-    validator: (value) => typeof value === 'string' || value === null,
+    validator: value => typeof value === 'string' || value === null,
     fallback: null,
   },
 };
@@ -53,90 +53,90 @@ export const useStateValidator = <T extends Record<string, any>>(
   const previousStateRef = useRef<T>(state);
   const validationErrorsRef = useRef<string[]>([]);
 
-  const validateState = useCallback((stateToValidate: T): T => {
-    if (!__DEV__) return stateToValidate;
+  const validateState = useCallback(
+    (stateToValidate: T): T => {
+      if (!__DEV__) return stateToValidate;
 
-    const errors: string[] = [];
-    const correctedState = { ...stateToValidate };
+      const errors: string[] = [];
+      const correctedState = { ...stateToValidate };
 
-          Object.entries(schema).forEach(([key, schemaItem]) => {
-      const value = (stateToValidate as any)[key];
-      
-      // Check if required field is missing
-      if (schemaItem.required && (value === undefined || value === null)) {
-        errors.push(`${componentName}: Required field '${key}' is missing`);
-        if (schemaItem.fallback !== undefined) {
-          (correctedState as any)[key] = schemaItem.fallback;
+      Object.entries(schema).forEach(([key, schemaItem]) => {
+        const value = (stateToValidate as any)[key];
+
+        // Check if required field is missing
+        if (schemaItem.required && (value === undefined || value === null)) {
+          errors.push(`${componentName}: Required field '${key}' is missing`);
+          if (schemaItem.fallback !== undefined) {
+            (correctedState as any)[key] = schemaItem.fallback;
+          }
+          return;
         }
-        return;
-      }
 
-      // Skip validation if value is null/undefined and not required
-      if (value === null || value === undefined) return;
+        // Skip validation if value is null/undefined and not required
+        if (value === null || value === undefined) return;
 
-      // Type validation
-      const expectedType = schemaItem.type;
-      const actualType = Array.isArray(value) ? 'array' : typeof value;
-      
-      if (actualType !== expectedType) {
-        errors.push(`${componentName}: Field '${key}' expected ${expectedType} but got ${actualType}`);
-        if (schemaItem.fallback !== undefined) {
-          (correctedState as any)[key] = schemaItem.fallback;
+        // Type validation
+        const expectedType = schemaItem.type;
+        const actualType = Array.isArray(value) ? 'array' : typeof value;
+
+        if (actualType !== expectedType) {
+          errors.push(
+            `${componentName}: Field '${key}' expected ${expectedType} but got ${actualType}`
+          );
+          if (schemaItem.fallback !== undefined) {
+            (correctedState as any)[key] = schemaItem.fallback;
+          }
         }
-      }
 
-      // Custom validator
-      if (schemaItem.validator && !schemaItem.validator(value)) {
-        errors.push(`${componentName}: Field '${key}' failed custom validation`);
-        if (schemaItem.fallback !== undefined) {
-          (correctedState as any)[key] = schemaItem.fallback;
+        // Custom validator
+        if (schemaItem.validator && !schemaItem.validator(value)) {
+          errors.push(`${componentName}: Field '${key}' failed custom validation`);
+          if (schemaItem.fallback !== undefined) {
+            (correctedState as any)[key] = schemaItem.fallback;
+          }
         }
+      });
+
+      // Log validation errors in development
+      if (errors.length > 0) {
+        console.group(`⚠️ State Validation Errors - ${componentName}`);
+        errors.forEach(error => console.warn(error));
+        if (__DEV__) {
+          console.log('Original state:', stateToValidate);
+        }
+        if (__DEV__) {
+          console.log('Corrected state:', correctedState);
+        }
+        console.groupEnd();
+
+        validationErrorsRef.current = errors;
+      } else if (validationErrorsRef.current.length > 0) {
+        if (__DEV__) {
+          console.log(`✅ State validation recovered for ${componentName}`);
+        }
+        validationErrorsRef.current = [];
       }
-    });
 
-    // Log validation errors in development
-    if (errors.length > 0) {
-      console.group(`⚠️ State Validation Errors - ${componentName}`);
-      errors.forEach(error => console.warn(error));
-      if (__DEV__) {
-
-        console.log('Original state:', stateToValidate);
-
-      }
-      if (__DEV__) {
-
-        console.log('Corrected state:', correctedState);
-
-      }
-      console.groupEnd();
-      
-      validationErrorsRef.current = errors;
-    } else if (validationErrorsRef.current.length > 0) {
-      if (__DEV__) {
-
-        console.log(`✅ State validation recovered for ${componentName}`);
-
-      }
-      validationErrorsRef.current = [];
-    }
-
-    return correctedState;
-  }, [schema, componentName]);
+      return correctedState;
+    },
+    [schema, componentName]
+  );
 
   useEffect(() => {
     if (__DEV__) {
       const validated = validateState(state);
-      
+
       // Check if state changed significantly (hot reload detection)
-      const hasSignificantChange = JSON.stringify(previousStateRef.current) !== JSON.stringify(state);
-      
+      const hasSignificantChange =
+        JSON.stringify(previousStateRef.current) !== JSON.stringify(state);
+
       if (hasSignificantChange) {
         console.log(`🔄 State change detected in ${componentName}:`, {
           previous: previousStateRef.current,
           current: state,
           validated,
         });
-        
+
         setValidatedState(validated);
         previousStateRef.current = state;
       }
@@ -180,14 +180,16 @@ export const useHotReloadRecovery = (componentName: string) => {
       if (timeSinceMount < 100) {
         hotReloadCountRef.current++;
         if (__DEV__) {
-
-          console.log(`🔥 Hot reload detected for ${componentName} (count: ${hotReloadCountRef.current})`);
-
+          console.log(
+            `🔥 Hot reload detected for ${componentName} (count: ${hotReloadCountRef.current})`
+          );
         }
-        
+
         // If too many hot reloads, suggest full refresh
         if (hotReloadCountRef.current > 5) {
-          console.warn(`⚠️ Multiple hot reloads detected for ${componentName}. Consider full refresh if experiencing issues.`);
+          console.warn(
+            `⚠️ Multiple hot reloads detected for ${componentName}. Consider full refresh if experiencing issues.`
+          );
         }
       } else {
         hotReloadCountRef.current = 0;
@@ -204,10 +206,7 @@ export const useHotReloadRecovery = (componentName: string) => {
 };
 
 // Development fallback component generator
-export const createDevelopmentFallbackConfig = (
-  componentName: string,
-  error?: string
-) => {
+export const createDevelopmentFallbackConfig = (componentName: string, error?: string) => {
   if (!__DEV__) return null;
 
   return {
@@ -226,9 +225,7 @@ export const devDebugHelpers = {
     if (__DEV__) {
       const emoji = phase === 'mount' ? '🟢' : phase === 'update' ? '🔄' : '🔴';
       if (__DEV__) {
-
         console.log(`${emoji} ${componentName} ${phase}`, data || '');
-
       }
     }
   },
@@ -238,20 +235,17 @@ export const devDebugHelpers = {
     if (__DEV__) {
       console.group(`🔄 ${componentName} State Change`);
       if (__DEV__) {
-
         console.log('Previous:', prevState);
-
       }
       if (__DEV__) {
-
         console.log('New:', newState);
-
       }
       console.log('Diff:', {
         added: Object.keys(newState).filter(key => !(key in prevState)),
         removed: Object.keys(prevState).filter(key => !(key in newState)),
-        changed: Object.keys(newState).filter(key => 
-          key in prevState && JSON.stringify(prevState[key]) !== JSON.stringify(newState[key])
+        changed: Object.keys(newState).filter(
+          key =>
+            key in prevState && JSON.stringify(prevState[key]) !== JSON.stringify(newState[key])
         ),
       });
       console.groupEnd();
@@ -264,11 +258,14 @@ export const devDebugHelpers = {
       const start = performance.now();
       const result = renderFn();
       const end = performance.now();
-      
-      if (end - start > 16) { // More than one frame (60fps)
-        console.warn(`⏱️ Slow render detected: ${componentName} took ${(end - start).toFixed(2)}ms`);
+
+      if (end - start > 16) {
+        // More than one frame (60fps)
+        console.warn(
+          `⏱️ Slow render detected: ${componentName} took ${(end - start).toFixed(2)}ms`
+        );
       }
-      
+
       return result;
     }
     return renderFn();

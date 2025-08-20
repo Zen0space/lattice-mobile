@@ -1,19 +1,10 @@
 import React, { useState, useEffect, memo } from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  Dimensions,
-} from 'react-native';
-import {
-  TrendingUp,
-  DollarSign,
-  Activity,
-} from 'react-native-feather';
+import { View, Text, TouchableOpacity, Dimensions } from 'react-native';
+import { TrendingUp, DollarSign, Activity } from 'react-native-feather';
 import { DashboardConfig, AssetData } from './types';
-import { 
-  DashboardContainer, 
-  ActionButton, 
+import {
+  DashboardContainer,
+  ActionButton,
   StatCard,
   AssetCard,
   SectionHeader,
@@ -37,7 +28,7 @@ const OverviewDashboard: React.FC<OverviewDashboardProps> = ({ config }) => {
   const mountedRef = useMountedRef();
   memoryLeakDetection.useComponentLifecycleLogger('OverviewDashboard');
   memoryLeakDetection.useMemoryMonitor('OverviewDashboard');
-  
+
   const [portfolioData, setPortfolioData] = useState({
     totalValue: 125847.32,
     totalChange: 2847.23,
@@ -74,7 +65,7 @@ const OverviewDashboard: React.FC<OverviewDashboardProps> = ({ config }) => {
       change: 1.87,
       changePercent: 1.87,
       holdings: 50,
-      value: 18394.50,
+      value: 18394.5,
       allocation: 14.6,
     },
     {
@@ -124,10 +115,8 @@ const OverviewDashboard: React.FC<OverviewDashboardProps> = ({ config }) => {
   return (
     <DashboardContainer>
       {/* Portfolio Summary */}
-      <WelcomeHeader 
-        subtitle="Here's your portfolio summary."
-      />
-      
+      <WelcomeHeader subtitle="Here's your portfolio summary." />
+
       <View className="flex-row flex-wrap justify-between gap-3 mb-6">
         <StatCard
           title="Total Value"
@@ -147,14 +136,14 @@ const OverviewDashboard: React.FC<OverviewDashboardProps> = ({ config }) => {
 
       {/* Top Holdings */}
       <View className="mb-6">
-        <AssetsHeader 
+        <AssetsHeader
           totalAssets={topAssets.length}
           onViewAll={() => console.log('View All Assets')}
         />
         <AssetDataRenderer
           assets={topAssets.slice(0, 5)}
           variant="row"
-          onAssetPress={(asset) => console.log('Asset pressed:', asset.symbol)}
+          onAssetPress={asset => console.log('Asset pressed:', asset.symbol)}
           nestedInScrollView={true}
         />
       </View>
@@ -173,19 +162,17 @@ const OverviewDashboard: React.FC<OverviewDashboardProps> = ({ config }) => {
 
       {/* Recent Activity */}
       <View className="mb-6">
-        <ActivityHeader 
-          onViewHistory={() => console.log('View Activity History')}
-        />
+        <ActivityHeader onViewHistory={() => console.log('View Activity History')} />
         <ActivityDataRenderer
           activities={recentActivity.slice(0, 5)}
-          onActivityPress={(activity) => console.log('Activity pressed:', activity)}
+          onActivityPress={activity => console.log('Activity pressed:', activity)}
           nestedInScrollView={true}
         />
       </View>
 
       {/* Quick Actions */}
       <View className="mb-6">
-        <SectionHeader 
+        <SectionHeader
           title="Quick Actions"
           subtitle="Manage your portfolio with ease"
           variant="compact"

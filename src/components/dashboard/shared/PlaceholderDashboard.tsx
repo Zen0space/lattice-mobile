@@ -39,7 +39,9 @@ const PlaceholderDashboard: React.FC<PlaceholderDashboardProps> = ({
       <View className="bg-gray-50 rounded-xl p-6 border border-gray-200 shadow-sm mb-6 items-center">
         <IconComponent width={64} height={64} stroke={primaryAction.color} />
         <Text className="text-lg font-semibold text-gray-900 mt-4 mb-2">{title} Dashboard</Text>
-        <Text className="text-gray-600 text-center">Advanced {title.toLowerCase()} features coming soon</Text>
+        <Text className="text-gray-600 text-center">
+          Advanced {title.toLowerCase()} features coming soon
+        </Text>
       </View>
 
       <View className="flex-row justify-between gap-4">

@@ -1,10 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import {
-  View,
-  Dimensions,
-  Alert,
-  Animated,
-} from 'react-native';
+import { View, Dimensions, Alert, Animated } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { DashboardConfig, DashboardType } from './types';
 import { preloadCriticalDashboards, monitorBundleSize } from '../../utils/core/dynamicImports';
@@ -68,25 +63,25 @@ const DashboardManager: React.FC<DashboardManagerProps> = ({ onBack }) => {
     openDeleteModal,
     closeDeleteModal,
   } = useModalStore();
-  
+
   // Local state for widget count (dashboard-specific)
   const [dashboardWidgetCount, setDashboardWidgetCount] = useState<number>(0);
 
   // Combined loading state
   const isLoading = dashboardLoading || dataLoading || widgetLoading;
-  
+
   // Combined error state
   const error = dashboardError || dataError || widgetError;
 
   // Bundle optimization: preload critical dashboards
   useEffect(() => {
     preloadCriticalDashboards();
-    
+
     if (__DEV__) {
       monitorBundleSize();
     }
   }, []);
-  
+
   // Animated values for delete modal
   const deleteModalOpacity = useRef(new Animated.Value(0)).current;
   const deleteModalScale = useRef(new Animated.Value(0.8)).current;
@@ -140,9 +135,12 @@ const DashboardManager: React.FC<DashboardManagerProps> = ({ onBack }) => {
   // Handle dashboard deletion using custom hook
   const handleDeleteDashboard = async (dashboardId: string) => {
     const dashboard = dashboards.find((d: DashboardConfig) => d.id === dashboardId);
-    
+
     if (!canDeleteDashboard(dashboardId)) {
-      Alert.alert('Cannot Delete', 'Default dashboards cannot be deleted or this is the last dashboard');
+      Alert.alert(
+        'Cannot Delete',
+        'Default dashboards cannot be deleted or this is the last dashboard'
+      );
       return;
     }
 
@@ -150,15 +148,13 @@ const DashboardManager: React.FC<DashboardManagerProps> = ({ onBack }) => {
       // Load widgets to get count for confirmation modal
       await loadWidgets(dashboardId);
       const widgetCount = getWidgetCount(dashboardId);
-      
+
       if (__DEV__) {
         if (__DEV__) {
-
           console.log(`📊 Dashboard "${dashboard?.name}" has ${widgetCount} widgets`);
-
         }
       }
-      
+
       openDeleteModal(dashboardId);
       setDashboardWidgetCount(widgetCount);
       showDeleteModalWithAnimation();
@@ -183,22 +179,23 @@ const DashboardManager: React.FC<DashboardManagerProps> = ({ onBack }) => {
   };
 
   // Handle dashboard switching using custom hook
-  const handleSwitchDashboard = useCallback(async (dashboardId: string) => {
-    try {
-      await switchDashboard(dashboardId);
-      // Only fetch data if switch was successful
-      await fetchDashboardData(dashboardId);
-    } catch (error) {
-      // Error is already handled in switchDashboard
-      if (__DEV__) {
+  const handleSwitchDashboard = useCallback(
+    async (dashboardId: string) => {
+      try {
+        await switchDashboard(dashboardId);
+        // Only fetch data if switch was successful
+        await fetchDashboardData(dashboardId);
+      } catch (error) {
+        // Error is already handled in switchDashboard
         if (__DEV__) {
-
-          console.log('Switch dashboard failed, skipping data fetch');
-
+          if (__DEV__) {
+            console.log('Switch dashboard failed, skipping data fetch');
+          }
         }
       }
-    }
-  }, [switchDashboard, fetchDashboardData]);
+    },
+    [switchDashboard, fetchDashboardData]
+  );
 
   // Development state validation - only run when dashboards or activeDashboardId actually change
   useEffect(() => {

@@ -30,10 +30,10 @@ class FakeDataGeneratorImpl implements FakeDataGenerator {
       let trendFactor = 0;
       switch (trend) {
         case 'up':
-          trendFactor = (max - min) / points * 0.5;
+          trendFactor = ((max - min) / points) * 0.5;
           break;
         case 'down':
-          trendFactor = -(max - min) / points * 0.5;
+          trendFactor = (-(max - min) / points) * 0.5;
           break;
         case 'wave':
           trendFactor = Math.sin((i / points) * Math.PI * 2) * (max - min) * 0.1;
@@ -46,10 +46,10 @@ class FakeDataGeneratorImpl implements FakeDataGenerator {
 
       // Add volatility
       const volatilityFactor = (Math.random() - 0.5) * (max - min) * volatility;
-      
+
       // Calculate next value
       currentValue += trendFactor + volatilityFactor;
-      
+
       // Ensure value stays within bounds
       currentValue = Math.max(min, Math.min(max, currentValue));
 
@@ -87,10 +87,10 @@ class FakeDataGeneratorImpl implements FakeDataGenerator {
     } = options;
 
     const data = this.generateLineData(points, { min, max, trend, volatility });
-    
+
     // Add time information
     const intervalMs = this.getIntervalMs(interval);
-    
+
     return data.map((point, index) => {
       const date = new Date(startDate.getTime() + index * intervalMs);
       return {
@@ -120,21 +120,21 @@ class FakeDataGeneratorImpl implements FakeDataGenerator {
   private formatDate(date: Date, interval: 'hour' | 'day' | 'week' | 'month'): string {
     switch (interval) {
       case 'hour':
-        return date.toLocaleTimeString('en-US', { 
-          hour: '2-digit', 
-          minute: '2-digit' 
+        return date.toLocaleTimeString('en-US', {
+          hour: '2-digit',
+          minute: '2-digit',
         });
       case 'day':
-        return date.toLocaleDateString('en-US', { 
-          month: 'short', 
-          day: 'numeric' 
+        return date.toLocaleDateString('en-US', {
+          month: 'short',
+          day: 'numeric',
         });
       case 'week':
         return `Week ${Math.ceil(date.getDate() / 7)}`;
       case 'month':
-        return date.toLocaleDateString('en-US', { 
-          month: 'short', 
-          year: 'numeric' 
+        return date.toLocaleDateString('en-US', {
+          month: 'short',
+          year: 'numeric',
         });
       default:
         return date.toLocaleDateString();
@@ -197,16 +197,18 @@ class FakeDataGeneratorImpl implements FakeDataGenerator {
   /**
    * Generate weekly data with day names (Monday-Sunday)
    */
-  generateWeeklyData(options: {
-    min?: number;
-    max?: number;
-    trend?: 'up' | 'down' | 'random' | 'wave';
-    volatility?: number;
-    startValue?: number;
-  } = {}): ChartDataPoint[] {
+  generateWeeklyData(
+    options: {
+      min?: number;
+      max?: number;
+      trend?: 'up' | 'down' | 'random' | 'wave';
+      volatility?: number;
+      startValue?: number;
+    } = {}
+  ): ChartDataPoint[] {
     const dayNames = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
     const data = this.generateLineData(7, options);
-    
+
     return data.map((point, index) => ({
       ...point,
       label: dayNames[index],

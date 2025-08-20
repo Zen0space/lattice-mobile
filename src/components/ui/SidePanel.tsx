@@ -16,7 +16,10 @@ import ChatStorage, { ChatSession } from '../../stores/storage/chatStorage';
 interface SidePanelProps {
   isVisible: boolean;
   onClose: () => void;
-  translateX: Animated.Value | Animated.AnimatedAddition<number> | Animated.AnimatedInterpolation<number>;
+  translateX:
+    | Animated.Value
+    | Animated.AnimatedAddition<number>
+    | Animated.AnimatedInterpolation<number>;
   onNavigateToDashboard?: () => void;
   onNewChat?: () => void;
   onLoadChatSession?: (sessionId: string) => void;
@@ -49,12 +52,12 @@ const SidePanel: React.FC<SidePanelProps> = ({
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedChat, setSelectedChat] = useState<ChatHistoryItem | null>(null);
   const [editedTitle, setEditedTitle] = useState('');
-  
+
   // Dropdown state
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const [dropdownPosition, setDropdownPosition] = useState({ x: 0, y: 0 });
   const [dropdownChat, setDropdownChat] = useState<ChatHistoryItem | null>(null);
-  
+
   const insets = useSafeAreaInsets();
 
   // Load chat sessions from storage
@@ -63,26 +66,26 @@ const SidePanel: React.FC<SidePanelProps> = ({
       try {
         setIsLoadingHistory(true);
         const sessions = await ChatStorage.loadSessions();
-        
+
         // Convert ChatSessions to ChatHistoryItems
         const historyItems: ChatHistoryItem[] = sessions.map((session: ChatSession) => {
           const firstMessage = session.messages.find(msg => msg.isUser);
           const preview = firstMessage ? firstMessage.text.substring(0, 50) + '...' : 'No messages';
           const title = generateChatTitle(firstMessage?.text || 'Untitled Chat');
-          
+
           return {
             id: session.id,
             title,
             date: formatRelativeDate(session.lastUpdated),
             preview,
             messageCount: session.messages.length,
-            lastUpdated: session.lastUpdated
+            lastUpdated: session.lastUpdated,
           };
         });
-        
+
         // Sort by last updated (most recent first)
         historyItems.sort((a, b) => b.lastUpdated.getTime() - a.lastUpdated.getTime());
-        
+
         setChatHistory(historyItems);
       } catch (error) {
         console.error('Failed to load chat history:', error);
@@ -102,13 +105,13 @@ const SidePanel: React.FC<SidePanelProps> = ({
     if (!firstMessage || firstMessage.trim().length === 0) {
       return 'Untitled Chat';
     }
-    
+
     // Extract meaningful title from first message
     const cleanMessage = firstMessage.trim();
     if (cleanMessage.length <= 30) {
       return cleanMessage;
     }
-    
+
     // Try to find a good breaking point
     const words = cleanMessage.split(' ');
     let title = '';
@@ -116,7 +119,7 @@ const SidePanel: React.FC<SidePanelProps> = ({
       if ((title + word).length > 30) break;
       title += (title ? ' ' : '') + word;
     }
-    
+
     return title || cleanMessage.substring(0, 30) + '...';
   };
 
@@ -127,7 +130,7 @@ const SidePanel: React.FC<SidePanelProps> = ({
     const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
     const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
     const diffMinutes = Math.floor(diffMs / (1000 * 60));
-    
+
     if (diffMinutes < 1) return 'Just now';
     if (diffMinutes < 60) return `${diffMinutes}m ago`;
     if (diffHours < 24) return `${diffHours}h ago`;
@@ -161,11 +164,11 @@ const SidePanel: React.FC<SidePanelProps> = ({
   const handleLongPress = (chat: ChatHistoryItem, event: any) => {
     // Get touch position for dropdown positioning
     const { pageX, pageY } = event.nativeEvent;
-    
+
     // Position dropdown using screen coordinates (Modal uses full screen)
     const x = Math.max(10, Math.min(pageX - 50, 250)); // Center around touch, keep in bounds
     const y = Math.max(50, pageY + 10); // Position below touch point with margin
-    
+
     setDropdownPosition({ x, y });
     setDropdownChat(chat);
     setDropdownVisible(true);
@@ -173,11 +176,9 @@ const SidePanel: React.FC<SidePanelProps> = ({
 
   const handleSaveEdit = () => {
     if (selectedChat && editedTitle.trim()) {
-      setChatHistory(prev => 
-        prev.map(chat => 
-          chat.id === selectedChat.id 
-            ? { ...chat, title: editedTitle.trim() }
-            : chat
+      setChatHistory(prev =>
+        prev.map(chat =>
+          chat.id === selectedChat.id ? { ...chat, title: editedTitle.trim() } : chat
         )
       );
       setModalVisible(false);
@@ -188,31 +189,25 @@ const SidePanel: React.FC<SidePanelProps> = ({
 
   const handleDeleteChat = () => {
     if (selectedChat) {
-      Alert.alert(
-        'Delete Chat',
-        'Are you sure you want to delete this conversation?',
-        [
-          { text: 'Cancel', style: 'cancel' },
-          {
-            text: 'Delete',
-            style: 'destructive',
-            onPress: async () => {
-              try {
-                await ChatStorage.deleteSession(selectedChat.id);
-                setChatHistory(prev => 
-                  prev.filter(chat => chat.id !== selectedChat.id)
-                );
-                setModalVisible(false);
-                setSelectedChat(null);
-                setEditedTitle('');
-              } catch (error) {
-                console.error('Failed to delete chat session:', error);
-                Alert.alert('Error', 'Failed to delete the conversation. Please try again.');
-              }
+      Alert.alert('Delete Chat', 'Are you sure you want to delete this conversation?', [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              await ChatStorage.deleteSession(selectedChat.id);
+              setChatHistory(prev => prev.filter(chat => chat.id !== selectedChat.id));
+              setModalVisible(false);
+              setSelectedChat(null);
+              setEditedTitle('');
+            } catch (error) {
+              console.error('Failed to delete chat session:', error);
+              Alert.alert('Error', 'Failed to delete the conversation. Please try again.');
             }
-          }
-        ]
-      );
+          },
+        },
+      ]);
     }
   };
 
@@ -246,29 +241,23 @@ const SidePanel: React.FC<SidePanelProps> = ({
 
   const handleDropdownDelete = () => {
     if (dropdownChat) {
-      Alert.alert(
-        'Delete Chat',
-        'Are you sure you want to delete this conversation?',
-        [
-          { text: 'Cancel', style: 'cancel' },
-          {
-            text: 'Delete',
-            style: 'destructive',
-            onPress: async () => {
-              try {
-                await ChatStorage.deleteSession(dropdownChat.id);
-                setChatHistory(prev => 
-                  prev.filter(chat => chat.id !== dropdownChat.id)
-                );
-                closeDropdown();
-              } catch (error) {
-                console.error('Failed to delete chat session:', error);
-                Alert.alert('Error', 'Failed to delete the conversation. Please try again.');
-              }
+      Alert.alert('Delete Chat', 'Are you sure you want to delete this conversation?', [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              await ChatStorage.deleteSession(dropdownChat.id);
+              setChatHistory(prev => prev.filter(chat => chat.id !== dropdownChat.id));
+              closeDropdown();
+            } catch (error) {
+              console.error('Failed to delete chat session:', error);
+              Alert.alert('Error', 'Failed to delete the conversation. Please try again.');
             }
-          }
-        ]
-      );
+          },
+        },
+      ]);
     }
   };
 
@@ -282,7 +271,7 @@ const SidePanel: React.FC<SidePanelProps> = ({
         activeOpacity={1}
         onPress={onClose}
       />
-      
+
       {/* Side Panel */}
       <Animated.View
         className="absolute left-0 top-0 bottom-0 w-80 bg-white z-50 border-r border-gray-200"
@@ -300,15 +289,12 @@ const SidePanel: React.FC<SidePanelProps> = ({
         {/* Header - Search Section */}
         <View className="px-4 py-4 border-b border-gray-200">
           <View className="flex-row items-center mb-4">
-            <TouchableOpacity
-              className="mr-3 p-2 rounded-lg bg-gray-100"
-              onPress={onClose}
-            >
+            <TouchableOpacity className="mr-3 p-2 rounded-lg bg-gray-100" onPress={onClose}>
               <X width={18} height={18} stroke="#6B7280" />
             </TouchableOpacity>
             <Text className="text-gray-900 text-lg font-semibold">Lattice</Text>
           </View>
-          
+
           {/* Search Input */}
           <View className="flex-row items-center bg-gray-50 rounded-lg px-3 py-2 border border-gray-200">
             <Search width={16} height={16} stroke="#9CA3AF" />
@@ -335,7 +321,9 @@ const SidePanel: React.FC<SidePanelProps> = ({
 
           {/* Chat History List */}
           <View className="mt-4">
-            <Text className="text-gray-600 text-sm font-medium mb-3 px-1">Recent Conversations</Text>
+            <Text className="text-gray-600 text-sm font-medium mb-3 px-1">
+              Recent Conversations
+            </Text>
 
             {isLoadingHistory ? (
               // Loading State
@@ -346,56 +334,59 @@ const SidePanel: React.FC<SidePanelProps> = ({
               // Empty State
               <View className="py-8 px-3">
                 <Text className="text-gray-400 text-sm text-center">No conversations yet</Text>
-                <Text className="text-gray-300 text-xs text-center mt-1">Start a new chat to begin</Text>
+                <Text className="text-gray-300 text-xs text-center mt-1">
+                  Start a new chat to begin
+                </Text>
               </View>
             ) : (
               // Chat History
               chatHistory
-                .filter(chat => 
-                  searchQuery === '' || 
-                  chat.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                  chat.preview.toLowerCase().includes(searchQuery.toLowerCase())
+                .filter(
+                  chat =>
+                    searchQuery === '' ||
+                    chat.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                    chat.preview.toLowerCase().includes(searchQuery.toLowerCase())
                 )
-                .map((chat) => (
-                <View key={chat.id} className="mb-2">
-                  <TouchableOpacity
-                    className="py-3 px-3 rounded-lg bg-gray-50 border border-gray-100 hover:bg-gray-100"
-                    onPress={() => handleChatPress(chat.id)}
-                    onLongPress={(event) => handleLongPress(chat, event)}
-                    delayLongPress={500}
-                    activeOpacity={0.7}
-                  >
-                    <View className="flex-row justify-between items-start mb-1">
-                      <Text className="text-gray-900 font-medium flex-1 mr-2" numberOfLines={1}>
-                        {chat.title}
-                      </Text>
-                      <View className="flex-row items-center">
-                        <Text className="text-gray-500 text-xs mr-2">{chat.date}</Text>
-                        <TouchableOpacity
-                          className="p-1 rounded hover:bg-gray-200 z-10"
-                          onPress={(e) => {
-                            e.stopPropagation();
-                            handleEditPress(chat);
-                          }}
-                          hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
-                        >
-                          <Edit3 width={14} height={14} stroke="#6B7280" />
-                        </TouchableOpacity>
+                .map(chat => (
+                  <View key={chat.id} className="mb-2">
+                    <TouchableOpacity
+                      className="py-3 px-3 rounded-lg bg-gray-50 border border-gray-100 hover:bg-gray-100"
+                      onPress={() => handleChatPress(chat.id)}
+                      onLongPress={event => handleLongPress(chat, event)}
+                      delayLongPress={500}
+                      activeOpacity={0.7}
+                    >
+                      <View className="flex-row justify-between items-start mb-1">
+                        <Text className="text-gray-900 font-medium flex-1 mr-2" numberOfLines={1}>
+                          {chat.title}
+                        </Text>
+                        <View className="flex-row items-center">
+                          <Text className="text-gray-500 text-xs mr-2">{chat.date}</Text>
+                          <TouchableOpacity
+                            className="p-1 rounded hover:bg-gray-200 z-10"
+                            onPress={e => {
+                              e.stopPropagation();
+                              handleEditPress(chat);
+                            }}
+                            hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+                          >
+                            <Edit3 width={14} height={14} stroke="#6B7280" />
+                          </TouchableOpacity>
+                        </View>
                       </View>
-                    </View>
-                    <Text className="text-gray-600 text-sm" numberOfLines={2}>
-                      {chat.preview}
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-              ))
+                      <Text className="text-gray-600 text-sm" numberOfLines={2}>
+                        {chat.preview}
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                ))
             )}
           </View>
         </ScrollView>
 
         {/* Footer - Dashboard Section */}
         <View className="px-4 py-4 border-t border-gray-200">
-          <TouchableOpacity 
+          <TouchableOpacity
             className="flex-row items-center py-3 px-3 rounded-lg bg-gray-50 border border-gray-100 hover:bg-gray-100"
             onPress={() => {
               onNavigateToDashboard?.();
@@ -422,23 +413,19 @@ const SidePanel: React.FC<SidePanelProps> = ({
         animationType="none"
         onRequestClose={closeDropdown}
       >
-        <TouchableOpacity
-          className="flex-1"
-          activeOpacity={1}
-          onPress={closeDropdown}
-        >
-                     <View
-             className="absolute bg-white rounded-lg border border-gray-200 shadow-lg min-w-40"
-             style={{
-               left: dropdownPosition.x,
-               top: dropdownPosition.y,
-               shadowColor: '#000',
-               shadowOffset: { width: 0, height: 4 },
-               shadowOpacity: 0.15,
-               shadowRadius: 12,
-               elevation: 8,
-             }}
-           >
+        <TouchableOpacity className="flex-1" activeOpacity={1} onPress={closeDropdown}>
+          <View
+            className="absolute bg-white rounded-lg border border-gray-200 shadow-lg min-w-40"
+            style={{
+              left: dropdownPosition.x,
+              top: dropdownPosition.y,
+              shadowColor: '#000',
+              shadowOffset: { width: 0, height: 4 },
+              shadowOpacity: 0.15,
+              shadowRadius: 12,
+              elevation: 8,
+            }}
+          >
             {/* Open Option */}
             <TouchableOpacity
               className="flex-row items-center px-4 py-3 hover:bg-gray-50"
@@ -482,10 +469,7 @@ const SidePanel: React.FC<SidePanelProps> = ({
             <View className="px-6 py-4 border-b border-gray-200">
               <View className="flex-row justify-between items-center">
                 <Text className="text-lg font-semibold text-gray-900">Edit Conversation</Text>
-                <TouchableOpacity
-                  onPress={closeModal}
-                  className="p-1 rounded-lg hover:bg-gray-100"
-                >
+                <TouchableOpacity onPress={closeModal} className="p-1 rounded-lg hover:bg-gray-100">
                   <X width={20} height={20} stroke="#6B7280" />
                 </TouchableOpacity>
               </View>

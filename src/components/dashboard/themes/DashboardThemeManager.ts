@@ -3,7 +3,7 @@ import { DashboardTheme } from '../DashboardRenderer';
 
 /**
  * Dashboard Theme Manager
- * 
+ *
  * Manages dashboard themes including:
  * - Built-in themes (light, dark)
  * - Custom theme creation and management
@@ -255,11 +255,7 @@ export class DashboardThemeManager {
       }
 
       if (__DEV__) {
-
-
         console.log(`✅ Loaded ${this.themes.size} dashboard themes`);
-
-
       }
     } catch (error) {
       console.error('Failed to load themes:', error);
@@ -271,9 +267,10 @@ export class DashboardThemeManager {
    */
   async saveThemes(): Promise<void> {
     try {
-      const customThemes = Array.from(this.themes.values())
-        .filter(theme => theme.category !== 'built-in');
-      
+      const customThemes = Array.from(this.themes.values()).filter(
+        theme => theme.category !== 'built-in'
+      );
+
       await AsyncStorage.setItem(this.storageKey, JSON.stringify(customThemes));
       await AsyncStorage.setItem(this.currentThemeKey, this.currentThemeId);
     } catch (error) {
@@ -292,8 +289,7 @@ export class DashboardThemeManager {
    * Get themes by category
    */
   getThemesByCategory(category: 'built-in' | 'custom' | 'community'): ExtendedDashboardTheme[] {
-    return Array.from(this.themes.values())
-      .filter(theme => theme.category === category);
+    return Array.from(this.themes.values()).filter(theme => theme.category === category);
   }
 
   /**
@@ -321,13 +317,9 @@ export class DashboardThemeManager {
 
     this.currentThemeId = themeId;
     await this.saveThemes();
-    
+
     if (__DEV__) {
-
-    
       console.log(`🎨 Switched to theme: ${themeId}`);
-
-    
     }
     return true;
   }
@@ -335,7 +327,9 @@ export class DashboardThemeManager {
   /**
    * Create custom theme
    */
-  async createCustomTheme(theme: Partial<ExtendedDashboardTheme> & { id: string; name: string }): Promise<boolean> {
+  async createCustomTheme(
+    theme: Partial<ExtendedDashboardTheme> & { id: string; name: string }
+  ): Promise<boolean> {
     if (this.themes.has(theme.id)) {
       console.warn(`Theme ${theme.id} already exists`);
       return false;
@@ -352,13 +346,9 @@ export class DashboardThemeManager {
 
     this.themes.set(theme.id, customTheme);
     await this.saveThemes();
-    
+
     if (__DEV__) {
-
-    
       console.log(`✨ Created custom theme: ${theme.name} (${theme.id})`);
-
-    
     }
     return true;
   }
@@ -387,13 +377,9 @@ export class DashboardThemeManager {
 
     this.themes.set(themeId, updatedTheme);
     await this.saveThemes();
-    
+
     if (__DEV__) {
-
-    
       console.log(`🔄 Updated theme: ${themeId}`);
-
-    
     }
     return true;
   }
@@ -421,13 +407,9 @@ export class DashboardThemeManager {
 
     this.themes.delete(themeId);
     await this.saveThemes();
-    
+
     if (__DEV__) {
-
-    
       console.log(`🗑️ Deleted theme: ${themeId}`);
-
-    
     }
     return true;
   }
@@ -435,7 +417,11 @@ export class DashboardThemeManager {
   /**
    * Create theme from existing theme (clone)
    */
-  async cloneTheme(sourceThemeId: string, newThemeId: string, newThemeName: string): Promise<boolean> {
+  async cloneTheme(
+    sourceThemeId: string,
+    newThemeId: string,
+    newThemeName: string
+  ): Promise<boolean> {
     const sourceTheme = this.themes.get(sourceThemeId);
     if (!sourceTheme) {
       console.warn(`Source theme ${sourceThemeId} not found`);
@@ -458,13 +444,9 @@ export class DashboardThemeManager {
 
     this.themes.set(newThemeId, clonedTheme);
     await this.saveThemes();
-    
+
     if (__DEV__) {
-
-    
       console.log(`📋 Cloned theme: ${sourceThemeId} → ${newThemeId}`);
-
-    
     }
     return true;
   }
@@ -487,7 +469,7 @@ export class DashboardThemeManager {
   async importTheme(themeConfig: string): Promise<boolean> {
     try {
       const theme: ExtendedDashboardTheme = JSON.parse(themeConfig);
-      
+
       // Validate theme structure
       if (!theme.id || !theme.name || !theme.colors) {
         console.error('Invalid theme configuration');
@@ -511,16 +493,12 @@ export class DashboardThemeManager {
     this.themes.clear();
     this.initializeBuiltInThemes();
     this.currentThemeId = 'light';
-    
+
     await AsyncStorage.removeItem(this.storageKey);
     await AsyncStorage.removeItem(this.currentThemeKey);
-    
+
     if (__DEV__) {
-
-    
       console.log('🔄 Reset themes to defaults');
-
-    
     }
   }
 

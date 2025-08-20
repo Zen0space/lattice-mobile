@@ -1,9 +1,31 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, LayoutAnimation, Platform, UIManager, ScrollView } from 'react-native';
-import { PieChart, TrendingUp, BarChart2, ArrowLeft, Plus, ChevronDown, ChevronUp } from 'react-native-feather';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  LayoutAnimation,
+  Platform,
+  UIManager,
+  ScrollView,
+} from 'react-native';
+import {
+  PieChart,
+  TrendingUp,
+  BarChart2,
+  ArrowLeft,
+  Plus,
+  ChevronDown,
+  ChevronUp,
+} from 'react-native-feather';
 import DraggableFlatList, { RenderItemParams } from 'react-native-draggable-flatlist';
 import { DashboardConfig } from './types';
-import { WidgetManager, Widget, createChartConfig, CHART_TEMPLATES, CHART_DATA_PRESETS } from '../widget';
+import {
+  WidgetManager,
+  Widget,
+  createChartConfig,
+  CHART_TEMPLATES,
+  CHART_DATA_PRESETS,
+} from '../widget';
 import { DashboardWidget } from './shared';
 import { widgetStorage } from '../../stores/storage';
 
@@ -27,7 +49,7 @@ const PortfolioDashboard: React.FC<PortfolioDashboardProps> = ({ config }) => {
   // Load widgets from local storage when component mounts or dashboard changes
   useEffect(() => {
     let isMounted = true;
-    
+
     const loadDashboardWidgets = async () => {
       try {
         const savedWidgets = await widgetStorage.loadWidgets(config.id);
@@ -68,13 +90,15 @@ const PortfolioDashboard: React.FC<PortfolioDashboardProps> = ({ config }) => {
   // Dashboard change detection - reset widget state when switching dashboards
   useEffect(() => {
     if (previousDashboardId && previousDashboardId !== config.id) {
-      console.log(`🔄 Dashboard changed from ${previousDashboardId} to ${config.id} - resetting widget state`);
-      
+      console.log(
+        `🔄 Dashboard changed from ${previousDashboardId} to ${config.id} - resetting widget state`
+      );
+
       // Dashboard changed - reset widget-related state
       setWidgets([]);
       setShowAllWidgets(false);
       setShowWidgetManager(false);
-      
+
       // Optional: Add smooth transition animation
       if (Platform.OS === 'android' || Platform.OS === 'ios') {
         LayoutAnimation.configureNext({
@@ -101,7 +125,9 @@ const PortfolioDashboard: React.FC<PortfolioDashboardProps> = ({ config }) => {
         return;
       }
 
-      console.log(`🔧 Adding widget "${newWidgetData.title}" to dashboard "${config.name}" (${config.id})`);
+      console.log(
+        `🔧 Adding widget "${newWidgetData.title}" to dashboard "${config.name}" (${config.id})`
+      );
 
       const newWidget: Widget = {
         ...newWidgetData,
@@ -109,22 +135,24 @@ const PortfolioDashboard: React.FC<PortfolioDashboardProps> = ({ config }) => {
         createdAt: new Date(),
         updatedAt: new Date(),
       };
-      
+
       const updatedWidgets = [...widgets, newWidget];
-      
+
       // CRITICAL: Save to storage FIRST to validate dashboard exists
       await widgetStorage.saveWidgets(config.id, updatedWidgets);
       console.log(`✅ Widget "${newWidget.title}" saved to ${config.name} dashboard`);
-      
+
       // Only update state if storage operation succeeded
       setWidgets(updatedWidgets);
     } catch (error) {
       console.error('❌ Error adding widget:', error);
       console.error('Dashboard config:', config);
       console.error('Widget data:', newWidgetData);
-      
+
       // Don't update state if save failed - keeps UI consistent
-      alert(`Failed to add widget "${newWidgetData?.title || 'Unknown'}". Please try refreshing the app.`);
+      alert(
+        `Failed to add widget "${newWidgetData?.title || 'Unknown'}". Please try refreshing the app.`
+      );
     }
   };
 
@@ -144,15 +172,15 @@ const PortfolioDashboard: React.FC<PortfolioDashboardProps> = ({ config }) => {
 
       console.log(`🗑️ Deleting widget "${widgetToDelete.title}" from dashboard "${config.name}"`);
 
-      const newWidgets = widgets.filter((w) => w.id !== widgetId);
-      
+      const newWidgets = widgets.filter(w => w.id !== widgetId);
+
       // CRITICAL: Save to storage FIRST
       await widgetStorage.saveWidgets(config.id, newWidgets);
       console.log(`✅ Widget "${widgetToDelete.title}" deleted from ${config.name} dashboard`);
-      
+
       // Only update state if storage operation succeeded
       setWidgets(newWidgets);
-      
+
       // Auto-collapse if we now have 2 or fewer widgets
       if (newWidgets.length <= 2) {
         setShowAllWidgets(false);
@@ -172,11 +200,11 @@ const PortfolioDashboard: React.FC<PortfolioDashboardProps> = ({ config }) => {
       }
 
       console.log(`🔄 Reordering ${data.length} widgets in dashboard "${config.name}"`);
-      
+
       // CRITICAL: Save to storage FIRST
       await widgetStorage.saveWidgets(config.id, data);
       console.log(`✅ Widget order saved for ${config.name} dashboard`);
-      
+
       // Only update state if storage operation succeeded
       setWidgets(data);
     } catch (error) {
@@ -192,7 +220,7 @@ const PortfolioDashboard: React.FC<PortfolioDashboardProps> = ({ config }) => {
       duration: 300,
       create: { type: 'easeInEaseOut', property: 'opacity' },
       update: { type: 'easeInEaseOut' },
-      delete: { type: 'easeInEaseOut', property: 'opacity' }
+      delete: { type: 'easeInEaseOut', property: 'opacity' },
     });
     setShowAllWidgets(!showAllWidgets);
   };
@@ -213,17 +241,17 @@ const PortfolioDashboard: React.FC<PortfolioDashboardProps> = ({ config }) => {
 
       console.log(`🔧 Updating widget "${existingWidget.title}" in dashboard "${config.name}"`);
 
-      const updatedWidgets = widgets.map((widget) =>
-        widget.id === widgetId
-          ? { ...widget, ...updates, updatedAt: new Date() }
-          : widget
+      const updatedWidgets = widgets.map(widget =>
+        widget.id === widgetId ? { ...widget, ...updates, updatedAt: new Date() } : widget
       );
-      
+
       // CRITICAL: Save to storage FIRST
       await widgetStorage.saveWidgets(config.id, updatedWidgets);
       const updatedWidget = updatedWidgets.find(w => w.id === widgetId);
-      console.log(`✅ Widget "${updatedWidget?.title || widgetId}" updated in ${config.name} dashboard`);
-      
+      console.log(
+        `✅ Widget "${updatedWidget?.title || widgetId}" updated in ${config.name} dashboard`
+      );
+
       // Only update state if storage operation succeeded
       setWidgets(updatedWidgets);
     } catch (error) {
@@ -232,7 +260,11 @@ const PortfolioDashboard: React.FC<PortfolioDashboardProps> = ({ config }) => {
     }
   };
 
-  const handleQuickAddWidget = async (templateType: 'line' | 'area' | 'curved', dataPreset: keyof typeof CHART_DATA_PRESETS, title: string) => {
+  const handleQuickAddWidget = async (
+    templateType: 'line' | 'area' | 'curved',
+    dataPreset: keyof typeof CHART_DATA_PRESETS,
+    title: string
+  ) => {
     const template = CHART_TEMPLATES.find(t => t.type === templateType);
     if (!template) return;
 
@@ -244,7 +276,7 @@ const PortfolioDashboard: React.FC<PortfolioDashboardProps> = ({ config }) => {
       position: { row: 0, col: 0 },
       size: { width: 1, height: 1 },
     };
-    
+
     // Use the proper handleAddWidget function to save to storage
     await handleAddWidget(newWidgetData);
   };
@@ -252,7 +284,7 @@ const PortfolioDashboard: React.FC<PortfolioDashboardProps> = ({ config }) => {
   // Get only widgets for the draggable list - no static content mixed in
   const getWidgetListData = () => {
     const widgetsToShow = showAllWidgets ? widgets : widgets.slice(0, 2);
-    return widgetsToShow.map((widget) => ({
+    return widgetsToShow.map(widget => ({
       ...widget,
       // Preserve original widget properties without additional metadata
     }));
@@ -292,12 +324,14 @@ const PortfolioDashboard: React.FC<PortfolioDashboardProps> = ({ config }) => {
       return (
         <TouchableOpacity
           className="mb-4"
-          style={{ 
+          style={{
             marginHorizontal: 20,
             opacity: isActive ? 0.9 : 1,
-            transform: [{ 
-              scale: isActive ? 1.02 : 1, // Reduced scale for smoother animation
-            }],
+            transform: [
+              {
+                scale: isActive ? 1.02 : 1, // Reduced scale for smoother animation
+              },
+            ],
             elevation: isActive ? 8 : 0,
             shadowColor: isActive ? '#000' : 'transparent',
             shadowOffset: { width: 0, height: 2 }, // Reduced shadow offset
@@ -309,11 +343,7 @@ const PortfolioDashboard: React.FC<PortfolioDashboardProps> = ({ config }) => {
           delayLongPress={200} // Faster response time
           activeOpacity={0.98} // Subtle opacity change
         >
-          <DashboardWidget
-            widget={item}
-            compact={true}
-            onDelete={handleDeleteWidget}
-          />
+          <DashboardWidget widget={item} compact={true} onDelete={handleDeleteWidget} />
         </TouchableOpacity>
       );
     }
@@ -354,7 +384,7 @@ const PortfolioDashboard: React.FC<PortfolioDashboardProps> = ({ config }) => {
               <TrendingUp width={24} height={24} stroke="#3b82f6" />
               <Text className="text-blue-700 font-semibold mt-2">Line Chart</Text>
             </TouchableOpacity>
-            
+
             <TouchableOpacity
               onPress={() => handleQuickAddWidget('area', 'revenue', 'Revenue Growth')}
               className="bg-green-50 border border-green-200 rounded-xl p-4 items-center justify-center flex-1 mx-1"
@@ -363,7 +393,7 @@ const PortfolioDashboard: React.FC<PortfolioDashboardProps> = ({ config }) => {
               <BarChart2 width={24} height={24} stroke="#10b981" />
               <Text className="text-green-700 font-semibold mt-2">Area Chart</Text>
             </TouchableOpacity>
-            
+
             <TouchableOpacity
               onPress={() => handleQuickAddWidget('curved', 'user-growth', 'User Analytics')}
               className="bg-purple-50 border border-purple-200 rounded-xl p-4 items-center justify-center flex-1 ml-2"
@@ -373,7 +403,7 @@ const PortfolioDashboard: React.FC<PortfolioDashboardProps> = ({ config }) => {
               <Text className="text-purple-700 font-semibold mt-2">Curved Chart</Text>
             </TouchableOpacity>
           </View>
-          
+
           <TouchableOpacity
             onPress={() => setShowWidgetManager(true)}
             className="mt-4 bg-white border border-gray-300 rounded-xl p-4 items-center justify-center"
@@ -447,12 +477,14 @@ const PortfolioDashboard: React.FC<PortfolioDashboardProps> = ({ config }) => {
     return (
       <TouchableOpacity
         className="mb-4"
-        style={{ 
+        style={{
           marginHorizontal: 20,
           opacity: isActive ? 0.9 : 1,
-          transform: [{ 
-            scale: isActive ? 1.02 : 1, // Reduced scale for smoother animation
-          }],
+          transform: [
+            {
+              scale: isActive ? 1.02 : 1, // Reduced scale for smoother animation
+            },
+          ],
           elevation: isActive ? 8 : 0,
           shadowColor: isActive ? '#000' : 'transparent',
           shadowOffset: { width: 0, height: 2 }, // Reduced shadow offset
@@ -464,11 +496,7 @@ const PortfolioDashboard: React.FC<PortfolioDashboardProps> = ({ config }) => {
         delayLongPress={200} // Faster response time
         activeOpacity={0.98} // Subtle opacity change
       >
-        <DashboardWidget
-          widget={item}
-          compact={true}
-          onDelete={handleDeleteWidget}
-        />
+        <DashboardWidget widget={item} compact={true} onDelete={handleDeleteWidget} />
       </TouchableOpacity>
     );
   };
@@ -540,7 +568,7 @@ const PortfolioDashboard: React.FC<PortfolioDashboardProps> = ({ config }) => {
             <TrendingUp width={24} height={24} stroke="#3b82f6" />
             <Text className="text-blue-700 font-semibold mt-2">Line Chart</Text>
           </TouchableOpacity>
-          
+
           <TouchableOpacity
             onPress={() => handleQuickAddWidget('area', 'revenue', 'Revenue Growth')}
             className="bg-green-50 border border-green-200 rounded-xl p-4 items-center justify-center flex-1 mx-1"
@@ -549,7 +577,7 @@ const PortfolioDashboard: React.FC<PortfolioDashboardProps> = ({ config }) => {
             <BarChart2 width={24} height={24} stroke="#10b981" />
             <Text className="text-green-700 font-semibold mt-2">Area Chart</Text>
           </TouchableOpacity>
-          
+
           <TouchableOpacity
             onPress={() => handleQuickAddWidget('curved', 'user-growth', 'User Analytics')}
             className="bg-purple-50 border border-purple-200 rounded-xl p-4 items-center justify-center flex-1 ml-2"
@@ -590,7 +618,7 @@ const PortfolioDashboard: React.FC<PortfolioDashboardProps> = ({ config }) => {
       <DraggableFlatList
         data={widgetListData}
         onDragEnd={handleDragEnd}
-        keyExtractor={(item) => item.id}
+        keyExtractor={item => item.id}
         renderItem={renderWidgetItem}
         ListHeaderComponent={renderListHeader}
         ListFooterComponent={renderListFooter}

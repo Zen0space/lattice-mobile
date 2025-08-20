@@ -4,7 +4,7 @@ import { createChartConfig, CHART_TEMPLATES } from './ChartTemplates';
 
 export const createSampleWidgets = (): Widget[] => {
   const now = new Date();
-  
+
   return [
     {
       id: 'sample_1',

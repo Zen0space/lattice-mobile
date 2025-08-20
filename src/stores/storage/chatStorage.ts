@@ -46,7 +46,7 @@ class ChatStorage {
         // Convert timestamp strings back to Date objects
         return messages.map((msg: any) => ({
           ...msg,
-          timestamp: new Date(msg.timestamp)
+          timestamp: new Date(msg.timestamp),
         }));
       }
       return [];
@@ -89,25 +89,25 @@ class ChatStorage {
     try {
       const sessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
       const currentMessages = await this.loadMessages();
-      
+
       if (currentMessages.length > 0) {
         // Save current messages as a session
         const session: ChatSession = {
           id: sessionId,
           messages: currentMessages,
           createdAt: new Date(),
-          lastUpdated: new Date()
+          lastUpdated: new Date(),
         };
-        
+
         await this.saveSession(session);
       }
-      
+
       // Clear current messages to start fresh
       await this.clearMessages();
-      
+
       // Set new session as current
       await AsyncStorage.setItem(this.CURRENT_SESSION_KEY, sessionId);
-      
+
       return sessionId;
     } catch (error) {
       console.error('Error creating new session:', error);
@@ -144,8 +144,8 @@ class ChatStorage {
           lastUpdated: new Date(session.lastUpdated),
           messages: session.messages.map((msg: any) => ({
             ...msg,
-            timestamp: new Date(msg.timestamp)
-          }))
+            timestamp: new Date(msg.timestamp),
+          })),
         }));
       }
       return [];
@@ -206,18 +206,18 @@ class ChatStorage {
     try {
       const messages = await this.loadMessages();
       const sessions = await this.loadSessions();
-      
+
       return {
         totalMessages: messages.length,
         totalSessions: sessions.length,
-        currentSessionMessages: messages.length
+        currentSessionMessages: messages.length,
       };
     } catch (error) {
       console.error('Error getting storage stats:', error);
       return {
         totalMessages: 0,
         totalSessions: 0,
-        currentSessionMessages: 0
+        currentSessionMessages: 0,
       };
     }
   }
@@ -234,13 +234,13 @@ class ChatStorage {
       const [currentMessages, sessions, currentSessionId] = await Promise.all([
         this.loadMessages(),
         this.loadSessions(),
-        this.getCurrentSessionId()
+        this.getCurrentSessionId(),
       ]);
 
       return {
         currentMessages,
         sessions,
-        currentSessionId
+        currentSessionId,
       };
     } catch (error) {
       console.error('Error exporting data:', error);
@@ -260,9 +260,9 @@ class ChatStorage {
       await Promise.all([
         this.saveMessages(data.currentMessages),
         AsyncStorage.setItem(this.SESSIONS_KEY, JSON.stringify(data.sessions)),
-        data.currentSessionId 
+        data.currentSessionId
           ? AsyncStorage.setItem(this.CURRENT_SESSION_KEY, data.currentSessionId)
-          : AsyncStorage.removeItem(this.CURRENT_SESSION_KEY)
+          : AsyncStorage.removeItem(this.CURRENT_SESSION_KEY),
       ]);
     } catch (error) {
       console.error('Error importing data:', error);

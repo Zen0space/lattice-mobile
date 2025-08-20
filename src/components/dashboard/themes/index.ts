@@ -1,6 +1,6 @@
 /**
  * Dashboard Theme System
- * 
+ *
  * Comprehensive theme management for dashboard components including:
  * - Built-in themes (light, dark, ocean, sunset)
  * - Custom theme creation and management
@@ -9,7 +9,7 @@
  */
 
 // Theme manager and utilities
-export { 
+export {
   default as DashboardThemeManager,
   themeManager,
   BUILT_IN_THEMES,

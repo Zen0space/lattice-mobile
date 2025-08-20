@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 /**
  * Intelligent Caching System
- * 
+ *
  * Features:
  * - Cache invalidation strategies
  * - Memory usage optimization
@@ -71,10 +71,10 @@ class CacheManager {
    */
   async get<T>(key: string): Promise<T | null> {
     const startTime = Date.now();
-    
+
     try {
       const entry = this.cache.get(key);
-      
+
       if (!entry) {
         this.recordMiss();
         return null;
@@ -90,10 +90,10 @@ class CacheManager {
       // Update access info
       entry.accessCount++;
       entry.lastAccessed = Date.now();
-      
+
       this.recordHit();
       this.recordAccessTime(Date.now() - startTime);
-      
+
       return entry.data as T;
     } catch (error) {
       this.recordMiss();
@@ -118,9 +118,9 @@ class CacheManager {
 
       // Check if we need to make space
       await this.ensureSpace(size);
-      
+
       this.cache.set(key, entry);
-      
+
       // Persist to AsyncStorage for important data
       if (this.shouldPersist(key)) {
         await this.persistEntry(key, entry);
@@ -136,11 +136,11 @@ class CacheManager {
   async delete(key: string): Promise<boolean> {
     try {
       const deleted = this.cache.delete(key);
-      
+
       if (deleted && this.shouldPersist(key)) {
         await AsyncStorage.removeItem(`cache_${key}`);
       }
-      
+
       return deleted;
     } catch (error) {
       throw new Error(`Cache delete failed for key ${key}: ${error}`);
@@ -153,12 +153,12 @@ class CacheManager {
   async clear(): Promise<void> {
     try {
       this.cache.clear();
-      
+
       // Clear persisted cache entries
       const allKeys = await AsyncStorage.getAllKeys();
       const cacheKeys = allKeys.filter(key => key.startsWith('cache_'));
       await AsyncStorage.multiRemove(cacheKeys);
-      
+
       this.resetStats();
     } catch (error) {
       throw new Error(`Cache clear failed: ${error}`);
@@ -172,17 +172,17 @@ class CacheManager {
     try {
       const regex = typeof pattern === 'string' ? new RegExp(pattern) : pattern;
       const keysToDelete: string[] = [];
-      
+
       for (const key of this.cache.keys()) {
         if (regex.test(key)) {
           keysToDelete.push(key);
         }
       }
-      
+
       for (const key of keysToDelete) {
         await this.delete(key);
       }
-      
+
       return keysToDelete.length;
     } catch (error) {
       throw new Error(`Cache invalidation failed: ${error}`);
@@ -194,9 +194,11 @@ class CacheManager {
    */
   getStats(): CacheStats {
     const totalRequests = this.stats.hits + this.stats.misses;
-    const memoryUsage = Array.from(this.cache.values())
-      .reduce((total, entry) => total + entry.size, 0);
-    
+    const memoryUsage = Array.from(this.cache.values()).reduce(
+      (total, entry) => total + entry.size,
+      0
+    );
+
     return {
       entries: this.cache.size,
       memoryUsage,
@@ -214,10 +216,10 @@ class CacheManager {
     try {
       // Remove expired entries
       await this.cleanup();
-      
+
       // Remove least recently used entries if over limit
       await this.evictLRU();
-      
+
       // Defragment if needed
       await this.defragment();
     } catch (error) {
@@ -257,31 +259,31 @@ class CacheManager {
 
   private async ensureSpace(requiredSize: number): Promise<void> {
     const currentUsage = this.getCurrentMemoryUsage();
-    
+
     if (currentUsage + requiredSize > this.config.maxMemoryUsage) {
       await this.evictLRU(requiredSize);
     }
-    
+
     if (this.cache.size >= this.config.maxEntries) {
       await this.evictLRU();
     }
   }
 
   private getCurrentMemoryUsage(): number {
-    return Array.from(this.cache.values())
-      .reduce((total, entry) => total + entry.size, 0);
+    return Array.from(this.cache.values()).reduce((total, entry) => total + entry.size, 0);
   }
 
   private async evictLRU(targetSize?: number): Promise<void> {
-    const entries = Array.from(this.cache.entries())
-      .sort(([, a], [, b]) => a.lastAccessed - b.lastAccessed);
-    
+    const entries = Array.from(this.cache.entries()).sort(
+      ([, a], [, b]) => a.lastAccessed - b.lastAccessed
+    );
+
     let freedSize = 0;
     const targetFree = targetSize || this.config.maxMemoryUsage * 0.1; // Free 10% by default
-    
+
     for (const [key, entry] of entries) {
       if (freedSize >= targetFree) break;
-      
+
       await this.delete(key);
       freedSize += entry.size;
     }
@@ -289,13 +291,13 @@ class CacheManager {
 
   private async cleanup(): Promise<void> {
     const expiredKeys: string[] = [];
-    
+
     for (const [key, entry] of this.cache.entries()) {
       if (this.isExpired(entry)) {
         expiredKeys.push(key);
       }
     }
-    
+
     for (const key of expiredKeys) {
       await this.delete(key);
     }
@@ -305,7 +307,7 @@ class CacheManager {
     // Recreate cache map to optimize memory layout
     const entries = Array.from(this.cache.entries());
     this.cache.clear();
-    
+
     for (const [key, entry] of entries) {
       this.cache.set(key, entry);
     }

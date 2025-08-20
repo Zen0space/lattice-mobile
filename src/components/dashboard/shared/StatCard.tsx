@@ -27,7 +27,7 @@ export interface StatCardData {
 /**
  * Reusable StatCard component for displaying statistics with consistent styling
  * Eliminates duplicate code across dashboard components
- * 
+ *
  * Features:
  * - Consistent styling and behavior
  * - Icon and color theming support
@@ -47,11 +47,11 @@ const StatCard: React.FC<StatCardProps> = ({
   customWidth,
 }) => {
   const isPositive = changePercent >= 0;
-  
+
   // Calculate card width based on variant
   const getCardWidth = () => {
     if (customWidth) return customWidth;
-    
+
     switch (variant) {
       case 'compact':
         return (width - 48) / 3 - 8;
@@ -123,45 +123,45 @@ const StatCard: React.FC<StatCardProps> = ({
   const styles = getVariantStyles();
 
   return (
-    <View 
+    <View
       className={`${colors.background} rounded-xl ${styles.padding} ${colors.border} border shadow-sm`}
       style={{ width: getCardWidth() }}
     >
       <View className="flex-row items-center justify-between mb-3">
-        <View className={`${styles.iconContainer} ${colors.iconBg} rounded-lg items-center justify-center`}>
-          <IconComponent 
-            width={styles.iconSize.width} 
-            height={styles.iconSize.height} 
-            stroke={colors.iconColor} 
+        <View
+          className={`${styles.iconContainer} ${colors.iconBg} rounded-lg items-center justify-center`}
+        >
+          <IconComponent
+            width={styles.iconSize.width}
+            height={styles.iconSize.height}
+            stroke={colors.iconColor}
           />
         </View>
         {showTrend && (
-          <View className={`flex-row items-center px-2 py-1 rounded-full ${
-            isPositive ? 'bg-green-100' : 'bg-red-100'
-          }`}>
+          <View
+            className={`flex-row items-center px-2 py-1 rounded-full ${
+              isPositive ? 'bg-green-100' : 'bg-red-100'
+            }`}
+          >
             {isPositive ? (
               <ArrowUp width={12} height={12} stroke="#10b981" />
             ) : (
               <ArrowDown width={12} height={12} stroke="#ef4444" />
             )}
-            <Text className={`text-xs font-medium ml-1 ${
-              isPositive ? 'text-green-600' : 'text-red-600'
-            }`}>
+            <Text
+              className={`text-xs font-medium ml-1 ${
+                isPositive ? 'text-green-600' : 'text-red-600'
+              }`}
+            >
               {Math.abs(changePercent)}%
             </Text>
           </View>
         )}
       </View>
-      
-      <Text className={`${styles.titleSize} font-bold text-gray-900 mb-1`}>
-        {value}
-      </Text>
-      <Text className="text-gray-600 text-sm mb-1">
-        {title}
-      </Text>
-      <Text className={`text-sm font-medium ${
-        isPositive ? 'text-green-600' : 'text-red-600'
-      }`}>
+
+      <Text className={`${styles.titleSize} font-bold text-gray-900 mb-1`}>{value}</Text>
+      <Text className="text-gray-600 text-sm mb-1">{title}</Text>
+      <Text className={`text-sm font-medium ${isPositive ? 'text-green-600' : 'text-red-600'}`}>
         {change}
       </Text>
     </View>
@@ -169,8 +169,8 @@ const StatCard: React.FC<StatCardProps> = ({
 };
 
 // Loading state component
-export const StatCardSkeleton: React.FC<{ variant?: 'default' | 'compact' | 'large' }> = ({ 
-  variant = 'default' 
+export const StatCardSkeleton: React.FC<{ variant?: 'default' | 'compact' | 'large' }> = ({
+  variant = 'default',
 }) => {
   const getCardWidth = () => {
     switch (variant) {
@@ -186,7 +186,7 @@ export const StatCardSkeleton: React.FC<{ variant?: 'default' | 'compact' | 'lar
   const styles = variant === 'compact' ? 'p-3' : variant === 'large' ? 'p-6' : 'p-4';
 
   return (
-    <View 
+    <View
       className={`bg-gray-50 rounded-xl ${styles} border border-gray-200 shadow-sm`}
       style={{ width: getCardWidth() }}
     >
@@ -202,7 +202,7 @@ export const StatCardSkeleton: React.FC<{ variant?: 'default' | 'compact' | 'lar
 };
 
 // Error state component
-export const StatCardError: React.FC<{ 
+export const StatCardError: React.FC<{
   title: string;
   onRetry?: () => void;
   variant?: 'default' | 'compact' | 'large';
@@ -221,19 +221,14 @@ export const StatCardError: React.FC<{
   const styles = variant === 'compact' ? 'p-3' : variant === 'large' ? 'p-6' : 'p-4';
 
   return (
-    <View 
+    <View
       className={`bg-red-50 rounded-xl ${styles} border border-red-200 shadow-sm`}
       style={{ width: getCardWidth() }}
     >
       <View className="items-center justify-center h-full">
-        <Text className="text-red-600 text-sm font-medium mb-2">
-          Error loading {title}
-        </Text>
+        <Text className="text-red-600 text-sm font-medium mb-2">Error loading {title}</Text>
         {onRetry && (
-          <Text 
-            className="text-red-500 text-xs underline"
-            onPress={onRetry}
-          >
+          <Text className="text-red-500 text-xs underline" onPress={onRetry}>
             Tap to retry
           </Text>
         )}

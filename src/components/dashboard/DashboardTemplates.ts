@@ -13,9 +13,9 @@ export const DASHBOARD_TEMPLATES: Record<DashboardType, DashboardTemplate> = {
       refreshInterval: 30000,
       defaultTimeframe: '1D',
       showPriceAlerts: true,
-      compactMode: false
+      compactMode: false,
     },
-    components: ['totalValue', 'performance', 'topAssets', 'recentActivity']
+    components: ['totalValue', 'performance', 'topAssets', 'recentActivity'],
   },
 
   stocks: {
@@ -30,9 +30,9 @@ export const DASHBOARD_TEMPLATES: Record<DashboardType, DashboardTemplate> = {
       refreshInterval: 60000,
       defaultTimeframe: '1D',
       showPriceAlerts: true,
-      compactMode: false
+      compactMode: false,
     },
-    components: ['stockHoldings', 'sectorAllocation', 'earnings', 'dividends']
+    components: ['stockHoldings', 'sectorAllocation', 'earnings', 'dividends'],
   },
   portfolio: {
     type: 'portfolio',
@@ -46,9 +46,9 @@ export const DASHBOARD_TEMPLATES: Record<DashboardType, DashboardTemplate> = {
       refreshInterval: 30000,
       defaultTimeframe: '1M',
       showPriceAlerts: true,
-      compactMode: false
+      compactMode: false,
     },
-    components: ['allocation', 'performance', 'riskMetrics', 'rebalancing']
+    components: ['allocation', 'performance', 'riskMetrics', 'rebalancing'],
   },
   watchlist: {
     type: 'watchlist',
@@ -62,9 +62,9 @@ export const DASHBOARD_TEMPLATES: Record<DashboardType, DashboardTemplate> = {
       refreshInterval: 15000,
       defaultTimeframe: '1D',
       showPriceAlerts: true,
-      compactMode: true
+      compactMode: true,
     },
-    components: ['watchedAssets', 'priceAlerts', 'technicalIndicators', 'marketScanner']
+    components: ['watchedAssets', 'priceAlerts', 'technicalIndicators', 'marketScanner'],
   },
   analytics: {
     type: 'analytics',
@@ -78,9 +78,9 @@ export const DASHBOARD_TEMPLATES: Record<DashboardType, DashboardTemplate> = {
       refreshInterval: 60000,
       defaultTimeframe: '3M',
       showPriceAlerts: false,
-      compactMode: false
+      compactMode: false,
     },
-    components: ['performanceAnalysis', 'riskAnalysis', 'correlationMatrix', 'backtesting']
+    components: ['performanceAnalysis', 'riskAnalysis', 'correlationMatrix', 'backtesting'],
   },
   trading: {
     type: 'trading',
@@ -94,8 +94,8 @@ export const DASHBOARD_TEMPLATES: Record<DashboardType, DashboardTemplate> = {
       refreshInterval: 5000,
       defaultTimeframe: '1D',
       showPriceAlerts: true,
-      compactMode: true
+      compactMode: true,
     },
-    components: ['orderBook', 'tradingCharts', 'positions', 'pnl']
-  }
+    components: ['orderBook', 'tradingCharts', 'positions', 'pnl'],
+  },
 };

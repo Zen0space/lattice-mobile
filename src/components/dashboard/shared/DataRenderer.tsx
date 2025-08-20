@@ -24,7 +24,7 @@ export interface DataRendererProps<T = any> {
 /**
  * Unified data rendering component
  * Replaces hardcoded mock data and provides consistent data visualization
- * 
+ *
  * Features:
  * - Data validation and formatting
  * - Error boundaries for data issues
@@ -54,9 +54,7 @@ const DataRenderer = <T extends any>({
     return (
       <View className="flex-1">
         {showHeader && headerTitle && (
-          <Text className="text-lg font-semibold text-gray-900 mb-4">
-            {headerTitle}
-          </Text>
+          <Text className="text-lg font-semibold text-gray-900 mb-4">{headerTitle}</Text>
         )}
         <View className="flex-1">
           {SkeletonComponent ? (
@@ -83,14 +81,9 @@ const DataRenderer = <T extends any>({
         <Text className="text-lg font-semibold text-gray-900 mt-4 mb-2 text-center">
           Something went wrong
         </Text>
-        <Text className="text-gray-600 text-center mb-4">
-          {error}
-        </Text>
+        <Text className="text-gray-600 text-center mb-4">{error}</Text>
         {onRetry && (
-          <Text
-            className="text-primary font-medium underline"
-            onPress={onRetry}
-          >
+          <Text className="text-primary font-medium underline" onPress={onRetry}>
             Tap to retry
           </Text>
         )}
@@ -102,17 +95,10 @@ const DataRenderer = <T extends any>({
   if (!data || data.length === 0) {
     return (
       <View className="flex-1 items-center justify-center p-8">
-        <Text className="text-lg font-semibold text-gray-900 mb-2 text-center">
-          No data found
-        </Text>
-        <Text className="text-gray-600 text-center">
-          {emptyMessage}
-        </Text>
+        <Text className="text-lg font-semibold text-gray-900 mb-2 text-center">No data found</Text>
+        <Text className="text-gray-600 text-center">{emptyMessage}</Text>
         {onRetry && (
-          <Text
-            className="text-primary font-medium underline mt-4"
-            onPress={onRetry}
-          >
+          <Text className="text-primary font-medium underline mt-4" onPress={onRetry}>
             Refresh
           </Text>
         )}
@@ -123,12 +109,8 @@ const DataRenderer = <T extends any>({
   // Render header if needed
   const renderHeader = () => {
     if (!showHeader || !headerTitle) return null;
-    
-    return (
-      <Text className="text-lg font-semibold text-gray-900 mb-4">
-        {headerTitle}
-      </Text>
-    );
+
+    return <Text className="text-lg font-semibold text-gray-900 mb-4">{headerTitle}</Text>;
   };
 
   // Default key extractor
@@ -168,7 +150,9 @@ const DataRenderer = <T extends any>({
           <FlatList
             data={data}
             renderItem={({ item, index }) => (
-              <React.Fragment key={keyExtractor ? keyExtractor(item, index) : defaultKeyExtractor(item, index)}>
+              <React.Fragment
+                key={keyExtractor ? keyExtractor(item, index) : defaultKeyExtractor(item, index)}
+              >
                 {renderItem(item, index)}
               </React.Fragment>
             )}
@@ -184,12 +168,14 @@ const DataRenderer = <T extends any>({
       return (
         <View className="flex-1">
           {renderHeader()}
-          <ScrollView 
+          <ScrollView
             showsVerticalScrollIndicator={false}
             contentContainerStyle={{ paddingBottom: 20 }}
           >
             {data.map((item, index) => (
-              <View key={keyExtractor ? keyExtractor(item, index) : defaultKeyExtractor(item, index)}>
+              <View
+                key={keyExtractor ? keyExtractor(item, index) : defaultKeyExtractor(item, index)}
+              >
                 {renderItem(item, index)}
               </View>
             ))}
@@ -204,7 +190,9 @@ const DataRenderer = <T extends any>({
           <FlatList
             data={data}
             renderItem={({ item, index }) => (
-              <React.Fragment key={keyExtractor ? keyExtractor(item, index) : defaultKeyExtractor(item, index)}>
+              <React.Fragment
+                key={keyExtractor ? keyExtractor(item, index) : defaultKeyExtractor(item, index)}
+              >
                 {renderItem(item, index)}
               </React.Fragment>
             )}
@@ -226,11 +214,11 @@ export const AssetDataRenderer: React.FC<{
   onAssetPress?: (asset: AssetData) => void;
   onRetry?: () => void;
   nestedInScrollView?: boolean;
-}> = ({ 
-  assets, 
-  loading, 
-  error, 
-  variant = 'row', 
+}> = ({
+  assets,
+  loading,
+  error,
+  variant = 'row',
   onAssetPress,
   onRetry,
   nestedInScrollView = false,
@@ -241,11 +229,7 @@ export const AssetDataRenderer: React.FC<{
     error={error}
     emptyMessage="No assets in your portfolio yet"
     renderItem={(asset: AssetData) => (
-      <AssetCard
-        asset={asset}
-        variant={variant}
-        onPress={onAssetPress}
-      />
+      <AssetCard asset={asset} variant={variant} onPress={onAssetPress} />
     )}
     keyExtractor={(asset: AssetData) => asset.symbol}
     skeletonComponent={() => <AssetCardSkeleton variant={variant} />}
@@ -261,21 +245,14 @@ export const ActivityDataRenderer: React.FC<{
   onActivityPress?: (activity: any) => void;
   onRetry?: () => void;
   nestedInScrollView?: boolean;
-}> = ({ 
-  activities, 
-  loading, 
-  error, 
-  onActivityPress,
-  onRetry,
-  nestedInScrollView = false,
-}) => (
+}> = ({ activities, loading, error, onActivityPress, onRetry, nestedInScrollView = false }) => (
   <DataRenderer
     data={activities}
     loading={loading}
     error={error}
     emptyMessage="No recent activity"
     renderItem={(activity, index) => (
-      <View 
+      <View
         key={index}
         className="flex-row items-center py-3 border-b border-gray-100 last:border-b-0"
       >
@@ -288,13 +265,13 @@ export const ActivityDataRenderer: React.FC<{
           <Text className="text-gray-900 font-medium text-sm">
             {activity.description || 'Activity'}
           </Text>
-          <Text className="text-gray-500 text-xs">
-            {activity.time || 'Recently'}
-          </Text>
+          <Text className="text-gray-500 text-xs">{activity.time || 'Recently'}</Text>
         </View>
-        <Text className={`font-semibold text-sm ${
-          activity.amount > 0 ? 'text-green-600' : 'text-red-600'
-        }`}>
+        <Text
+          className={`font-semibold text-sm ${
+            activity.amount > 0 ? 'text-green-600' : 'text-red-600'
+          }`}
+        >
           {activity.amount > 0 ? '+' : ''}${Math.abs(activity.amount || 0).toFixed(2)}
         </Text>
       </View>
@@ -314,10 +291,10 @@ export const ValidatedDataRenderer = <T extends any>({
 }) => {
   // Validate data if validator is provided
   const validatedData = validator ? data.filter(validator) : data;
-  
+
   // Show warning if some items were filtered out
   const filteredCount = data.length - validatedData.length;
-  
+
   return (
     <View className="flex-1">
       {filteredCount > 0 && (
@@ -330,11 +307,8 @@ export const ValidatedDataRenderer = <T extends any>({
           </View>
         </View>
       )}
-      
-      <DataRenderer
-        {...props}
-        data={validatedData}
-      />
+
+      <DataRenderer {...props} data={validatedData} />
     </View>
   );
 };

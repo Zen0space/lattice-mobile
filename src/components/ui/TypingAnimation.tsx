@@ -22,10 +22,7 @@ const TypingAnimation: React.FC<TypingAnimationProps> = ({ isVisible }) => {
     if (isVisible) {
       // Start the typing animation with staggered delays
       dot1Opacity.value = withRepeat(
-        withSequence(
-          withTiming(1, { duration: 400 }),
-          withTiming(0.3, { duration: 400 })
-        ),
+        withSequence(withTiming(1, { duration: 400 }), withTiming(0.3, { duration: 400 })),
         -1, // infinite repeat
         false
       );
@@ -33,10 +30,7 @@ const TypingAnimation: React.FC<TypingAnimationProps> = ({ isVisible }) => {
       dot2Opacity.value = withDelay(
         200,
         withRepeat(
-          withSequence(
-            withTiming(1, { duration: 400 }),
-            withTiming(0.3, { duration: 400 })
-          ),
+          withSequence(withTiming(1, { duration: 400 }), withTiming(0.3, { duration: 400 })),
           -1,
           false
         )
@@ -45,10 +39,7 @@ const TypingAnimation: React.FC<TypingAnimationProps> = ({ isVisible }) => {
       dot3Opacity.value = withDelay(
         400,
         withRepeat(
-          withSequence(
-            withTiming(1, { duration: 400 }),
-            withTiming(0.3, { duration: 400 })
-          ),
+          withSequence(withTiming(1, { duration: 400 }), withTiming(0.3, { duration: 400 })),
           -1,
           false
         )
@@ -79,38 +70,31 @@ const TypingAnimation: React.FC<TypingAnimationProps> = ({ isVisible }) => {
     <View className="mb-4 items-start">
       <View className="flex-row items-end" style={{ maxWidth: '85%' }}>
         {/* AI Avatar */}
-        <View className="w-8 h-8 rounded-full items-center justify-center mb-1 mx-2"
-              style={{ 
-                backgroundColor: '#10a37f',
-                flexShrink: 0
-              }}>
+        <View
+          className="w-8 h-8 rounded-full items-center justify-center mb-1 mx-2"
+          style={{
+            backgroundColor: '#10a37f',
+            flexShrink: 0,
+          }}
+        >
           <View className="text-white text-xs font-semibold">
             <View className="w-2 h-2 rounded-full bg-white" />
           </View>
         </View>
-        
+
         {/* Typing Bubble */}
-        <View 
+        <View
           className="rounded-2xl rounded-bl-md px-4 py-3"
           style={{
             backgroundColor: '#f3f4f6',
             flex: 1,
-            maxWidth: '100%'
+            maxWidth: '100%',
           }}
         >
           <View className="flex-row items-center justify-center py-1">
-            <Animated.View 
-              className="w-2 h-2 rounded-full bg-gray-400 mx-1"
-              style={dot1Style}
-            />
-            <Animated.View 
-              className="w-2 h-2 rounded-full bg-gray-400 mx-1"
-              style={dot2Style}
-            />
-            <Animated.View 
-              className="w-2 h-2 rounded-full bg-gray-400 mx-1"
-              style={dot3Style}
-            />
+            <Animated.View className="w-2 h-2 rounded-full bg-gray-400 mx-1" style={dot1Style} />
+            <Animated.View className="w-2 h-2 rounded-full bg-gray-400 mx-1" style={dot2Style} />
+            <Animated.View className="w-2 h-2 rounded-full bg-gray-400 mx-1" style={dot3Style} />
           </View>
         </View>
       </View>

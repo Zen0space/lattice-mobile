@@ -24,7 +24,9 @@ export class ResponsiveUtils {
    */
   static getResponsiveWidth(percentage: number): number {
     if (typeof percentage !== 'number' || percentage < 0 || percentage > 100) {
-      console.warn(`ResponsiveUtils.getResponsiveWidth: Invalid percentage ${percentage}, using 90% as fallback`);
+      console.warn(
+        `ResponsiveUtils.getResponsiveWidth: Invalid percentage ${percentage}, using 90% as fallback`
+      );
       percentage = 90;
     }
     return Math.round((screenWidth * percentage) / 100);
@@ -37,7 +39,9 @@ export class ResponsiveUtils {
    */
   static getResponsiveHeight(percentage: number): number {
     if (typeof percentage !== 'number' || percentage < 0 || percentage > 100) {
-      console.warn(`ResponsiveUtils.getResponsiveHeight: Invalid percentage ${percentage}, using 80% as fallback`);
+      console.warn(
+        `ResponsiveUtils.getResponsiveHeight: Invalid percentage ${percentage}, using 80% as fallback`
+      );
       percentage = 80;
     }
     return Math.round((screenHeight * percentage) / 100);
@@ -50,10 +54,12 @@ export class ResponsiveUtils {
    */
   static getChartWidth(containerType: 'full' | 'compact' | 'gallery' = 'full'): number {
     if (typeof containerType !== 'string') {
-      console.warn(`ResponsiveUtils.getChartWidth: Invalid containerType ${containerType}, using 'full' as fallback`);
+      console.warn(
+        `ResponsiveUtils.getChartWidth: Invalid containerType ${containerType}, using 'full' as fallback`
+      );
       containerType = 'full';
     }
-    
+
     switch (containerType) {
       case 'full':
         return ResponsiveUtils.getResponsiveWidth(90); // 90% of screen width
@@ -62,7 +68,9 @@ export class ResponsiveUtils {
       case 'gallery':
         return ResponsiveUtils.getResponsiveWidth(47); // 47% for 2-column layout
       default:
-        console.warn(`ResponsiveUtils.getChartWidth: Unknown containerType '${containerType}', using 'full' as fallback`);
+        console.warn(
+          `ResponsiveUtils.getChartWidth: Unknown containerType '${containerType}', using 'full' as fallback`
+        );
         return ResponsiveUtils.getResponsiveWidth(90);
     }
   }
@@ -117,11 +125,16 @@ export class ResponsiveUtils {
 }
 
 // Export convenience functions
-export const getResponsiveWidth = (percentage: number) => ResponsiveUtils.getResponsiveWidth(percentage);
-export const getResponsiveHeight = (percentage: number) => ResponsiveUtils.getResponsiveHeight(percentage);
-export const getChartWidth = (containerType: 'full' | 'compact' | 'gallery' = 'full') => ResponsiveUtils.getChartWidth(containerType);
-export const getResponsiveSpacing = (baseSpacing: number, scaleFactor: number = 1) => ResponsiveUtils.getResponsiveSpacing(baseSpacing, scaleFactor);
-export const getResponsiveFontSize = (baseFontSize: number) => ResponsiveUtils.getResponsiveFontSize(baseFontSize);
+export const getResponsiveWidth = (percentage: number) =>
+  ResponsiveUtils.getResponsiveWidth(percentage);
+export const getResponsiveHeight = (percentage: number) =>
+  ResponsiveUtils.getResponsiveHeight(percentage);
+export const getChartWidth = (containerType: 'full' | 'compact' | 'gallery' = 'full') =>
+  ResponsiveUtils.getChartWidth(containerType);
+export const getResponsiveSpacing = (baseSpacing: number, scaleFactor: number = 1) =>
+  ResponsiveUtils.getResponsiveSpacing(baseSpacing, scaleFactor);
+export const getResponsiveFontSize = (baseFontSize: number) =>
+  ResponsiveUtils.getResponsiveFontSize(baseFontSize);
 
 // Export screen dimension constants
 export const SCREEN_WIDTH = screenWidth;

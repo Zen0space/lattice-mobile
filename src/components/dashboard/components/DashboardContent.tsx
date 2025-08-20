@@ -13,10 +13,10 @@ interface DashboardContentProps {
 
 /**
  * DashboardContent Component
- * 
+ *
  * Handles the main content rendering for the active dashboard.
  * Extracted from DashboardManager.tsx for better separation of concerns.
- * 
+ *
  * Features:
  * - Safe dashboard rendering with fallback handling
  * - Development-specific error logging
@@ -33,7 +33,7 @@ const DashboardContent: React.FC<DashboardContentProps> = ({
   // Use refs to prevent infinite loops
   const lastAttemptedRecoveryRef = useRef<string>('');
   const isRecoveringRef = useRef(false);
-  
+
   // Fix: Move setState logic to useEffect to prevent "setState during render" error
   useEffect(() => {
     // Prevent infinite loops by checking if we're already recovering or have recently attempted recovery
@@ -42,18 +42,19 @@ const DashboardContent: React.FC<DashboardContentProps> = ({
     }
 
     const activeDashboard = dashboards.find(d => d.id === activeDashboardId);
-    
+
     // Auto-recovery logic - only run once per activeDashboardId
     if (!activeDashboard && dashboards.length > 0) {
       const fallbackDashboard = dashboards.find(d => d.type === 'overview') || dashboards[0];
-      
+
       if (__DEV__) {
         console.warn(`⚠️ Active Dashboard Not Found: ${activeDashboardId}`);
-        console.warn('Available dashboards:', dashboards.map(d => ({ id: d.id, name: d.name, type: d.type })));
+        console.warn(
+          'Available dashboards:',
+          dashboards.map(d => ({ id: d.id, name: d.name, type: d.type }))
+        );
         if (__DEV__) {
-
           console.log(`🔄 Auto-recovering with fallback dashboard: ${fallbackDashboard.id}`);
-
         }
       }
 
@@ -74,31 +75,34 @@ const DashboardContent: React.FC<DashboardContentProps> = ({
       isRecoveringRef.current = false;
     }
   }, [dashboards, activeDashboardId]);
-  
+
   const renderDashboardContent = () => {
     // Simplified state validation
     if (__DEV__) {
       if (__DEV__) {
-
-        console.log('🔄 Dashboard state updated:', { activeDashboardId, dashboardCount: dashboards.length });
-
+        console.log('🔄 Dashboard state updated:', {
+          activeDashboardId,
+          dashboardCount: dashboards.length,
+        });
       }
     }
 
     const activeDashboard = dashboards.find(d => d.id === activeDashboardId);
-    
+
     // Enhanced error handling for undefined activeDashboard
     if (!activeDashboard) {
       // Development-specific fallback handled in useEffect above
       if (dashboards.length > 0) {
         return null; // Will re-render with correct dashboard from useEffect
       }
-      
+
       // No dashboards available - enhanced empty state with development info
       return (
         <View className="flex-1 items-center justify-center p-4 bg-gray-50">
           <Text className="text-lg font-semibold text-gray-900 mb-2">No Dashboards Available</Text>
-          <Text className="text-gray-600 text-center mb-4">Create a new dashboard to get started</Text>
+          <Text className="text-gray-600 text-center mb-4">
+            Create a new dashboard to get started
+          </Text>
           {__DEV__ && (
             <Text className="text-yellow-600 text-xs text-center mb-4 font-mono">
               DEV: activeDashboardId = {activeDashboardId || 'null'}
@@ -127,11 +131,7 @@ const DashboardContent: React.FC<DashboardContentProps> = ({
     );
   };
 
-  return (
-    <View className="flex-1">
-      {renderDashboardContent()}
-    </View>
-  );
+  return <View className="flex-1">{renderDashboardContent()}</View>;
 };
 
 export default DashboardContent;

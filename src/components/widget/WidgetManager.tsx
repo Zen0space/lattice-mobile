@@ -1,12 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  ScrollView,
-  Alert,
-  Dimensions,
-} from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, Alert, Dimensions } from 'react-native';
 import { Plus, BarChart, Trash2, Download } from 'react-native-feather';
 import { WidgetManagerProps, Widget } from './types';
 import ChartWidget from './ChartWidget';
@@ -14,8 +7,6 @@ import WidgetGallery from './WidgetGallery';
 import { createSampleWidgets } from './SampleWidgets';
 
 const { width: screenWidth } = Dimensions.get('window');
-
-
 
 const WidgetManager: React.FC<WidgetManagerProps> = ({
   widgets: initialWidgets = [],
@@ -59,7 +50,7 @@ const WidgetManager: React.FC<WidgetManagerProps> = ({
           text: 'Delete',
           style: 'destructive',
           onPress: () => {
-            const updatedWidgets = widgets.filter((w) => w.id !== widgetId);
+            const updatedWidgets = widgets.filter(w => w.id !== widgetId);
             setWidgets(updatedWidgets);
             onDeleteWidget?.(widgetId);
           },
@@ -69,10 +60,8 @@ const WidgetManager: React.FC<WidgetManagerProps> = ({
   };
 
   const handleUpdateWidget = (widgetId: string, updates: Partial<Widget>) => {
-    const updatedWidgets = widgets.map((widget) =>
-      widget.id === widgetId
-        ? { ...widget, ...updates, updatedAt: new Date() }
-        : widget
+    const updatedWidgets = widgets.map(widget =>
+      widget.id === widgetId ? { ...widget, ...updates, updatedAt: new Date() } : widget
     );
     setWidgets(updatedWidgets);
     onUpdateWidget?.(widgetId, updates);
@@ -91,7 +80,7 @@ const WidgetManager: React.FC<WidgetManagerProps> = ({
           text: 'Clear All',
           style: 'destructive',
           onPress: () => {
-            widgets.forEach((widget) => onDeleteWidget?.(widget.id));
+            widgets.forEach(widget => onDeleteWidget?.(widget.id));
             setWidgets([]);
           },
         },
@@ -113,11 +102,11 @@ const WidgetManager: React.FC<WidgetManagerProps> = ({
             text: 'Load Samples',
             onPress: () => {
               // Clear existing widgets
-              widgets.forEach((widget) => onDeleteWidget?.(widget.id));
+              widgets.forEach(widget => onDeleteWidget?.(widget.id));
               // Add sample widgets
               const sampleWidgets = createSampleWidgets();
               setWidgets(sampleWidgets);
-              sampleWidgets.forEach((widget) => {
+              sampleWidgets.forEach(widget => {
                 onAddWidget?.({
                   type: widget.type,
                   title: widget.title,
@@ -133,7 +122,7 @@ const WidgetManager: React.FC<WidgetManagerProps> = ({
     } else {
       const sampleWidgets = createSampleWidgets();
       setWidgets(sampleWidgets);
-      sampleWidgets.forEach((widget) => {
+      sampleWidgets.forEach(widget => {
         onAddWidget?.({
           type: widget.type,
           title: widget.title,
@@ -150,15 +139,14 @@ const WidgetManager: React.FC<WidgetManagerProps> = ({
       <View className="w-20 h-20 bg-gray-100 rounded-full items-center justify-center mb-6">
         <BarChart width={32} height={32} stroke="#9ca3af" />
       </View>
-      
-      <Text className="text-xl font-semibold text-gray-900 mb-2 text-center">
-        No Widgets Yet
-      </Text>
-      
+
+      <Text className="text-xl font-semibold text-gray-900 mb-2 text-center">No Widgets Yet</Text>
+
       <Text className="text-gray-600 text-center mb-8 leading-relaxed">
-        Select from the widget gallery below to start visualizing your data with beautiful, interactive charts.
+        Select from the widget gallery below to start visualizing your data with beautiful,
+        interactive charts.
       </Text>
-      
+
       <TouchableOpacity
         onPress={handleLoadSamples}
         className="px-6 py-3 rounded-xl flex-row items-center shadow-sm"
@@ -182,14 +170,10 @@ const WidgetManager: React.FC<WidgetManagerProps> = ({
     <View className="px-6 py-4 bg-white border-b border-gray-200">
       <View className="flex-row items-center justify-between mb-4">
         <View>
-          <Text className="text-2xl font-bold text-secondary">
-            Dashboard Widgets
-          </Text>
-          <Text className="text-sm text-gray-600 mt-1">
-            {widgets.length} active widgets
-          </Text>
+          <Text className="text-2xl font-bold text-secondary">Dashboard Widgets</Text>
+          <Text className="text-sm text-gray-600 mt-1">{widgets.length} active widgets</Text>
         </View>
-        
+
         <View className="flex-row items-center space-x-3">
           {/* Toggle View Button */}
           <TouchableOpacity
@@ -201,7 +185,7 @@ const WidgetManager: React.FC<WidgetManagerProps> = ({
               {showGallery ? 'My Widgets' : 'Gallery'}
             </Text>
           </TouchableOpacity>
-          
+
           {widgets.length > 0 && !showGallery && (
             <TouchableOpacity
               onPress={handleClearAllWidgets}
@@ -229,12 +213,12 @@ const WidgetManager: React.FC<WidgetManagerProps> = ({
     }
 
     return (
-      <ScrollView 
-        className="flex-1 bg-gray-50" 
+      <ScrollView
+        className="flex-1 bg-gray-50"
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingVertical: 8 }}
       >
-        {widgets.map((widget) => (
+        {widgets.map(widget => (
           <ChartWidget
             key={widget.id}
             widget={widget}
@@ -243,7 +227,7 @@ const WidgetManager: React.FC<WidgetManagerProps> = ({
             showControls={true}
           />
         ))}
-        
+
         {/* Add Space at Bottom */}
         <View className="h-6" />
       </ScrollView>
@@ -253,7 +237,7 @@ const WidgetManager: React.FC<WidgetManagerProps> = ({
   return (
     <View className="flex-1 bg-gray-50">
       {showHeader && renderHeader()}
-      
+
       {showGallery ? (
         <WidgetGallery
           onSelectWidget={handleAddWidget}

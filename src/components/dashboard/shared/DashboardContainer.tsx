@@ -11,8 +11,8 @@ const DashboardContainer: React.FC<DashboardContainerProps> = ({
   showsVerticalScrollIndicator = false,
 }) => {
   return (
-    <ScrollView 
-      className="flex-1 bg-white" 
+    <ScrollView
+      className="flex-1 bg-white"
       contentContainerStyle={{ padding: 20, paddingBottom: 40 }}
       showsVerticalScrollIndicator={showsVerticalScrollIndicator}
     >

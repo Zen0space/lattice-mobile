@@ -69,9 +69,7 @@ class DevelopmentErrorBoundary extends Component<Props, State> {
     if (__DEV__) {
       this.resetTimeoutId = setTimeout(() => {
         if (__DEV__) {
-
           console.log(`🔄 Auto-recovering from error boundary ${this.state.errorBoundaryId}`);
-
         }
         this.resetErrorBoundary();
       }, 5000);
@@ -84,8 +82,8 @@ class DevelopmentErrorBoundary extends Component<Props, State> {
 
     if (hasError && prevProps.resetKeys !== resetKeys) {
       if (resetKeys) {
-        const hasResetKeyChanged = resetKeys.some((key, index) => 
-          this.prevResetKeys[index] !== key
+        const hasResetKeyChanged = resetKeys.some(
+          (key, index) => this.prevResetKeys[index] !== key
         );
         if (hasResetKeyChanged) {
           if (__DEV__) {
@@ -102,9 +100,7 @@ class DevelopmentErrorBoundary extends Component<Props, State> {
     if (hasError && resetOnPropsChange && prevProps !== this.props) {
       if (__DEV__) {
         if (__DEV__) {
-
           console.log(`🔄 Resetting error boundary due to props change`);
-
         }
       }
       this.resetErrorBoundary();
@@ -169,14 +165,12 @@ class DevelopmentErrorBoundary extends Component<Props, State> {
                 {error?.stack && (
                   <>
                     <Text className="text-gray-800 font-semibold mb-2">Stack Trace:</Text>
-                    <ScrollView 
-                      horizontal 
+                    <ScrollView
+                      horizontal
                       className="bg-gray-100 p-3 rounded mb-4"
                       style={{ maxHeight: 200 }}
                     >
-                      <Text className="text-gray-700 font-mono text-xs">
-                        {error.stack}
-                      </Text>
+                      <Text className="text-gray-700 font-mono text-xs">{error.stack}</Text>
                     </ScrollView>
                   </>
                 )}
@@ -184,8 +178,8 @@ class DevelopmentErrorBoundary extends Component<Props, State> {
                 {errorInfo?.componentStack && (
                   <>
                     <Text className="text-gray-800 font-semibold mb-2">Component Stack:</Text>
-                    <ScrollView 
-                      horizontal 
+                    <ScrollView
+                      horizontal
                       className="bg-gray-100 p-3 rounded"
                       style={{ maxHeight: 200 }}
                     >
@@ -204,11 +198,10 @@ class DevelopmentErrorBoundary extends Component<Props, State> {
                   <Text className="text-blue-800 font-semibold ml-2">Development Tips:</Text>
                 </View>
                 <Text className="text-blue-700 text-sm leading-5">
-                  • Check the console for additional error details{'\n'}
-                  • This error boundary will auto-recover in 5 seconds{'\n'}
-                  • Use the Reset button to manually recover{'\n'}
-                  • Enable Fast Refresh for better hot reload stability{'\n'}
-                  • Check if state is properly initialized before rendering
+                  • Check the console for additional error details{'\n'}• This error boundary will
+                  auto-recover in 5 seconds{'\n'}• Use the Reset button to manually recover{'\n'}•
+                  Enable Fast Refresh for better hot reload stability{'\n'}• Check if state is
+                  properly initialized before rendering
                 </Text>
               </View>
 
@@ -227,9 +220,7 @@ class DevelopmentErrorBoundary extends Component<Props, State> {
                   onPress={() => {
                     if (__DEV__) {
                       if (__DEV__) {
-
                         console.log('🔄 Triggering Fast Refresh...');
-
                       }
                       // In development, this will trigger a fast refresh
                       if ((global as any).HermesInternal?.enableDebugger) {
