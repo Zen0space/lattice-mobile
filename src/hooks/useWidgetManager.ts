@@ -18,7 +18,7 @@
 
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { Alert } from 'react-native';
-import { DashboardStorage } from '../utils/DashboardStorage';
+import { widgetStorage } from '../stores/storage';
 import { useDashboardStore } from '../stores/dashboardStore';
 import { Widget } from '../components/dashboard/types';
 import { WidgetManagerHook, HookConfig } from './types';
@@ -104,10 +104,14 @@ export const useWidgetManager = (
       setError(null);
 
       if (config.enableDevMode) {
-        console.log(`🔄 Loading widgets for dashboard: ${dashboardId}`);
+        if (__DEV__) {
+
+          console.log(`🔄 Loading widgets for dashboard: ${dashboardId}`);
+
+        }
       }
 
-      const dashboardWidgets = await DashboardStorage.loadDashboardWidgets(dashboardId);
+      const dashboardWidgets = await widgetStorage.loadWidgets(dashboardId);
       
       setWidgets(prev => ({
         ...prev,
@@ -117,7 +121,11 @@ export const useWidgetManager = (
       setIsLoading(false);
 
       if (config.enableDevMode) {
-        console.log(`✅ Loaded ${dashboardWidgets.length} widgets for dashboard: ${dashboardId}`);
+        if (__DEV__) {
+
+          console.log(`✅ Loaded ${dashboardWidgets.length} widgets for dashboard: ${dashboardId}`);
+
+        }
       }
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Failed to load widgets';
@@ -194,7 +202,11 @@ export const useWidgetManager = (
       setIsLoading(false);
 
       if (config.enableDevMode) {
-        console.log(`✅ Added widget "${newWidget.title}" to dashboard: ${dashboardId}`);
+        if (__DEV__) {
+
+          console.log(`✅ Added widget "${newWidget.title}" to dashboard: ${dashboardId}`);
+
+        }
       }
     } catch (error) {
       // Rollback optimistic update
@@ -273,7 +285,11 @@ export const useWidgetManager = (
       setIsLoading(false);
 
       if (config.enableDevMode) {
-        console.log(`✅ Updated widget "${updatedWidget.title}" in dashboard: ${dashboardId}`);
+        if (__DEV__) {
+
+          console.log(`✅ Updated widget "${updatedWidget.title}" in dashboard: ${dashboardId}`);
+
+        }
       }
     } catch (error) {
       // Rollback optimistic update
@@ -340,7 +356,11 @@ export const useWidgetManager = (
       setIsLoading(false);
 
       if (config.enableDevMode) {
-        console.log(`✅ Deleted widget "${widgetToDelete.title}" from dashboard: ${dashboardId}`);
+        if (__DEV__) {
+
+          console.log(`✅ Deleted widget "${widgetToDelete.title}" from dashboard: ${dashboardId}`);
+
+        }
       }
     } catch (error) {
       // Rollback optimistic update
@@ -410,7 +430,11 @@ export const useWidgetManager = (
       setIsLoading(false);
 
       if (config.enableDevMode) {
-        console.log(`✅ Reordered ${widgetIds.length} widgets in dashboard: ${dashboardId}`);
+        if (__DEV__) {
+
+          console.log(`✅ Reordered ${widgetIds.length} widgets in dashboard: ${dashboardId}`);
+
+        }
       }
     } catch (error) {
       // Rollback optimistic update
@@ -471,7 +495,7 @@ export const useWidgetManager = (
                 }
 
                 // Clear from storage
-                await DashboardStorage.clearDashboardWidgets(dashboardId);
+                await widgetStorage.deleteWidgets(dashboardId);
 
                 // Clear optimistic update on success
                 if (config.enableOptimisticUpdates) {
@@ -479,7 +503,11 @@ export const useWidgetManager = (
                 }
 
                 if (config.enableDevMode) {
-                  console.log(`✅ Cleared all widgets from dashboard: ${dashboardId}`);
+                  if (__DEV__) {
+
+                    console.log(`✅ Cleared all widgets from dashboard: ${dashboardId}`);
+
+                  }
                 }
               } catch (error) {
                 // Rollback optimistic update
@@ -545,7 +573,11 @@ export const useWidgetManager = (
       await addWidget(dashboardId, duplicatedWidget);
 
       if (config.enableDevMode) {
-        console.log(`✅ Duplicated widget "${widgetToDuplicate.title}" in dashboard: ${dashboardId}`);
+        if (__DEV__) {
+
+          console.log(`✅ Duplicated widget "${widgetToDuplicate.title}" in dashboard: ${dashboardId}`);
+
+        }
       }
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Failed to duplicate widget';

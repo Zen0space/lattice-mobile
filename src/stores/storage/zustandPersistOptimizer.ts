@@ -178,7 +178,11 @@ class ZustandPersistOptimizer {
             try {
               state = migration.migrate(state);
               if (__DEV__) {
-                console.log(`Applied migration ${migration.version} for ${key}: ${migration.description}`);
+                if (__DEV__) {
+
+                  console.log(`Applied migration ${migration.version} for ${key}: ${migration.description}`);
+
+                }
               }
             } catch (error) {
               console.error(`Migration ${migration.version} failed for ${key}:`, error);

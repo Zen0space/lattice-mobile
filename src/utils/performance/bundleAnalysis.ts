@@ -38,7 +38,13 @@ export class BundleAnalyzer {
   private initializeAnalysis() {
     if (!__DEV__) return;
 
-    console.log('📦 Bundle Analysis initialized');
+    if (__DEV__) {
+
+
+      console.log('📦 Bundle Analysis initialized');
+
+
+    }
     
     if (this.config.monitorMemoryUsage) {
       this.startMemoryMonitoring();
@@ -86,7 +92,13 @@ export class BundleAnalyzer {
       const endTime = performance.now();
       const loadTime = endTime - startTime;
       
-      console.log(`📦 Chunk "${chunkName}" loaded in ${loadTime.toFixed(2)}ms`);
+      if (__DEV__) {
+
+      
+        console.log(`📦 Chunk "${chunkName}" loaded in ${loadTime.toFixed(2)}ms`);
+
+      
+      }
       
       if (loadTime > 1000) {
         console.warn(`⚠️ Slow chunk loading detected: ${chunkName} (${loadTime.toFixed(2)}ms)`);
@@ -109,10 +121,26 @@ export class BundleAnalyzer {
 
     if (this.config.enableLogging) {
       console.group('📊 Bundle Analysis Report');
-      console.log('Total Analysis Time:', `${totalTime}ms`);
-      console.log('Chunk Load Times:', report.chunkLoadTimes);
-      console.log('Memory Usage:', report.memoryUsage);
-      console.log('Recommendations:', report.recommendations);
+      if (__DEV__) {
+
+        console.log('Total Analysis Time:', `${totalTime}ms`);
+
+      }
+      if (__DEV__) {
+
+        console.log('Chunk Load Times:', report.chunkLoadTimes);
+
+      }
+      if (__DEV__) {
+
+        console.log('Memory Usage:', report.memoryUsage);
+
+      }
+      if (__DEV__) {
+
+        console.log('Recommendations:', report.recommendations);
+
+      }
       console.groupEnd();
     }
 

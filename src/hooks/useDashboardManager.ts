@@ -16,7 +16,7 @@ import { Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { DashboardConfig, DashboardType } from '../components/dashboard/types';
 import { DASHBOARD_TEMPLATES } from '../components/dashboard/DashboardTemplates';
-import { DashboardStorage } from '../utils/DashboardStorage';
+import { dashboardStorage, widgetStorage } from '../stores/storage';
 import { useDashboardStore } from '../stores/dashboardStore';
 import { DashboardManagerHook, HookError } from './types';
 
@@ -86,7 +86,11 @@ export const useDashboardManager = (
       setError(null);
 
       if (config.enableDevMode) {
-        console.log('🔄 Initializing dashboards...');
+        if (__DEV__) {
+
+          console.log('🔄 Initializing dashboards...');
+
+        }
       }
 
       // Check if Zustand store already has dashboards (from persistence)
@@ -110,11 +114,19 @@ export const useDashboardManager = (
         setActiveDashboard('overview-default');
 
         if (config.enableDevMode) {
-          console.log('✅ Initialized default dashboards');
+          if (__DEV__) {
+
+            console.log('✅ Initialized default dashboards');
+
+          }
         }
       } else {
         if (config.enableDevMode) {
-          console.log(`✅ Found ${dashboards.length} persisted dashboards`);
+          if (__DEV__) {
+
+            console.log(`✅ Found ${dashboards.length} persisted dashboards`);
+
+          }
         }
       }
 
@@ -171,7 +183,11 @@ export const useDashboardManager = (
       setLoading(false);
 
       if (config.enableDevMode) {
-        console.log(`✅ Created dashboard: ${name} (${newDashboard.id})`);
+        if (__DEV__) {
+
+          console.log(`✅ Created dashboard: ${name} (${newDashboard.id})`);
+
+        }
       }
     } catch (error) {
       // Rollback optimistic update
@@ -211,11 +227,15 @@ export const useDashboardManager = (
       }
 
       // Check widget count before deletion (still using DashboardStorage for widgets)
-      const widgets = await DashboardStorage.loadDashboardWidgets(id);
+      const widgets = await widgetStorage.loadWidgets(id);
       const widgetCount = widgets.length;
 
       if (config.enableDevMode) {
-        console.log(`🔍 Dashboard "${dashboard.name}" has ${widgetCount} widgets`);
+        if (__DEV__) {
+
+          console.log(`🔍 Dashboard "${dashboard.name}" has ${widgetCount} widgets`);
+
+        }
       }
 
       // Use the safe deletion method from the store
@@ -223,7 +243,11 @@ export const useDashboardManager = (
       
       if (success) {
         if (config.enableDevMode) {
-          console.log(`✅ Successfully deleted dashboard: ${dashboard.name}`);
+          if (__DEV__) {
+
+            console.log(`✅ Successfully deleted dashboard: ${dashboard.name}`);
+
+          }
         }
       } else {
         throw new Error('Failed to delete dashboard safely');
@@ -255,7 +279,11 @@ export const useDashboardManager = (
       if (!dashboard) {
         if (config.enableDevMode) {
           console.error(`❌ Dashboard not found: ${dashboardId}`);
-          console.log('Available dashboards:', dashboards.map(d => ({ id: d.id, name: d.name })));
+          if (__DEV__) {
+
+            console.log('Available dashboards:', dashboards.map(d => ({ id: d.id, name: d.name })));
+
+          }
         }
         throw new Error('Dashboard not found');
       }
@@ -266,7 +294,11 @@ export const useDashboardManager = (
       updateDashboard(dashboardId, { lastAccessed: new Date() });
 
       if (config.enableDevMode) {
-        console.log(`🔄 Switched to dashboard: ${dashboard.name}`);
+        if (__DEV__) {
+
+          console.log(`🔄 Switched to dashboard: ${dashboard.name}`);
+
+        }
       }
     } catch (error) {
       const { setError } = useDashboardStore.getState();
@@ -312,7 +344,11 @@ export const useDashboardManager = (
       setLoading(false);
 
       if (config.enableDevMode) {
-        console.log(`✅ Updated dashboard: ${dashboard.name}`);
+        if (__DEV__) {
+
+          console.log(`✅ Updated dashboard: ${dashboard.name}`);
+
+        }
       }
     } catch (error) {
       // Rollback optimistic update
@@ -353,14 +389,22 @@ export const useDashboardManager = (
     const initializeApp = async () => {
       // Clean up old DashboardStorage data to prevent conflicts
       if (config.enableDevMode) {
-        console.log('🧹 Cleaning up old storage keys...');
+        if (__DEV__) {
+
+          console.log('🧹 Cleaning up old storage keys...');
+
+        }
       }
       
       try {
         await AsyncStorage.removeItem('user_dashboards');
         await AsyncStorage.removeItem('active_dashboard');
         if (config.enableDevMode) {
-          console.log('✅ Old storage keys cleaned up');
+          if (__DEV__) {
+
+            console.log('✅ Old storage keys cleaned up');
+
+          }
         }
       } catch (error) {
         if (config.enableDevMode) {

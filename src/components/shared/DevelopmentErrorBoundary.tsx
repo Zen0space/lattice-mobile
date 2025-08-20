@@ -68,7 +68,11 @@ class DevelopmentErrorBoundary extends Component<Props, State> {
     // Auto-recovery in development after 5 seconds
     if (__DEV__) {
       this.resetTimeoutId = setTimeout(() => {
-        console.log(`🔄 Auto-recovering from error boundary ${this.state.errorBoundaryId}`);
+        if (__DEV__) {
+
+          console.log(`🔄 Auto-recovering from error boundary ${this.state.errorBoundaryId}`);
+
+        }
         this.resetErrorBoundary();
       }, 5000);
     }
@@ -97,7 +101,11 @@ class DevelopmentErrorBoundary extends Component<Props, State> {
 
     if (hasError && resetOnPropsChange && prevProps !== this.props) {
       if (__DEV__) {
-        console.log(`🔄 Resetting error boundary due to props change`);
+        if (__DEV__) {
+
+          console.log(`🔄 Resetting error boundary due to props change`);
+
+        }
       }
       this.resetErrorBoundary();
     }
@@ -218,7 +226,11 @@ class DevelopmentErrorBoundary extends Component<Props, State> {
                 <TouchableOpacity
                   onPress={() => {
                     if (__DEV__) {
-                      console.log('🔄 Triggering Fast Refresh...');
+                      if (__DEV__) {
+
+                        console.log('🔄 Triggering Fast Refresh...');
+
+                      }
                       // In development, this will trigger a fast refresh
                       if ((global as any).HermesInternal?.enableDebugger) {
                         (global as any).HermesInternal.enableDebugger();

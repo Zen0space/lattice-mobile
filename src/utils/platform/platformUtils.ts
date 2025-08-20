@@ -78,7 +78,11 @@ export const getBundleInfo = () => {
 // Development-only logging
 export const devLog = (message: string, data?: any) => {
   if (__DEV__) {
-    console.log(`🔧 [${Platform.OS.toUpperCase()}] ${message}`, data || '');
+    if (__DEV__) {
+
+      console.log(`🔧 [${Platform.OS.toUpperCase()}] ${message}`, data || '');
+
+    }
   }
 };
 

@@ -23,8 +23,8 @@ import {
   AssetDataRenderer,
   ActivityDataRenderer,
 } from './shared';
-import { ActivityItem } from './shared/OptimizedActivityList';
-import { useMountedRef, memoryLeakDetection } from '../../utils/memoryLeakPrevention';
+import { ActivityItem } from '../../types';
+import { useMountedRef, memoryLeakDetection } from '../../utils/performance/memoryLeakPrevention';
 
 const { width } = Dimensions.get('window');
 

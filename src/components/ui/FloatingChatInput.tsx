@@ -37,13 +37,21 @@ const FloatingChatInput: React.FC<FloatingChatInputProps> = ({
 
     // Official React Native Keyboard API event listeners
     const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', (event) => {
-      console.log('Keyboard shown - Height:', event.endCoordinates.height);
+      if (__DEV__) {
+
+        console.log('Keyboard shown - Height:', event.endCoordinates.height);
+
+      }
       setIsKeyboardVisible(true);
       setKeyboardHeight(event.endCoordinates.height);
     });
 
     const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
-      console.log('Keyboard hidden - Returning to original position');
+      if (__DEV__) {
+
+        console.log('Keyboard hidden - Returning to original position');
+
+      }
       setIsKeyboardVisible(false);
       setKeyboardHeight(0);
     });

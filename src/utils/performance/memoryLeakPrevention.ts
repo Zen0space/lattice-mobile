@@ -213,9 +213,17 @@ export const memoryLeakDetection = {
   useComponentLifecycleLogger: (componentName: string) => {
     useEffect(() => {
       if (__DEV__) {
-        console.log(`🟢 ${componentName} mounted`);
+        if (__DEV__) {
+
+          console.log(`🟢 ${componentName} mounted`);
+
+        }
         return () => {
-          console.log(`🔴 ${componentName} unmounted`);
+          if (__DEV__) {
+
+            console.log(`🔴 ${componentName} unmounted`);
+
+          }
         };
       }
     }, [componentName]);

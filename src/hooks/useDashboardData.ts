@@ -181,7 +181,11 @@ export const useDashboardData = (
     }
 
     if (config.enableDevMode) {
-      console.log(`📦 Cached data for dashboard: ${dashboardId} (${cacheRef.current.size} total)`);
+      if (__DEV__) {
+
+        console.log(`📦 Cached data for dashboard: ${dashboardId} (${cacheRef.current.size} total)`);
+
+      }
     }
   }, [config.enableCache, config.cacheTimeout, config.maxCacheSize, config.enableDevMode]);
 
@@ -194,7 +198,11 @@ export const useDashboardData = (
       setError(null);
 
       if (config.enableDevMode) {
-        console.log(`🔄 Fetching data for dashboard: ${dashboardId}`);
+        if (__DEV__) {
+
+          console.log(`🔄 Fetching data for dashboard: ${dashboardId}`);
+
+        }
       }
 
       // Check cache first
@@ -204,7 +212,11 @@ export const useDashboardData = (
         setIsLoading(false);
         
         if (config.enableDevMode) {
-          console.log(`💾 Using cached data for dashboard: ${dashboardId}`);
+          if (__DEV__) {
+
+            console.log(`💾 Using cached data for dashboard: ${dashboardId}`);
+
+          }
         }
         return;
       }
@@ -222,7 +234,11 @@ export const useDashboardData = (
       setIsLoading(false);
 
       if (config.enableDevMode) {
-        console.log(`✅ Fetched fresh data for dashboard: ${dashboardId}`);
+        if (__DEV__) {
+
+          console.log(`✅ Fetched fresh data for dashboard: ${dashboardId}`);
+
+        }
       }
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Failed to fetch dashboard data';
@@ -236,7 +252,11 @@ export const useDashboardData = (
           setDashboardData(prev => ({ ...prev, [dashboardId]: cachedData }));
           
           if (config.enableDevMode) {
-            console.log(`🔄 Using stale cached data as fallback for: ${dashboardId}`);
+            if (__DEV__) {
+
+              console.log(`🔄 Using stale cached data as fallback for: ${dashboardId}`);
+
+            }
           }
         }
       }
@@ -274,7 +294,11 @@ export const useDashboardData = (
       setLastRefresh(new Date());
 
       if (config.enableDevMode) {
-        console.log(`🔄 Refreshed data for ${dashboardId || 'all dashboards'}`);
+        if (__DEV__) {
+
+          console.log(`🔄 Refreshed data for ${dashboardId || 'all dashboards'}`);
+
+        }
       }
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Failed to refresh data';
@@ -303,7 +327,11 @@ export const useDashboardData = (
     }
 
     if (config.enableDevMode) {
-      console.log(`🗑️ Cleared cache for ${dashboardId || 'all dashboards'}`);
+      if (__DEV__) {
+
+        console.log(`🗑️ Cleared cache for ${dashboardId || 'all dashboards'}`);
+
+      }
     }
   }, [config.enableDevMode]);
 
@@ -313,7 +341,11 @@ export const useDashboardData = (
   const preloadData = useCallback(async (dashboardIds: string[]) => {
     try {
       if (config.enableDevMode) {
-        console.log(`⏳ Preloading data for ${dashboardIds.length} dashboards`);
+        if (__DEV__) {
+
+          console.log(`⏳ Preloading data for ${dashboardIds.length} dashboards`);
+
+        }
       }
 
       // Fetch data for all dashboards in parallel
@@ -322,7 +354,11 @@ export const useDashboardData = (
       );
 
       if (config.enableDevMode) {
-        console.log(`✅ Preloaded data for ${dashboardIds.length} dashboards`);
+        if (__DEV__) {
+
+          console.log(`✅ Preloaded data for ${dashboardIds.length} dashboards`);
+
+        }
       }
     } catch (error) {
       if (config.enableDevMode) {
@@ -338,7 +374,11 @@ export const useDashboardData = (
     cacheRef.current.delete(dashboardId);
     
     if (config.enableDevMode) {
-      console.log(`🗑️ Invalidated cache for dashboard: ${dashboardId}`);
+      if (__DEV__) {
+
+        console.log(`🗑️ Invalidated cache for dashboard: ${dashboardId}`);
+
+      }
     }
   }, [config.enableDevMode]);
 
@@ -371,7 +411,11 @@ export const useDashboardData = (
       }, config.refreshInterval || DEFAULT_CONFIG.refreshInterval!);
       
       if (config.enableDevMode) {
-        console.log('🔄 Enabled background data sync');
+        if (__DEV__) {
+
+          console.log('🔄 Enabled background data sync');
+
+        }
       }
     } else {
       // Stop background refresh
@@ -381,7 +425,11 @@ export const useDashboardData = (
       }
       
       if (config.enableDevMode) {
-        console.log('⏹️ Disabled background data sync');
+        if (__DEV__) {
+
+          console.log('⏹️ Disabled background data sync');
+
+        }
       }
     }
   }, [config.enableBackgroundRefresh, config.refreshInterval, config.enableDevMode, refreshData]);

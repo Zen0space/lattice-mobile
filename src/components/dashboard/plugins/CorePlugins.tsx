@@ -349,7 +349,13 @@ export function registerCorePlugins() {
     pluginRegistry.register(plugin, 'core');
   });
   
-  console.log(`✅ Registered ${CORE_PLUGINS.length} core dashboard plugins`);
+  if (__DEV__) {
+
+  
+    console.log(`✅ Registered ${CORE_PLUGINS.length} core dashboard plugins`);
+
+  
+  }
 }
 
 export default CORE_PLUGINS;

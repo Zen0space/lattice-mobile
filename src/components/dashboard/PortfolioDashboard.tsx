@@ -5,7 +5,7 @@ import DraggableFlatList, { RenderItemParams } from 'react-native-draggable-flat
 import { DashboardConfig } from './types';
 import { WidgetManager, Widget, createChartConfig, CHART_TEMPLATES, CHART_DATA_PRESETS } from '../widget';
 import { DashboardWidget } from './shared';
-import { DashboardStorage } from '../../utils/DashboardStorage';
+import { widgetStorage } from '../../stores/storage';
 
 interface PortfolioDashboardProps {
   config: DashboardConfig;
@@ -30,14 +30,18 @@ const PortfolioDashboard: React.FC<PortfolioDashboardProps> = ({ config }) => {
     
     const loadDashboardWidgets = async () => {
       try {
-        const savedWidgets = await DashboardStorage.loadDashboardWidgets(config.id);
+        const savedWidgets = await widgetStorage.loadWidgets(config.id);
         if (isMounted) {
           if (savedWidgets.length > 0) {
             setWidgets(savedWidgets);
-            console.log(`✅ Loaded ${savedWidgets.length} widgets for ${config.name} dashboard`);
+            if (__DEV__) {
+              console.log(`✅ Loaded ${savedWidgets.length} widgets for ${config.name} dashboard`);
+            }
           } else {
             setWidgets([]);
-            console.log(`📝 No widgets found for ${config.name} dashboard`);
+            if (__DEV__) {
+              console.log(`📝 No widgets found for ${config.name} dashboard`);
+            }
           }
         }
       } catch (error) {
@@ -55,7 +59,9 @@ const PortfolioDashboard: React.FC<PortfolioDashboardProps> = ({ config }) => {
     // CRITICAL: Cleanup function to prevent state updates after unmount
     return () => {
       isMounted = false;
-      console.log(`🧹 Cleaning up widget state for dashboard: ${config.name}`);
+      if (__DEV__) {
+        console.log(`🧹 Cleaning up widget state for dashboard: ${config.name}`);
+      }
     };
   }, [config.id, config.name]);
 
@@ -107,7 +113,7 @@ const PortfolioDashboard: React.FC<PortfolioDashboardProps> = ({ config }) => {
       const updatedWidgets = [...widgets, newWidget];
       
       // CRITICAL: Save to storage FIRST to validate dashboard exists
-      await DashboardStorage.saveDashboardWidgets(config.id, updatedWidgets);
+      await widgetStorage.saveWidgets(config.id, updatedWidgets);
       console.log(`✅ Widget "${newWidget.title}" saved to ${config.name} dashboard`);
       
       // Only update state if storage operation succeeded
@@ -141,7 +147,7 @@ const PortfolioDashboard: React.FC<PortfolioDashboardProps> = ({ config }) => {
       const newWidgets = widgets.filter((w) => w.id !== widgetId);
       
       // CRITICAL: Save to storage FIRST
-      await DashboardStorage.saveDashboardWidgets(config.id, newWidgets);
+      await widgetStorage.saveWidgets(config.id, newWidgets);
       console.log(`✅ Widget "${widgetToDelete.title}" deleted from ${config.name} dashboard`);
       
       // Only update state if storage operation succeeded
@@ -168,7 +174,7 @@ const PortfolioDashboard: React.FC<PortfolioDashboardProps> = ({ config }) => {
       console.log(`🔄 Reordering ${data.length} widgets in dashboard "${config.name}"`);
       
       // CRITICAL: Save to storage FIRST
-      await DashboardStorage.saveDashboardWidgets(config.id, data);
+      await widgetStorage.saveWidgets(config.id, data);
       console.log(`✅ Widget order saved for ${config.name} dashboard`);
       
       // Only update state if storage operation succeeded
@@ -214,7 +220,7 @@ const PortfolioDashboard: React.FC<PortfolioDashboardProps> = ({ config }) => {
       );
       
       // CRITICAL: Save to storage FIRST
-      await DashboardStorage.saveDashboardWidgets(config.id, updatedWidgets);
+      await widgetStorage.saveWidgets(config.id, updatedWidgets);
       const updatedWidget = updatedWidgets.find(w => w.id === widgetId);
       console.log(`✅ Widget "${updatedWidget?.title || widgetId}" updated in ${config.name} dashboard`);
       

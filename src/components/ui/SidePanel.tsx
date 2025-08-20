@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Search, X, Plus, User, Edit3, Trash2, ExternalLink } from 'react-native-feather';
-import ChatStorage, { ChatSession } from '../../utils/ChatStorage';
+import ChatStorage, { ChatSession } from '../../stores/storage/chatStorage';
 
 interface SidePanelProps {
   isVisible: boolean;
@@ -138,13 +138,17 @@ const SidePanel: React.FC<SidePanelProps> = ({
   };
 
   const handleChatPress = (chatId: string) => {
-    console.log('Loading chat session:', chatId);
+    if (__DEV__) {
+      console.log('Loading chat session:', chatId);
+    }
     onLoadChatSession?.(chatId);
     onClose();
   };
 
   const handleNewChat = () => {
-    console.log('New chat pressed');
+    if (__DEV__) {
+      console.log('New chat pressed');
+    }
     onNewChat?.();
   };
 

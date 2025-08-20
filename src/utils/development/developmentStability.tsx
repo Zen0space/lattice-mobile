@@ -22,7 +22,11 @@ export const DevelopmentFallback: React.FC<{ error?: string }> = ({ error }) => 
         onPress={() => {
           // In React Native, we can't reload like web, but we can trigger a state reset
           if (__DEV__) {
-            console.log('🔄 Development fallback triggered - restart the app');
+            if (__DEV__) {
+
+              console.log('🔄 Development fallback triggered - restart the app');
+
+            }
           }
         }}
         className="bg-yellow-400 px-4 py-2 rounded"
@@ -45,7 +49,11 @@ export const useHotReloadRecovery = (
 
   useEffect(() => {
     if (__DEV__ && recoveryCount > 0) {
-      console.log(`🔄 Hot reload recovery #${recoveryCount} for ${stateKey}`);
+      if (__DEV__) {
+
+        console.log(`🔄 Hot reload recovery #${recoveryCount} for ${stateKey}`);
+
+      }
     }
   }, [recoveryCount, stateKey]);
 
@@ -53,7 +61,11 @@ export const useHotReloadRecovery = (
     if (__DEV__) {
       setState(initialState);
       setRecoveryCount(prev => prev + 1);
-      console.log(`✅ State recovered for ${stateKey}`);
+      if (__DEV__) {
+
+        console.log(`✅ State recovered for ${stateKey}`);
+
+      }
     }
   }, [initialState, stateKey]);
 
@@ -144,7 +156,11 @@ export const withDevelopmentSafety = <P extends object>(
 // Development logging utilities
 export const devLog = (message: string, data?: any) => {
   if (__DEV__) {
-    console.log(`🔧 [DEV] ${message}`, data || '');
+    if (__DEV__) {
+
+      console.log(`🔧 [DEV] ${message}`, data || '');
+
+    }
   }
 };
 

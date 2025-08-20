@@ -1,8 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { DashboardConfig } from '../types';
-import { DashboardStorage } from '../../../utils/DashboardStorage';
-import { DynamicDashboardRenderer } from '../../../utils/dynamicImports';
+import { dashboardStorage } from '../../../stores/storage';
+import { DynamicDashboardRenderer } from '../../../utils/core/dynamicImports';
 
 interface DashboardContentProps {
   dashboards: DashboardConfig[];
@@ -50,7 +50,11 @@ const DashboardContent: React.FC<DashboardContentProps> = ({
       if (__DEV__) {
         console.warn(`⚠️ Active Dashboard Not Found: ${activeDashboardId}`);
         console.warn('Available dashboards:', dashboards.map(d => ({ id: d.id, name: d.name, type: d.type })));
-        console.log(`🔄 Auto-recovering with fallback dashboard: ${fallbackDashboard.id}`);
+        if (__DEV__) {
+
+          console.log(`🔄 Auto-recovering with fallback dashboard: ${fallbackDashboard.id}`);
+
+        }
       }
 
       // Mark that we're recovering and track the attempt
@@ -74,7 +78,11 @@ const DashboardContent: React.FC<DashboardContentProps> = ({
   const renderDashboardContent = () => {
     // Simplified state validation
     if (__DEV__) {
-      console.log('🔄 Dashboard state updated:', { activeDashboardId, dashboardCount: dashboards.length });
+      if (__DEV__) {
+
+        console.log('🔄 Dashboard state updated:', { activeDashboardId, dashboardCount: dashboards.length });
+
+      }
     }
 
     const activeDashboard = dashboards.find(d => d.id === activeDashboardId);

@@ -29,11 +29,16 @@ export {
   zustandPersistOptimizer,
 } from './zustandPersistOptimizer';
 
+export { 
+  default as ChatStorage,
+} from './chatStorage';
+
 // Types
 export type { DashboardMetadata, StorageStats } from './dashboardStorage';
 export type { WidgetTemplate, WidgetBackup } from './widgetStorage';
 export type { CacheEntry, CacheConfig, CacheStats } from './cacheManager';
 export type { PersistConfig, MigrationStrategy } from './zustandPersistOptimizer';
+export type { ChatMessage, ChatSession } from './chatStorage';
 
 // Utility functions
 export const createOptimizedPersistence = () => {

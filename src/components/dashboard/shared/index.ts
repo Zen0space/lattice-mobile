@@ -8,8 +8,7 @@ export { default as ActionButton } from './ActionButton';
 export { default as DashboardContainer } from './DashboardContainer';
 export { default as DashboardWidget } from './DashboardWidget';
 export { default as PlaceholderDashboard } from './PlaceholderDashboard';
-export { default as OptimizedAssetList } from './OptimizedAssetList';
-export { default as OptimizedActivityList } from './OptimizedActivityList';
+// OptimizedAssetList and OptimizedActivityList removed - replaced by DataRenderer system
 
 // New Phase 3.1 shared components
 export { default as StatCard, StatCardSkeleton, StatCardError } from './StatCard';

@@ -8,7 +8,7 @@ import { FloatingChatInput, SidePanel, ChatBubble, TypingAnimation } from '../co
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../navigation/AppNavigator';
-import ChatStorage, { ChatMessage as StoredChatMessage } from '../utils/ChatStorage';
+import ChatStorage, { ChatMessage as StoredChatMessage } from '../stores/storage/chatStorage';
 
 type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Home'>;
 
@@ -307,7 +307,11 @@ const HomeScreen: React.FC = () => {
       const session = await ChatStorage.loadSession(sessionId);
       if (session) {
         setMessages(session.messages);
-        console.log(`Loaded session with ${session.messages.length} messages`);
+        if (__DEV__) {
+
+          console.log(`Loaded session with ${session.messages.length} messages`);
+
+        }
       } else {
         console.error('Session not found:', sessionId);
         Alert.alert('Error', 'The selected conversation could not be found.');
@@ -319,7 +323,11 @@ const HomeScreen: React.FC = () => {
   };
 
   const handleMenuPress = () => {
-    console.log('Hamburger menu pressed');
+    if (__DEV__) {
+
+      console.log('Hamburger menu pressed');
+
+    }
     openSidePanel();
   };
 

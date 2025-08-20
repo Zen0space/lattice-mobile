@@ -200,7 +200,13 @@ export class DashboardConfigManager {
         });
       }
 
-      console.log(`✅ Loaded ${this.configurations.size} dashboard configurations and ${this.presets.size} presets`);
+      if (__DEV__) {
+
+
+        console.log(`✅ Loaded ${this.configurations.size} dashboard configurations and ${this.presets.size} presets`);
+
+
+      }
     } catch (error) {
       console.error('Failed to load dashboard configurations:', error);
     }
@@ -261,7 +267,13 @@ export class DashboardConfigManager {
     this.configurations.set(config.id, config);
     await this.saveConfigurations();
 
-    console.log(`✨ Created dashboard configuration: ${name} (${config.id})`);
+    if (__DEV__) {
+
+
+      console.log(`✨ Created dashboard configuration: ${name} (${config.id})`);
+
+
+    }
     return config;
   }
 
@@ -285,7 +297,13 @@ export class DashboardConfigManager {
     this.configurations.set(config.id, config);
     await this.saveConfigurations();
 
-    console.log(`📋 Created dashboard from preset: ${preset.name} → ${config.name}`);
+    if (__DEV__) {
+
+
+      console.log(`📋 Created dashboard from preset: ${preset.name} → ${config.name}`);
+
+
+    }
     return config;
   }
 
@@ -312,7 +330,13 @@ export class DashboardConfigManager {
     this.configurations.set(configId, updatedConfig);
     await this.saveConfigurations();
 
-    console.log(`🔄 Updated dashboard configuration: ${configId}`);
+    if (__DEV__) {
+
+
+      console.log(`🔄 Updated dashboard configuration: ${configId}`);
+
+
+    }
     return true;
   }
 
@@ -328,7 +352,13 @@ export class DashboardConfigManager {
     this.configurations.delete(configId);
     await this.saveConfigurations();
 
-    console.log(`🗑️ Deleted dashboard configuration: ${configId}`);
+    if (__DEV__) {
+
+
+      console.log(`🗑️ Deleted dashboard configuration: ${configId}`);
+
+
+    }
     return true;
   }
 
@@ -382,7 +412,13 @@ export class DashboardConfigManager {
     this.presets.set(preset.id, preset);
     await this.saveConfigurations();
 
-    console.log(`✨ Created custom preset: ${presetName} (${preset.id})`);
+    if (__DEV__) {
+
+
+      console.log(`✨ Created custom preset: ${presetName} (${preset.id})`);
+
+
+    }
     return preset;
   }
 
@@ -482,7 +518,13 @@ export class DashboardConfigManager {
       this.configurations.set(config.id, config);
       await this.saveConfigurations();
 
-      console.log(`📥 Imported dashboard configuration: ${config.name}`);
+      if (__DEV__) {
+
+
+        console.log(`📥 Imported dashboard configuration: ${config.name}`);
+
+
+      }
       return config;
     } catch (error) {
       console.error('Failed to import configuration:', error);
@@ -530,7 +572,13 @@ export class DashboardConfigManager {
     await AsyncStorage.removeItem(this.storageKey);
     await AsyncStorage.removeItem(this.presetsKey);
 
-    console.log('🔄 Reset dashboard configurations to defaults');
+    if (__DEV__) {
+
+
+      console.log('🔄 Reset dashboard configurations to defaults');
+
+
+    }
   }
 }
 

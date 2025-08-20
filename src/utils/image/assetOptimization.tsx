@@ -149,7 +149,11 @@ export const preloadImages = async (imageUrls: string[]): Promise<void> => {
     await Promise.all(preloadPromises);
     
     if (__DEV__) {
-      console.log(`✅ Preloaded ${imageUrls.length} images`);
+      if (__DEV__) {
+
+        console.log(`✅ Preloaded ${imageUrls.length} images`);
+
+      }
     }
   } catch (error) {
     console.error('Failed to preload images:', error);
@@ -164,7 +168,11 @@ export const imageCacheManager = {
       // React Native doesn't have a direct cache clear method
       // This is more relevant for web implementations
       if (__DEV__) {
-        console.log('🧹 Image cache cleared (development)');
+        if (__DEV__) {
+
+          console.log('🧹 Image cache cleared (development)');
+
+        }
       }
     } catch (error) {
       console.error('Failed to clear image cache:', error);
@@ -244,7 +252,11 @@ export const bundleOptimization = {
       return {
         onChunkLoaded: () => {
           const loadTime = (global.performance?.now ? global.performance.now() : Date.now()) - startTime;
-          console.log(`📦 Chunk loaded: ${chunkName} (${loadTime.toFixed(2)}ms)`);
+          if (__DEV__) {
+
+            console.log(`📦 Chunk loaded: ${chunkName} (${loadTime.toFixed(2)}ms)`);
+
+          }
         },
         
         onChunkError: (error: any) => {

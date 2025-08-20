@@ -1,8 +1,8 @@
 import './global.css';
 import React, { useEffect } from 'react';
 import { AppNavigator } from './src/navigation';
-import { initializeBundleAnalysis } from './src/utils/bundleAnalysis';
-import { imageCacheManager } from './src/utils/assetOptimization';
+import { initializeBundleAnalysis } from './src/utils/performance/bundleAnalysis';
+import { imageCacheManager } from './src/utils/image/assetOptimization';
 
 export default function App() {
   useEffect(() => {

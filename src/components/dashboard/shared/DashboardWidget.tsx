@@ -10,7 +10,7 @@ import {
 import { LineChart } from 'react-native-gifted-charts';
 import { MoreVertical, TrendingUp, TrendingDown, Trash2, X } from 'react-native-feather';
 import { Widget, ChartConfig, CryptoWidgetConfig } from '../../widget/types';
-import { getChartWidth, SCREEN_WIDTH } from '../../../utils/responsive';
+import { getChartWidth, SCREEN_WIDTH } from '../../../utils/platform/responsive';
 import CryptoWidget from '../../widget/CryptoWidget';
 
 const { width: screenWidth } = Dimensions.get('window');

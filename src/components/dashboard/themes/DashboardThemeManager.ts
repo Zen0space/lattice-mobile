@@ -254,7 +254,13 @@ export class DashboardThemeManager {
         this.currentThemeId = currentTheme;
       }
 
-      console.log(`✅ Loaded ${this.themes.size} dashboard themes`);
+      if (__DEV__) {
+
+
+        console.log(`✅ Loaded ${this.themes.size} dashboard themes`);
+
+
+      }
     } catch (error) {
       console.error('Failed to load themes:', error);
     }
@@ -316,7 +322,13 @@ export class DashboardThemeManager {
     this.currentThemeId = themeId;
     await this.saveThemes();
     
-    console.log(`🎨 Switched to theme: ${themeId}`);
+    if (__DEV__) {
+
+    
+      console.log(`🎨 Switched to theme: ${themeId}`);
+
+    
+    }
     return true;
   }
 
@@ -341,7 +353,13 @@ export class DashboardThemeManager {
     this.themes.set(theme.id, customTheme);
     await this.saveThemes();
     
-    console.log(`✨ Created custom theme: ${theme.name} (${theme.id})`);
+    if (__DEV__) {
+
+    
+      console.log(`✨ Created custom theme: ${theme.name} (${theme.id})`);
+
+    
+    }
     return true;
   }
 
@@ -370,7 +388,13 @@ export class DashboardThemeManager {
     this.themes.set(themeId, updatedTheme);
     await this.saveThemes();
     
-    console.log(`🔄 Updated theme: ${themeId}`);
+    if (__DEV__) {
+
+    
+      console.log(`🔄 Updated theme: ${themeId}`);
+
+    
+    }
     return true;
   }
 
@@ -398,7 +422,13 @@ export class DashboardThemeManager {
     this.themes.delete(themeId);
     await this.saveThemes();
     
-    console.log(`🗑️ Deleted theme: ${themeId}`);
+    if (__DEV__) {
+
+    
+      console.log(`🗑️ Deleted theme: ${themeId}`);
+
+    
+    }
     return true;
   }
 
@@ -429,7 +459,13 @@ export class DashboardThemeManager {
     this.themes.set(newThemeId, clonedTheme);
     await this.saveThemes();
     
-    console.log(`📋 Cloned theme: ${sourceThemeId} → ${newThemeId}`);
+    if (__DEV__) {
+
+    
+      console.log(`📋 Cloned theme: ${sourceThemeId} → ${newThemeId}`);
+
+    
+    }
     return true;
   }
 
@@ -479,7 +515,13 @@ export class DashboardThemeManager {
     await AsyncStorage.removeItem(this.storageKey);
     await AsyncStorage.removeItem(this.currentThemeKey);
     
-    console.log('🔄 Reset themes to defaults');
+    if (__DEV__) {
+
+    
+      console.log('🔄 Reset themes to defaults');
+
+    
+    }
   }
 
   /**

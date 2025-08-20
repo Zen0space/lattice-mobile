@@ -1,6 +1,6 @@
 import React, { lazy, ComponentType, Suspense } from 'react';
 import { View, Text, ActivityIndicator } from 'react-native';
-import { DashboardConfig } from '../components/dashboard/types';
+import { DashboardConfig } from '../../components/dashboard/types';
 
 /**
  * Dynamic Import Utilities for Bundle Optimization - 2025 Best Practices
@@ -50,12 +50,12 @@ const createLazyDashboard = (
 
 // Dashboard components with lazy loading
 const OverviewDashboard = createLazyDashboard(
-  () => import('../components/dashboard/OverviewDashboard'),
+  () => import('../../components/dashboard/OverviewDashboard'),
   'Overview Dashboard'
 );
 
 const UnifiedDashboard = createLazyDashboard(
-  () => import('../components/dashboard/UnifiedDashboard'),
+  () => import('../../components/dashboard/UnifiedDashboard'),
   'Unified Dashboard'
 );
 
@@ -110,19 +110,19 @@ export const preloadDashboardComponent = async (dashboardType: string): Promise<
   try {
     switch (dashboardType) {
       case 'overview':
-        await import('../components/dashboard/OverviewDashboard');
+        await import('../../components/dashboard/OverviewDashboard');
         break;
       case 'stocks':
       case 'portfolio':
       case 'watchlist':
       case 'analytics':
       case 'trading':
-        await import('../components/dashboard/UnifiedDashboard');
+        await import('../../components/dashboard/UnifiedDashboard');
         break;
       default:
         console.warn(`Unknown dashboard type for preloading: ${dashboardType}`);
         // Fallback to UnifiedDashboard for unknown types
-        await import('../components/dashboard/UnifiedDashboard');
+        await import('../../components/dashboard/UnifiedDashboard');
     }
   } catch (error) {
     console.error(`Failed to preload dashboard component ${dashboardType}:`, error);
@@ -134,12 +134,16 @@ export const preloadCriticalDashboards = async (): Promise<void> => {
   try {
     // Preload both OverviewDashboard (for overview tab) and UnifiedDashboard (for other tabs)
     await Promise.all([
-      import('../components/dashboard/OverviewDashboard'),
-      import('../components/dashboard/UnifiedDashboard'),
+      import('../../components/dashboard/OverviewDashboard'),
+      import('../../components/dashboard/UnifiedDashboard'),
     ]);
     
     if (__DEV__) {
-      console.log('✅ OverviewDashboard and UnifiedDashboard components preloaded');
+      if (__DEV__) {
+
+        console.log('✅ OverviewDashboard and UnifiedDashboard components preloaded');
+
+      }
     }
   } catch (error) {
     console.error('Failed to preload critical dashboards:', error);
@@ -161,7 +165,11 @@ export const monitorBundleSize = (): void => {
         platform: 'react-native',
       });
     } else {
-      console.log('📦 Bundle monitoring: Memory API not available on this platform');
+      if (__DEV__) {
+
+        console.log('📦 Bundle monitoring: Memory API not available on this platform');
+
+      }
     }
   }
 };
@@ -174,7 +182,11 @@ export const trackChunkLoad = (chunkName: string) => {
     return {
       onSuccess: () => {
         const loadTime = (global.performance?.now ? global.performance.now() : Date.now()) - startTime;
-        console.log(`✅ Chunk "${chunkName}" loaded in ${loadTime.toFixed(2)}ms`);
+        if (__DEV__) {
+
+          console.log(`✅ Chunk "${chunkName}" loaded in ${loadTime.toFixed(2)}ms`);
+
+        }
       },
       onError: (error: Error) => {
         const loadTime = (global.performance?.now ? global.performance.now() : Date.now()) - startTime;

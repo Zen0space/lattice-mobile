@@ -17,7 +17,7 @@ import DraggableFlatList, { RenderItemParams } from 'react-native-draggable-flat
 import { DashboardConfig, DashboardType } from './types';
 import { WidgetManager, Widget, createChartConfig, CHART_TEMPLATES, CHART_DATA_PRESETS } from '../widget';
 import { DashboardWidget } from './shared';
-import { DashboardStorage } from '../../utils/DashboardStorage';
+import { widgetStorage } from '../../stores/storage';
 import { DASHBOARD_TEMPLATES } from './DashboardTemplates';
 
 interface UnifiedDashboardProps {
@@ -137,14 +137,22 @@ const UnifiedDashboard: React.FC<UnifiedDashboardProps> = ({ config }) => {
     
     const loadDashboardWidgets = async () => {
       try {
-        const savedWidgets = await DashboardStorage.loadDashboardWidgets(config.id);
+        const savedWidgets = await widgetStorage.loadWidgets(config.id);
         if (isMounted) {
           if (savedWidgets.length > 0) {
             setWidgets(savedWidgets);
-            console.log(`✅ Loaded ${savedWidgets.length} widgets for ${config.name} dashboard`);
+            if (__DEV__) {
+
+              console.log(`✅ Loaded ${savedWidgets.length} widgets for ${config.name} dashboard`);
+
+            }
           } else {
             setWidgets([]);
-            console.log(`📝 No widgets found for ${config.name} dashboard`);
+            if (__DEV__) {
+
+              console.log(`📝 No widgets found for ${config.name} dashboard`);
+
+            }
           }
         }
       } catch (error) {
@@ -161,14 +169,22 @@ const UnifiedDashboard: React.FC<UnifiedDashboardProps> = ({ config }) => {
 
     return () => {
       isMounted = false;
-      console.log(`🧹 Cleaning up widget state for dashboard: ${config.name}`);
+      if (__DEV__) {
+
+        console.log(`🧹 Cleaning up widget state for dashboard: ${config.name}`);
+
+      }
     };
   }, [config.id, config.name]);
 
   // Dashboard change detection - reset widget state when switching dashboards
   useEffect(() => {
     if (previousDashboardId && previousDashboardId !== config.id) {
-      console.log(`🔄 Dashboard changed from ${previousDashboardId} to ${config.id} - resetting widget state`);
+      if (__DEV__) {
+
+        console.log(`🔄 Dashboard changed from ${previousDashboardId} to ${config.id} - resetting widget state`);
+
+      }
       
       setWidgets([]);
       setShowAllWidgets(false);
@@ -197,7 +213,13 @@ const UnifiedDashboard: React.FC<UnifiedDashboardProps> = ({ config }) => {
         return;
       }
 
-      console.log(`🔧 Adding widget "${newWidgetData.title}" to dashboard "${config.name}" (${config.id})`);
+      if (__DEV__) {
+
+
+        console.log(`🔧 Adding widget "${newWidgetData.title}" to dashboard "${config.name}" (${config.id})`);
+
+
+      }
 
       const newWidget: Widget = {
         ...newWidgetData,
@@ -208,8 +230,12 @@ const UnifiedDashboard: React.FC<UnifiedDashboardProps> = ({ config }) => {
       
       const updatedWidgets = [...widgets, newWidget];
       
-      await DashboardStorage.saveDashboardWidgets(config.id, updatedWidgets);
-      console.log(`✅ Widget "${newWidget.title}" saved to ${config.name} dashboard`);
+      await widgetStorage.saveWidgets(config.id, updatedWidgets);
+      if (__DEV__) {
+
+        console.log(`✅ Widget "${newWidget.title}" saved to ${config.name} dashboard`);
+
+      }
       
       setWidgets(updatedWidgets);
     } catch (error) {
@@ -231,12 +257,22 @@ const UnifiedDashboard: React.FC<UnifiedDashboardProps> = ({ config }) => {
         return;
       }
 
-      console.log(`🗑️ Deleting widget "${widgetToDelete.title}" from dashboard "${config.name}"`);
+      if (__DEV__) {
+
+
+        console.log(`🗑️ Deleting widget "${widgetToDelete.title}" from dashboard "${config.name}"`);
+
+
+      }
 
       const newWidgets = widgets.filter((w) => w.id !== widgetId);
       
-      await DashboardStorage.saveDashboardWidgets(config.id, newWidgets);
-      console.log(`✅ Widget "${widgetToDelete.title}" deleted from ${config.name} dashboard`);
+      await widgetStorage.saveWidgets(config.id, newWidgets);
+      if (__DEV__) {
+
+        console.log(`✅ Widget "${widgetToDelete.title}" deleted from ${config.name} dashboard`);
+
+      }
       
       setWidgets(newWidgets);
       
@@ -256,15 +292,29 @@ const UnifiedDashboard: React.FC<UnifiedDashboardProps> = ({ config }) => {
         return;
       }
 
-      console.log(`🔄 Reordering ${data.length} widgets in dashboard "${config.name}"`);
+      if (__DEV__) {
+
+
+        console.log(`🔄 Reordering ${data.length} widgets in dashboard "${config.name}"`);
+
+
+      }
       
-      await DashboardStorage.saveDashboardWidgets(config.id, data);
-      console.log(`✅ Widget order saved for ${config.name} dashboard`);
+      await widgetStorage.saveWidgets(config.id, data);
+      if (__DEV__) {
+
+        console.log(`✅ Widget order saved for ${config.name} dashboard`);
+
+      }
       
       setWidgets(data);
     } catch (error) {
       console.error('❌ Error saving widget order:', error);
-      console.log('🔄 Reverting widget order due to save failure');
+      if (__DEV__) {
+
+        console.log('🔄 Reverting widget order due to save failure');
+
+      }
     }
   };
 
@@ -291,7 +341,13 @@ const UnifiedDashboard: React.FC<UnifiedDashboardProps> = ({ config }) => {
         return;
       }
 
-      console.log(`🔧 Updating widget "${existingWidget.title}" in dashboard "${config.name}"`);
+      if (__DEV__) {
+
+
+        console.log(`🔧 Updating widget "${existingWidget.title}" in dashboard "${config.name}"`);
+
+
+      }
 
       const updatedWidgets = widgets.map((widget) =>
         widget.id === widgetId
@@ -299,9 +355,13 @@ const UnifiedDashboard: React.FC<UnifiedDashboardProps> = ({ config }) => {
           : widget
       );
       
-      await DashboardStorage.saveDashboardWidgets(config.id, updatedWidgets);
+      await widgetStorage.saveWidgets(config.id, updatedWidgets);
       const updatedWidget = updatedWidgets.find(w => w.id === widgetId);
-      console.log(`✅ Widget "${updatedWidget?.title || widgetId}" updated in ${config.name} dashboard`);
+      if (__DEV__) {
+
+        console.log(`✅ Widget "${updatedWidget?.title || widgetId}" updated in ${config.name} dashboard`);
+
+      }
       
       setWidgets(updatedWidgets);
     } catch (error) {

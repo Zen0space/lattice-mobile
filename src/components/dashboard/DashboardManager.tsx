@@ -7,7 +7,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { DashboardConfig, DashboardType } from './types';
-import { preloadCriticalDashboards, monitorBundleSize } from '../../utils/dynamicImports';
+import { preloadCriticalDashboards, monitorBundleSize } from '../../utils/core/dynamicImports';
 // Import custom hooks
 import { useDashboardManager, useDashboardData, useWidgetManager } from '../../hooks';
 // Import stores
@@ -152,7 +152,11 @@ const DashboardManager: React.FC<DashboardManagerProps> = ({ onBack }) => {
       const widgetCount = getWidgetCount(dashboardId);
       
       if (__DEV__) {
-        console.log(`📊 Dashboard "${dashboard?.name}" has ${widgetCount} widgets`);
+        if (__DEV__) {
+
+          console.log(`📊 Dashboard "${dashboard?.name}" has ${widgetCount} widgets`);
+
+        }
       }
       
       openDeleteModal(dashboardId);
@@ -187,7 +191,11 @@ const DashboardManager: React.FC<DashboardManagerProps> = ({ onBack }) => {
     } catch (error) {
       // Error is already handled in switchDashboard
       if (__DEV__) {
-        console.log('Switch dashboard failed, skipping data fetch');
+        if (__DEV__) {
+
+          console.log('Switch dashboard failed, skipping data fetch');
+
+        }
       }
     }
   }, [switchDashboard, fetchDashboardData]);

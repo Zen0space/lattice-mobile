@@ -45,7 +45,13 @@ export class DashboardPluginRegistry {
       }
     }
 
-    console.log(`✅ Registered plugin: ${plugin.name} (${plugin.id}) v${plugin.version}`);
+    if (__DEV__) {
+
+
+      console.log(`✅ Registered plugin: ${plugin.name} (${plugin.id}) v${plugin.version}`);
+
+
+    }
   }
 
   /**
@@ -73,7 +79,13 @@ export class DashboardPluginRegistry {
     this.plugins.delete(pluginId);
     this.pluginDependencies.delete(pluginId);
 
-    console.log(`🗑️ Unregistered plugin: ${plugin.name} (${pluginId})`);
+    if (__DEV__) {
+
+
+      console.log(`🗑️ Unregistered plugin: ${plugin.name} (${pluginId})`);
+
+
+    }
     return true;
   }
 

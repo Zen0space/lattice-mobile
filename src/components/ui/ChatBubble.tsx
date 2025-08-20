@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, ScrollView, Dimensions } from 'react-native';
 import TradingViewChart from './TradingViewChart';
-import { getResponsiveWidth } from '../../utils/responsive';
+import { getResponsiveWidth } from '../../utils/platform/responsive';
 
 interface ChartConfig {
   symbol: string;

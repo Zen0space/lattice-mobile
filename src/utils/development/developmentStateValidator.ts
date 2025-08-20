@@ -98,13 +98,25 @@ export const useStateValidator = <T extends Record<string, any>>(
     if (errors.length > 0) {
       console.group(`⚠️ State Validation Errors - ${componentName}`);
       errors.forEach(error => console.warn(error));
-      console.log('Original state:', stateToValidate);
-      console.log('Corrected state:', correctedState);
+      if (__DEV__) {
+
+        console.log('Original state:', stateToValidate);
+
+      }
+      if (__DEV__) {
+
+        console.log('Corrected state:', correctedState);
+
+      }
       console.groupEnd();
       
       validationErrorsRef.current = errors;
     } else if (validationErrorsRef.current.length > 0) {
-      console.log(`✅ State validation recovered for ${componentName}`);
+      if (__DEV__) {
+
+        console.log(`✅ State validation recovered for ${componentName}`);
+
+      }
       validationErrorsRef.current = [];
     }
 
@@ -167,7 +179,11 @@ export const useHotReloadRecovery = (componentName: string) => {
       // If component mounts very quickly after previous mount, it's likely a hot reload
       if (timeSinceMount < 100) {
         hotReloadCountRef.current++;
-        console.log(`🔥 Hot reload detected for ${componentName} (count: ${hotReloadCountRef.current})`);
+        if (__DEV__) {
+
+          console.log(`🔥 Hot reload detected for ${componentName} (count: ${hotReloadCountRef.current})`);
+
+        }
         
         // If too many hot reloads, suggest full refresh
         if (hotReloadCountRef.current > 5) {
@@ -209,7 +225,11 @@ export const devDebugHelpers = {
   logLifecycle: (componentName: string, phase: 'mount' | 'update' | 'unmount', data?: any) => {
     if (__DEV__) {
       const emoji = phase === 'mount' ? '🟢' : phase === 'update' ? '🔄' : '🔴';
-      console.log(`${emoji} ${componentName} ${phase}`, data || '');
+      if (__DEV__) {
+
+        console.log(`${emoji} ${componentName} ${phase}`, data || '');
+
+      }
     }
   },
 
@@ -217,8 +237,16 @@ export const devDebugHelpers = {
   logStateChange: (componentName: string, prevState: any, newState: any) => {
     if (__DEV__) {
       console.group(`🔄 ${componentName} State Change`);
-      console.log('Previous:', prevState);
-      console.log('New:', newState);
+      if (__DEV__) {
+
+        console.log('Previous:', prevState);
+
+      }
+      if (__DEV__) {
+
+        console.log('New:', newState);
+
+      }
       console.log('Diff:', {
         added: Object.keys(newState).filter(key => !(key in prevState)),
         removed: Object.keys(prevState).filter(key => !(key in newState)),

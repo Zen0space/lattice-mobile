@@ -8,7 +8,7 @@ import {
 import { LineChart } from 'react-native-gifted-charts';
 import { Trash2, MoreVertical } from 'react-native-feather';
 import { ChartWidgetProps, Widget, ChartConfig } from './types';
-import { getChartWidth, SCREEN_WIDTH } from '../../utils/responsive';
+import { getChartWidth, SCREEN_WIDTH } from '../../utils/platform/responsive';
 import CryptoWidget from './CryptoWidget';
 
 const { width: screenWidth } = Dimensions.get('window');
