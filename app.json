@@ -24,6 +24,12 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "5d8ede21-db3d-42ff-88cb-809b4c33c642"
+      }
+    },
+    "owner": "zen0team"
   }
 }

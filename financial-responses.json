@@ -1,0 +1,173 @@
+{
+  "financialResponses": {
+    "tesla": {
+      "symbol": "TSLA",
+      "exchange": "NASDAQ",
+      "fullSymbol": "NASDAQ:TSLA",
+      "currentPrice": 367.89,
+      "changePercent": 1.87,
+      "volume": "52.3M",
+      "marketCap": "1.17T",
+      "technicalAnalysis": {
+        "rsi": 61.4,
+        "support": 350.00,
+        "resistance": 385.00,
+        "trend": "bullish"
+      },
+      "recommendation": {
+        "action": "BUY",
+        "confidence": 78
+      },
+      "chartConfig": {
+        "symbol": "NASDAQ:TSLA",
+        "theme": "dark",
+        "interval": "D",
+        "height": 400,
+        "width": "100%",
+        "studies": ["RSI", "MACD"],
+        "showChart": true,
+        "hideTimeInterval": true,
+        "hideVolume": true,
+        "hideTopToolbar": false,
+        "hideLegend": false
+      },
+      "fullResponse": "TSLA $367.89 (+1.87%) • RSI: 61.4 • Trend: Bullish • Volume: 52.3M"
+    },
+
+    "bitcoin": {
+      "symbol": "BTC",
+      "currentPrice": 114523.45,
+      "changePercent": -1.23,
+      "volume": "28.4B",
+      "marketCap": "2.26T",
+      "technicalAnalysis": {
+        "rsi": 52.8,
+        "support": 110000.00,
+        "resistance": 118000.00,
+        "trend": "neutral"
+      },
+      "chartConfig": {
+        "symbol": "BINANCE:BTCUSDT",
+        "theme": "dark",
+        "interval": "D",
+        "height": 400,
+        "studies": ["RSI", "MACD"],
+        "showChart": true,
+        "hideTimeInterval": true,
+        "hideVolume": true,
+        "hideTopToolbar": false,
+        "hideLegend": false
+      },
+      "fullResponse": "BTC $114,523 (-1.23%) • RSI: 52.8 • Trend: Neutral • Support: $110K"
+    },
+    "ethereum": {
+      "symbol": "ETH",
+      "currentPrice": 4187.92,
+      "changePercent": 2.45,
+      "volume": "18.7B",
+      "marketCap": "503.2B",
+      "technicalAnalysis": {
+        "rsi": 64.2,
+        "support": 4000.00,
+        "resistance": 4300.00,
+        "trend": "bullish"
+      },
+      "chartConfig": {
+        "symbol": "BINANCE:ETHUSDT",
+        "theme": "dark",
+        "interval": "D",
+        "height": 400,
+        "studies": ["RSI", "MACD"],
+        "showChart": true,
+        "hideTimeInterval": true,
+        "hideVolume": true,
+        "hideTopToolbar": false,
+        "hideLegend": false
+      },
+      "fullResponse": "ETH $4,188 (+2.45%) • RSI: 64.2 • Trend: Bullish • Resistance: $4,300"
+    },
+    "apple": {
+      "symbol": "AAPL",
+      "currentPrice": 227.85,
+      "changePercent": 0.64,
+      "volume": "41.2M",
+      "marketCap": "3.47T",
+      "technicalAnalysis": {
+        "rsi": 58.2,
+        "support": 220.00,
+        "resistance": 235.00,
+        "trend": "bullish"
+      },
+      "chartConfig": {
+        "symbol": "NASDAQ:AAPL",
+        "theme": "dark",
+        "interval": "D",
+        "height": 400,
+        "studies": ["RSI", "MACD"],
+        "showChart": true,
+        "hideTimeInterval": true,
+        "hideVolume": true,
+        "hideTopToolbar": false,
+        "hideLegend": false
+      },
+      "fullResponse": "AAPL $227.85 (+0.64%) • RSI: 58.2 • Trend: Bullish • Support: $220"
+    },
+    "nvidia": {
+      "symbol": "NVDA", 
+      "currentPrice": 142.67,
+      "changePercent": -2.15,
+      "volume": "38.9M",
+      "marketCap": "3.51T",
+      "technicalAnalysis": {
+        "rsi": 48.3,
+        "support": 135.00,
+        "resistance": 150.00,
+        "trend": "neutral"
+      },
+      "chartConfig": {
+        "symbol": "NASDAQ:NVDA",
+        "theme": "dark",
+        "interval": "D", 
+        "height": 400,
+        "studies": ["RSI", "MACD"],
+        "showChart": true,
+        "hideTimeInterval": true,
+        "hideVolume": true,
+        "hideTopToolbar": false,
+        "hideLegend": false
+      },
+      "fullResponse": "NVDA $142.67 (-2.15%) • RSI: 48.3 • Trend: Neutral • Support: $135"
+    }
+  },
+  "conversationStarters": [
+    {
+      "id": "bitcoin",
+      "text": "Bitcoin chart",
+      "category": "crypto_chart",
+      "responseKey": "bitcoin"
+    },
+    {
+      "id": "ethereum",
+      "text": "Ethereum chart",
+      "category": "crypto_chart",
+      "responseKey": "ethereum"
+    },
+    {
+      "id": "tesla",
+      "text": "Tesla stock chart",
+      "category": "stock_chart",
+      "responseKey": "tesla"
+    },
+    {
+      "id": "apple",
+      "text": "Apple stock chart",
+      "category": "stock_chart",
+      "responseKey": "apple"
+    }
+  ],
+  "metadata": {
+    "version": "1.0.0",
+    "lastUpdated": "2024-01-15",
+    "disclaimer": "This analysis is for informational purposes only and should not be considered as personalized investment advice. Past performance does not guarantee future results. All investments carry risk of loss. Please consult with a qualified financial advisor before making investment decisions."
+  }
+}
