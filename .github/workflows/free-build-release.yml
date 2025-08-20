@@ -1,0 +1,178 @@
+name: Free React Native Build & Release
+
+on:
+  push:
+    branches: [master, main]
+    tags: ['v*']
+  pull_request:
+    branches: [master, main]
+  workflow_dispatch:
+
+jobs:
+  build-android:
+    name: Build Android APK
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 🏗 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 🏗 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: 🏗 Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: 🏗 Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: 📦 Install dependencies
+        run: npm ci
+
+      - name: 🔧 Setup Expo
+        run: |
+          npm install -g @expo/cli@latest
+          npx expo install --fix
+
+      - name: 📋 Generate app.json from app.config.js (if needed)
+        run: |
+          if [ -f app.config.js ]; then
+            npx expo export:embed
+          fi
+
+      - name: 🏗 Prebuild Android
+        run: npx expo prebuild --platform android --clean
+
+      - name: 🔑 Setup Production Signing (for tagged releases only)
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        run: |
+          if [ ! -z "$ANDROID_KEYSTORE_BASE64" ]; then
+            echo "🔑 Setting up production keystore for release build"
+            echo "$ANDROID_KEYSTORE_BASE64" | base64 -d > android/app/release.keystore
+            echo "MYAPP_UPLOAD_STORE_FILE=release.keystore" >> android/gradle.properties
+            echo "MYAPP_UPLOAD_KEY_ALIAS=$KEY_ALIAS" >> android/gradle.properties
+            echo "MYAPP_UPLOAD_STORE_PASSWORD=$KEYSTORE_PASSWORD" >> android/gradle.properties
+            echo "MYAPP_UPLOAD_KEY_PASSWORD=$KEY_PASSWORD" >> android/gradle.properties
+            echo "USE_PRODUCTION_KEYSTORE=true" >> $GITHUB_ENV
+          else
+            echo "⚠️ No production keystore found, using debug signing"
+            echo "USE_PRODUCTION_KEYSTORE=false" >> $GITHUB_ENV
+          fi
+
+      - name: 🔨 Build Android APK
+        run: |
+          cd android
+          if [ "$USE_PRODUCTION_KEYSTORE" = "true" ] && [ "${{ startsWith(github.ref, 'refs/tags/') }}" = "true" ]; then
+            echo "🚀 Building production-signed APK for release"
+            ./gradlew assembleRelease --no-daemon
+          else
+            echo "🧪 Building debug-signed APK for testing"
+            ./gradlew assembleDebug --no-daemon
+            # Copy debug APK to release location for consistency
+            cp app/build/outputs/apk/debug/app-debug.apk app/build/outputs/apk/release/app-release.apk
+          fi
+
+      - name: 📁 Copy APK to root
+        run: |
+          cp android/app/build/outputs/apk/release/app-release.apk ./lattice-mobile.apk
+
+      - name: 📊 Get app version
+        id: app-version
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: 📤 Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: lattice-mobile-apk
+          path: lattice-mobile.apk
+
+      - name: 🚀 Create GitHub Release (on tag)
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v1
+        with:
+          name: Lattice Mobile v${{ steps.app-version.outputs.version }}
+          body: |
+            ## 📱 Lattice Mobile - Android APK Release
+            
+            **Version:** ${{ steps.app-version.outputs.version }}
+            **Build Date:** ${{ github.event.head_commit.timestamp }}
+            **Commit:** ${{ github.sha }}
+            
+            ### 📥 Installation Instructions
+            1. **Download** the `lattice-mobile.apk` file below
+            2. **Enable** "Install from Unknown Sources" in your Android settings
+            3. **Install** the APK on your device
+            
+            ### 🆕 What's New
+            - Multi-dashboard financial management
+            - Drag-and-drop widget system
+            - Real-time market data
+            - AI-powered financial assistant
+            - TradingView chart integration
+            - Smooth animations and modern UI
+            
+            ### 🔧 Technical Details
+            - **React Native:** 0.79.5
+            - **Expo SDK:** ~53.0.20
+            - **Target SDK:** 34
+            - **Min SDK:** 21
+            
+            ### 📊 Dashboard Features
+            - **Overview Dashboard:** Complete portfolio overview
+            - **Stocks Dashboard:** Equity market analysis  
+            - **Portfolio Dashboard:** Comprehensive management
+            - **Watchlist Dashboard:** Track market opportunities
+            - **Analytics Dashboard:** Advanced performance metrics
+            - **Trading Dashboard:** Active trading interface
+            
+            ### 🎯 Widget System
+            - **Chart Widgets:** Interactive financial charts
+            - **Crypto Widgets:** Real-time cryptocurrency data
+            - **Drag & Drop:** Smooth widget reordering
+            - **Customization:** Themes, timeframes, display modes
+            
+            ---
+            
+            🚀 **Built with GitHub Actions** - Unlimited free builds!
+            
+            💬 **Support:** Create an issue if you encounter any problems
+            
+            ⭐ **Like this app?** Give us a star on GitHub!
+          files: |
+            lattice-mobile.apk
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  notify:
+    name: Notify Build Status
+    needs: build-android
+    runs-on: ubuntu-latest
+    if: always()
+    
+    steps:
+      - name: ✅ Build Success
+        if: needs.build-android.result == 'success'
+        run: |
+          echo "🎉 Android APK build completed successfully!"
+          echo "📱 APK is ready for download and installation"
+          
+      - name: ❌ Build Failed  
+        if: needs.build-android.result == 'failure'
+        run: |
+          echo "💥 Android APK build failed!"
+          echo "🔍 Check the logs above for error details"

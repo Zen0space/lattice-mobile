@@ -1,0 +1,106 @@
+name: EAS Build and GitHub Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      platform:
+        description: 'Platform to build for'
+        required: true
+        default: 'android'
+        type: choice
+        options:
+          - android
+          - ios
+          - all
+      profile:
+        description: 'Build profile'
+        required: true
+        default: 'preview'
+        type: choice
+        options:
+          - preview
+          - production-apk
+          - production
+
+jobs:
+  build:
+    name: EAS Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🏗 Setup repo
+        uses: actions/checkout@v4
+
+      - name: 🏗 Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18.x
+          cache: npm
+
+      - name: 🏗 Setup EAS
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: 📦 Install dependencies
+        run: npm ci
+
+      - name: 🚀 Build Android APK
+        if: ${{ github.event.inputs.platform == 'android' || github.event.inputs.platform == 'all' }}
+        run: eas build --platform android --profile ${{ github.event.inputs.profile || 'preview' }} --non-interactive --no-wait
+
+      - name: 🚀 Build iOS
+        if: ${{ github.event.inputs.platform == 'ios' || github.event.inputs.platform == 'all' }}
+        run: eas build --platform ios --profile ${{ github.event.inputs.profile || 'preview' }} --non-interactive --no-wait
+
+      - name: 📥 Download build artifacts
+        run: |
+          # Wait for build to complete and download
+          sleep 300  # Wait 5 minutes for build to start
+          eas build:list --platform android --limit 1 --json > build-info.json
+          BUILD_URL=$(cat build-info.json | jq -r '.[0].artifacts.buildUrl')
+          wget -O lattice-mobile.apk "$BUILD_URL"
+
+      - name: 📋 Get build info
+        id: build-info
+        run: |
+          BUILD_VERSION=$(cat build-info.json | jq -r '.[0].appVersion')
+          BUILD_NUMBER=$(cat build-info.json | jq -r '.[0].buildVersion')
+          echo "version=$BUILD_VERSION" >> $GITHUB_OUTPUT
+          echo "build_number=$BUILD_NUMBER" >> $GITHUB_OUTPUT
+
+      - name: 🚀 Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v${{ steps.build-info.outputs.version }}-${{ steps.build-info.outputs.build_number }}
+          name: Lattice Mobile v${{ steps.build-info.outputs.version }} (${{ steps.build-info.outputs.build_number }})
+          body: |
+            ## 📱 Lattice Mobile Release
+            
+            **Version:** ${{ steps.build-info.outputs.version }}
+            **Build Number:** ${{ steps.build-info.outputs.build_number }}
+            **Platform:** Android APK
+            
+            ### 🚀 Installation
+            1. Download the APK file below
+            2. Enable "Install from Unknown Sources" on your Android device
+            3. Install the APK
+            
+            ### 📊 Features
+            - Multi-dashboard management system
+            - Drag-and-drop widgets
+            - Real-time financial data
+            - AI-powered chat interface
+            - TradingView integration
+            
+            ---
+            *Built with EAS Build and automated via GitHub Actions*
+          files: |
+            lattice-mobile.apk
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
