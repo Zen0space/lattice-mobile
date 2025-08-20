@@ -7,18 +7,23 @@ import {
 } from 'react-native';
 import {
   TrendingUp,
-  TrendingDown,
   DollarSign,
   Activity,
-  Clock,
-  AlertTriangle,
-  ArrowUp,
-  ArrowDown,
 } from 'react-native-feather';
 import { DashboardConfig, AssetData } from './types';
-import { DashboardContainer, ActionButton } from './shared';
-import OptimizedAssetList from './shared/OptimizedAssetList';
-import OptimizedActivityList, { ActivityItem } from './shared/OptimizedActivityList';
+import { 
+  DashboardContainer, 
+  ActionButton, 
+  StatCard,
+  AssetCard,
+  SectionHeader,
+  WelcomeHeader,
+  AssetsHeader,
+  ActivityHeader,
+  AssetDataRenderer,
+  ActivityDataRenderer,
+} from './shared';
+import { ActivityItem } from './shared/OptimizedActivityList';
 import { useMountedRef, memoryLeakDetection } from '../../utils/memoryLeakPrevention';
 
 const { width } = Dimensions.get('window');
@@ -110,126 +115,49 @@ const OverviewDashboard: React.FC<OverviewDashboardProps> = ({ config }) => {
     },
   ]);
 
-  const renderStatCard = (title: string, value: string, change: string, changePercent: number, icon: any) => {
-    const IconComponent = icon;
-    const isPositive = changePercent >= 0;
-    
-    return (
-      <View className="bg-gray-50 rounded-xl p-4 border border-gray-200 shadow-sm" style={{ width: (width - 48) / 2 - 6 }}>
-        <View className="flex-row items-center justify-between mb-3">
-          <View className="w-10 h-10 bg-primary rounded-lg items-center justify-center">
-            <IconComponent width={20} height={20} stroke="#ffffff" />
-          </View>
-          <View className={`flex-row items-center px-2 py-1 rounded-full ${isPositive ? 'bg-green-100' : 'bg-red-100'}`}>
-            {isPositive ? (
-              <ArrowUp width={12} height={12} stroke="#10b981" />
-            ) : (
-              <ArrowDown width={12} height={12} stroke="#ef4444" />
-            )}
-            <Text className={`text-xs font-medium ml-1 ${isPositive ? 'text-green-600' : 'text-red-600'}`}>
-              {Math.abs(changePercent)}%
-            </Text>
-          </View>
-        </View>
-        <Text className="text-2xl font-bold text-gray-900 mb-1">{value}</Text>
-        <Text className="text-gray-600 text-sm mb-1">{title}</Text>
-        <Text className={`text-sm font-medium ${isPositive ? 'text-green-600' : 'text-red-600'}`}>
-          {change}
-        </Text>
-      </View>
-    );
-  };
+  // Removed renderStatCard - now using StatCard component
 
-  const renderAssetRow = (asset: AssetData) => {
-    const isPositive = asset.changePercent >= 0;
-    
-    return (
-      <View key={asset.symbol} className="flex-row items-center py-4 border-b border-gray-100 last:border-b-0">
-        <View className="w-12 h-12 bg-gray-100 rounded-full items-center justify-center mr-4">
-          <Text className="text-gray-700 font-bold text-sm">{asset.symbol}</Text>
-        </View>
-        <View className="flex-1">
-          <Text className="text-gray-900 font-semibold">{asset.name}</Text>
-          <Text className="text-gray-500 text-sm">{asset.holdings} {asset.symbol}</Text>
-        </View>
-        <View className="items-end">
-          <Text className="text-gray-900 font-semibold">${asset.value?.toLocaleString()}</Text>
-          <View className="flex-row items-center">
-            <Text className={`text-sm font-medium ${isPositive ? 'text-green-600' : 'text-red-600'}`}>
-              {isPositive ? '+' : ''}{asset.changePercent}%
-            </Text>
-            <Text className="text-gray-500 text-sm ml-2">{asset.allocation}%</Text>
-          </View>
-        </View>
-      </View>
-    );
-  };
+  // Removed renderAssetRow - now using AssetCard component
 
-  const renderActivityItem = (activity: any) => {
-    const getActivityColor = (type: string) => {
-      switch (type) {
-        case 'buy': return 'bg-green-500';
-        case 'sell': return 'bg-red-500';
-        case 'dividend': return 'bg-blue-500';
-        default: return 'bg-gray-500';
-      }
-    };
-
-    const getActivityText = (activity: any) => {
-      switch (activity.type) {
-        case 'buy':
-          return `Bought ${activity.amount} ${activity.asset} at $${activity.price.toLocaleString()}`;
-        case 'sell':
-          return `Sold ${activity.amount} ${activity.asset} at $${activity.price.toLocaleString()}`;
-        case 'dividend':
-          return `Received $${activity.amount} dividend from ${activity.asset}`;
-        default:
-          return 'Unknown activity';
-      }
-    };
-
-    return (
-      <View key={activity.id} className="flex-row items-center py-3 border-b border-gray-100 last:border-b-0">
-        <View className={`w-3 h-3 rounded-full mr-3 ${getActivityColor(activity.type)}`} />
-        <View className="flex-1">
-          <Text className="text-gray-900 font-medium text-sm">{getActivityText(activity)}</Text>
-          <Text className="text-gray-500 text-xs">{activity.time}</Text>
-        </View>
-      </View>
-    );
-  };
+  // Removed render functions - now using shared components
 
   return (
     <DashboardContainer>
       {/* Portfolio Summary */}
-      <View className="mb-6">
-        <Text className="text-2xl font-bold text-gray-900 mb-1">Portfolio Overview</Text>
-        <Text className="text-gray-600 mb-4">Welcome back! Here's your portfolio summary.</Text>
-        
-        <View className="flex-row flex-wrap justify-between gap-3">
-          {renderStatCard(
-            'Total Value',
-            `$${portfolioData.totalValue.toLocaleString()}`,
-            `+$${portfolioData.totalChange.toLocaleString()}`,
-            portfolioData.totalChangePercent,
-            DollarSign
-          )}
-          {renderStatCard(
-            'Today\'s Change',
-            `$${portfolioData.dayChange.toLocaleString()}`,
-            `${portfolioData.dayChangePercent > 0 ? '+' : ''}${portfolioData.dayChangePercent}%`,
-            portfolioData.dayChangePercent,
-            Activity
-          )}
-        </View>
+      <WelcomeHeader 
+        subtitle="Here's your portfolio summary."
+      />
+      
+      <View className="flex-row flex-wrap justify-between gap-3 mb-6">
+        <StatCard
+          title="Total Value"
+          value={`$${portfolioData.totalValue.toLocaleString()}`}
+          change={`+$${portfolioData.totalChange.toLocaleString()}`}
+          changePercent={portfolioData.totalChangePercent}
+          icon={DollarSign}
+        />
+        <StatCard
+          title="Today's Change"
+          value={`$${portfolioData.dayChange.toLocaleString()}`}
+          change={`${portfolioData.dayChangePercent > 0 ? '+' : ''}${portfolioData.dayChangePercent}%`}
+          changePercent={portfolioData.dayChangePercent}
+          icon={Activity}
+        />
       </View>
 
-      {/* Optimized Top Holdings */}
-      <OptimizedAssetList 
-        assets={topAssets}
-        headerTitle="Top Holdings"
-        onViewAll={() => console.log('View All Assets')}
-      />
+      {/* Top Holdings */}
+      <View className="mb-6">
+        <AssetsHeader 
+          totalAssets={topAssets.length}
+          onViewAll={() => console.log('View All Assets')}
+        />
+        <AssetDataRenderer
+          assets={topAssets.slice(0, 5)}
+          variant="row"
+          onAssetPress={(asset) => console.log('Asset pressed:', asset.symbol)}
+          nestedInScrollView={true}
+        />
+      </View>
 
       {/* Performance Chart Placeholder */}
       <View className="mb-6">
@@ -243,15 +171,25 @@ const OverviewDashboard: React.FC<OverviewDashboardProps> = ({ config }) => {
         </View>
       </View>
 
-      {/* Optimized Recent Activity */}
-      <OptimizedActivityList 
-        activities={recentActivity}
-        headerTitle="Recent Activity"
-      />
+      {/* Recent Activity */}
+      <View className="mb-6">
+        <ActivityHeader 
+          onViewHistory={() => console.log('View Activity History')}
+        />
+        <ActivityDataRenderer
+          activities={recentActivity.slice(0, 5)}
+          onActivityPress={(activity) => console.log('Activity pressed:', activity)}
+          nestedInScrollView={true}
+        />
+      </View>
 
       {/* Quick Actions */}
       <View className="mb-6">
-        <Text className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</Text>
+        <SectionHeader 
+          title="Quick Actions"
+          subtitle="Manage your portfolio with ease"
+          variant="compact"
+        />
         <View className="flex-row justify-between gap-4">
           <ActionButton
             title="Buy Assets"
